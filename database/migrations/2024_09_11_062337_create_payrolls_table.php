@@ -14,8 +14,9 @@ return new class extends Migration
         Schema::create('payrolls', function (Blueprint $table) {
             $table->id();
             $table->foreignId('karyawan_id')->constrained('karyawans')->cascadeOnDelete();
-            $table->date('periode');
-            $table->string('gaji_pokok');
+            $table->date('periode')->nullable();
+            $table->string('tunjangan');
+            $table->string('gaji_pokok')->nullable();
             $table->string('transport')->nullable();
             $table->string('makan')->nullable();
             $table->string('penyesuaian')->nullable();

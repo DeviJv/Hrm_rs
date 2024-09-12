@@ -49,7 +49,7 @@ class TidakMasukResource extends Resource
                             ->required(),
                         TextInput::make('keperluan'),
                         DatePicker::make('tgl_mulai')
-                            ->minDate(now())
+                            // ->minDate(now())
                             ->required(),
                         DatePicker::make('tgl_akhir')
                             ->afterOrEqual('tgl_mulai')
@@ -83,7 +83,7 @@ class TidakMasukResource extends Resource
                     ->label('Departement')
                     ->searchable(),
                 TextColumn::make('keterangan')
-                    ->extraAttributes(['class' => 'font-semibold'])
+                    ->extraAttributes(['class' => 'font-semibold uppercase'])
                     ->size(TextColumn\TextColumnSize::Large),
                 TextColumn::make('keperluan'),
                 TextColumn::make('tgl_mulai')
