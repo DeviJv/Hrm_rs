@@ -1,0 +1,332 @@
+<?php
+
+namespace App\Filament\Resources;
+
+use Filament\Forms;
+use Filament\Tables;
+use App\Models\Lembur;
+use App\Models\Payroll;
+use Filament\Forms\Get;
+use Filament\Forms\Set;
+use App\Models\Karyawan;
+use Filament\Forms\Form;
+use Filament\Tables\Table;
+use Filament\Resources\Resource;
+use Illuminate\Support\HtmlString;
+use Filament\Forms\Components\Hidden;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Checkbox;
+use Filament\Forms\Components\TextInput;
+use Filament\Notifications\Notification;
+use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\TimePicker;
+use Illuminate\Database\Eloquent\Builder;
+use Filament\Notifications\Actions\Action;
+use App\Filament\Resources\LemburResource\Pages;
+use Illuminate\Database\Eloquent\SoftDeletingScope;
+use App\Filament\Resources\LemburResource\RelationManagers;
+
+class LemburResource extends Resource
+{
+    protected static ?string $model = Lembur::class;
+
+    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+
+    public static function form(Form $form): Form
+    {
+        return $form
+            ->schema([
+                Section::make()
+                    ->columns(['sm' => 1, 'md' => 4, 'lg' => 4])
+                    ->description(new HtmlString('Note : untuk <b>HARGA LEMBUR</b> di dapat dari penjumlahan <b>(GAJI POKO + TRANSPORT + MAKAN)</b> pada menu pengaturan payroll'))
+                    ->schema([
+                        Select::make('karyawan_id')
+                            ->label('Pilih Karyawan')
+                            ->searchable()
+                            ->relationship('karyawan', 'nama')
+                            ->preload()
+                            // ->unique(Lembur::class, 'karyawan_id', ignoreRecord: true)
+                            ->live()
+                            ->afterStateUpdated(function ($state, Set $set, Get $get) {
+                                if (filled($state)) {
+                                    $karyawan = Karyawan::where('id', $state)->first();
+                                    $pengaturan_payroll = Payroll::where('karyawan_id', $state)->first();
+                                    if (empty($pengaturan_payroll)) {
+                                        $set('harga_lembur', '');
+                                        return
+                                            Notification::make()
+                                            ->title("Ops Sepertinya <b>{$karyawan->nama}</b> Belum Punya Pengaturan Gaji Poko,dll ")
+                                            ->body('Silahkan klik buat Untuk membuat pengaturan')
+                                            ->warning()
+                                            ->actions([
+                                                Action::make('buat_pengaturan_payroll')
+                                                    ->url(PengaturanPayrollResource::getUrl('create'))
+                                                    ->openUrlInNewTab(),
+                                            ])
+                                            ->send();
+                                    }
+                                    $set('harga_lembur', ($pengaturan_payroll->gaji_pokok + $pengaturan_payroll->makan + $pengaturan_payroll->transport));
+                                    if (filled($get('jm_mulai')) && filled($get('jm_selesai')) && filled($get('harga_lembur')) && filled($get('tgl_lembur'))) {
+                                        $tgl = $get('tgl_lembur');
+                                        $dari = date_create('' . $get('tgl_lembur') . '' . $state . '');
+                                        $sampai = date_create('' . $get('tgl_lembur') . '' . $get('jm_selesai') . '');
+                                        $hitung = date_diff($dari, $sampai);
+                                        if ($hitung->h > 6) {
+                                            $hitung = $hitung->h - 2;
+                                        } else {
+                                            $hitung = $hitung->h;
+                                        }
+                                        $harga_perjam = $get('harga_lembur') / 173;
+                                        if (static::tanggalMerah($tgl)) {
+                                            $harga_jam_pertama = $get('harga_lembur') / 173 * 2;
+                                        } else {
+                                            $harga_jam_pertama = $get('harga_lembur') / 173 * 1.5;
+                                        }
+                                        $harga_total_jam = $harga_jam_pertama * 2 * $hitung;
+                                        $set('jumlah_jam', $hitung);
+                                        $set('harga_perjam', $harga_perjam);
+                                        $set('harga_jam_pertama', $harga_jam_pertama);
+                                        $set('harga_total_jam', $harga_total_jam);
+                                        $set('total_lembur', $harga_jam_pertama + $harga_total_jam);
+                                    }
+                                }
+                            })
+                            ->required(),
+                        DatePicker::make('tgl_lembur')
+                            ->live()
+                            ->label('Tanggal Lembur')
+                            ->afterStateUpdated(function (Get $get, Set $set, $state) {
+                                if (filled($state) && filled($get('jm_mulai')) && filled($get('jm_selesai')) && filled($get('harga_lembur'))) {
+                                    $tgl = $state;
+
+                                    $dari = date_create('' . $get('tgl_lembur') . '' . $get('jm_mulai') . '');
+                                    $sampai = date_create('' . $get('tgl_lembur') . '' . $get('jm_selesai') . '');
+                                    $hitung = date_diff($dari, $sampai);
+                                    if ($hitung->h > 6) {
+                                        $hitung = $hitung->h - 2;
+                                    } else {
+                                        $hitung = $hitung->h;
+                                    }
+                                    $harga_perjam = $get('harga_lembur') / 173;
+                                    if (static::tanggalMerah($tgl)) {
+                                        $harga_jam_pertama = $get('harga_lembur') / 173 * 2;
+                                    } else {
+                                        $harga_jam_pertama = $get('harga_lembur') / 173 * 1.5;
+                                    }
+                                    $harga_total_jam = $harga_jam_pertama * 2 * $hitung;
+                                    $set('jumlah_jam', $hitung);
+                                    $set('harga_perjam', $harga_perjam);
+                                    $set('harga_jam_pertama', $harga_jam_pertama);
+                                    $set('harga_total_jam', $harga_total_jam);
+                                    $set('total_lembur', $harga_jam_pertama + $harga_total_jam);
+                                }
+                            })
+                            ->required(),
+                        TimePicker::make('jm_mulai')
+                            ->live(onBlur: true)
+                            ->afterStateUpdated(function (Get $get, Set $set, $state) {
+                                if (filled($state) && filled($get('jm_selesai')) && filled($get('tgl_lembur')) && filled($get('harga_lembur'))) {
+                                    $tgl = $get('tgl_lembur');
+                                    $dari = date_create('' . $get('tgl_lembur') . '' . $state . '');
+                                    $sampai = date_create('' . $get('tgl_lembur') . '' . $get('jm_selesai') . '');
+                                    $hitung = date_diff($dari, $sampai);
+                                    if ($hitung->h > 6) {
+                                        $hitung = $hitung->h - 2;
+                                    } else {
+                                        $hitung = $hitung->h;
+                                    }
+                                    $harga_perjam = $get('harga_lembur') / 173;
+                                    if (static::tanggalMerah($tgl)) {
+                                        $harga_jam_pertama = $get('harga_lembur') / 173 * 2;
+                                    } else {
+                                        $harga_jam_pertama = $get('harga_lembur') / 173 * 1.5;
+                                    }
+                                    $harga_total_jam = $harga_jam_pertama * 2 * $hitung;
+                                    $set('jumlah_jam', $hitung);
+                                    $set('harga_perjam', $harga_perjam);
+                                    $set('harga_jam_pertama', $harga_jam_pertama);
+                                    $set('harga_total_jam', $harga_total_jam);
+                                    $set('total_lembur', $harga_jam_pertama + $harga_total_jam);
+                                }
+                            })
+                            ->required(),
+                        TimePicker::make('jm_selesai')
+                            ->live(onBlur: true)
+                            ->afterStateUpdated(function (Get $get, Set $set, $state) {
+                                if (filled($state) && filled($get('jm_mulai')) && filled($get('tgl_lembur')) && filled($get('harga_lembur'))) {
+                                    $tgl = $get('tgl_lembur');
+
+                                    $dari = date_create('' . $get('tgl_lembur') . '' . $get('jm_mulai') . '');
+                                    $sampai = date_create('' . $get('tgl_lembur') . '' . $state . '');
+                                    $hitung = date_diff($dari, $sampai);
+                                    if ($hitung->h > 6) {
+                                        $hitung = $hitung->h - 2;
+                                    } else {
+                                        $hitung = $hitung->h;
+                                    }
+                                    $harga_perjam = $get('harga_lembur') / 173;
+                                    if (static::tanggalMerah($tgl)) {
+                                        $harga_jam_pertama = $get('harga_lembur') / 173 * 2;
+                                    } else {
+                                        $harga_jam_pertama = $get('harga_lembur') / 173 * 1.5;
+                                    }
+                                    $harga_total_jam = $harga_jam_pertama * 2 * $hitung;
+                                    $set('jumlah_jam', $hitung);
+                                    $set('harga_perjam', $harga_perjam);
+                                    $set('harga_jam_pertama', $harga_jam_pertama);
+                                    $set('harga_total_jam', $harga_total_jam);
+                                    $set('total_lembur', $harga_jam_pertama + $harga_total_jam);
+                                }
+                            })
+                            ->required(),
+                        TextInput::make('jumlah_jam')
+                            ->live()
+                            ->readOnly()
+                            ->required(),
+                        TextInput::make('harga_lembur')
+                            ->required()
+                            ->readOnly()
+                            ->currencyMask(thousandSeparator: ',', decimalSeparator: '.', precision: 2)
+                            ->prefix('Rp '),
+                        TextInput::make('harga_perjam')
+                            ->required()
+                            ->readOnly()
+                            ->currencyMask(thousandSeparator: ',', decimalSeparator: '.', precision: 2)
+                            ->prefix('Rp '),
+                        TextInput::make('harga_jam_pertama')
+                            ->required()
+                            ->readOnly()
+                            ->currencyMask(thousandSeparator: ',', decimalSeparator: '.', precision: 2)
+                            ->prefix('Rp '),
+                        TextInput::make('harga_total_jam')
+                            ->required()
+                            ->readOnly()
+                            ->currencyMask(thousandSeparator: ',', decimalSeparator: '.', precision: 2)
+                            ->prefix('Rp '),
+                        TextInput::make('total_lembur')
+                            ->readOnly()
+                            ->required()
+                            ->currencyMask(thousandSeparator: ',', decimalSeparator: '.', precision: 2)
+                            ->prefix('Rp '),
+                        Hidden::make('user_id')
+                            ->default(auth()->user()->id),
+                        Checkbox::make('is_holiday')
+                            ->label('Tanggal Merah?')
+                            ->inline(false)
+                            ->live()
+                            ->afterStateUpdated(function (Get $get, Set $set, $state) {
+
+                                $tgl = $get('tgl_lembur');
+                                $dari = date_create('' . $get('tgl_lembur') . '' . $get('jm_mulai') . '');
+                                $sampai = date_create('' . $get('tgl_lembur') . '' . $get('jm_selesai') . '');
+                                $hitung = date_diff($dari, $sampai);
+                                if ($hitung->h > 6) {
+                                    $hitung = $hitung->h - 2;
+                                } else {
+                                    $hitung = $hitung->h;
+                                }
+                                $harga_perjam = $get('harga_lembur') / 173;
+                                if ($state) {
+                                    $harga_jam_pertama = $get('harga_lembur') / 173 * 2;
+                                } else {
+                                    $harga_jam_pertama = $get('harga_lembur') / 173 * 1.5;
+                                }
+                                $harga_total_jam = $harga_jam_pertama * 2 * $hitung;
+                                $set('jumlah_jam', $hitung);
+                                $set('harga_perjam', $harga_perjam);
+                                $set('harga_jam_pertama', $harga_jam_pertama);
+                                $set('harga_total_jam', $harga_total_jam);
+                                $set('total_lembur', $harga_jam_pertama + $harga_total_jam);
+                            })
+                            ->dehydrated(false),
+                    ])
+            ]);
+    }
+
+    public static function table(Table $table): Table
+    {
+        return $table
+            ->columns([
+                Tables\Columns\TextColumn::make('user.name')
+                    ->label('Dibuat oleh')
+                    ->numeric()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('karyawan.nama')
+                    ->numeric()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('tgl_lembur')
+                    ->label('Tanggal Lembur')
+                    // ->date('d/m/Y')
+                    ->date()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('jm_mulai')
+                    ->label('Jam Mulai'),
+                Tables\Columns\TextColumn::make('jm_selesai')
+                    ->label('Tanggal Selesai'),
+                Tables\Columns\TextColumn::make('jumlah_jam')
+                    ->label('Jumlah Jam')
+
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('harga_lembur')
+                    ->money('IDR')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('total_lembur')
+                    ->money('IDR')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('created_at')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('updated_at')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+            ])
+            ->filters([
+                //
+            ])
+            ->actions([
+                Tables\Actions\EditAction::make(),
+            ])
+            ->bulkActions([
+                Tables\Actions\BulkActionGroup::make([
+                    Tables\Actions\DeleteBulkAction::make(),
+                ]),
+            ]);
+    }
+
+    public static function getRelations(): array
+    {
+        return [
+            //
+        ];
+    }
+
+    public static function getPages(): array
+    {
+        return [
+            'index' => Pages\ListLemburs::route('/'),
+            'create' => Pages\CreateLembur::route('/create'),
+            'edit' => Pages\EditLembur::route('/{record}/edit'),
+        ];
+    }
+
+    public static function tanggalMerah($value): bool
+    {
+        $array = json_decode(file_get_contents("https://raw.githubusercontent.com/guangrei/APIHariLibur_V2/main/calendar.json"), true);
+
+        //check tanggal merah berdasarkan libur nasional
+        if (isset($array[$value]) && $array[$value]["holiday"]) : return true;
+            print_r($array[$value]);
+
+        //check tanggal merah berdasarkan hari minggu
+        elseif (
+            date("D", strtotime($value)) === "Sun"
+        ) : return true;
+
+        //bukan tanggal merah
+        else : return false;
+        endif;
+    }
+}

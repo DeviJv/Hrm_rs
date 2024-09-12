@@ -2,29 +2,67 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\PengaturanPayrollResource\Pages;
-use App\Filament\Resources\PengaturanPayrollResource\RelationManagers;
-use App\Models\Payroll;
-use App\Models\PengaturanPayroll;
 use Filament\Forms;
-use Filament\Forms\Form;
-use Filament\Resources\Resource;
 use Filament\Tables;
+use App\Models\Payroll;
+use Filament\Forms\Form;
 use Filament\Tables\Table;
+use Filament\Resources\Resource;
+use App\Models\PengaturanPayroll;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Section;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Forms\Components\TextInput;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use App\Filament\Resources\PengaturanPayrollResource\Pages;
+use App\Filament\Resources\PengaturanPayrollResource\RelationManagers;
 
 class PengaturanPayrollResource extends Resource
 {
     protected static ?string $model = Payroll::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $pluralModelLabel = 'Pengaturan Payroll';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                //
+                Section::make()
+                    ->columns(['sm' => 1, 'md' => 3, 'lg' => 3])
+                    ->schema([
+                        Select::make('karyawan_id')
+                            ->label('Pilih Karyawan')
+                            ->searchable()
+                            ->relationship('karyawan', 'nama')
+                            ->preload()
+                            ->unique(Payroll::class, 'karyawan_id', ignoreRecord: true)
+                            ->required(),
+                        TextInput::make('tunjangan')
+                            ->currencyMask(thousandSeparator: ',', decimalSeparator: '.', precision: 2)
+                            ->prefix('Rp '),
+                        TextInput::make('makan')
+                            ->currencyMask(thousandSeparator: ',', decimalSeparator: '.', precision: 2)
+                            ->prefix('Rp '),
+                        TextInput::make('transport')
+                            ->currencyMask(thousandSeparator: ',', decimalSeparator: '.', precision: 2)
+                            ->prefix('Rp '),
+                        TextInput::make('gaji_pokok')
+                            ->currencyMask(thousandSeparator: ',', decimalSeparator: '.', precision: 2)
+                            ->prefix('Rp ')
+                            ->required(),
+                        TextInput::make('fungsional')
+                            ->currencyMask(thousandSeparator: ',', decimalSeparator: '.', precision: 2)
+                            ->prefix('Rp '),
+                        TextInput::make('fungsional_it')
+                            ->currencyMask(thousandSeparator: ',', decimalSeparator: '.', precision: 2)
+                            ->prefix('Rp '),
+                        TextInput::make('penyesuaian')
+                            ->currencyMask(thousandSeparator: ',', decimalSeparator: '.', precision: 2)
+                            ->prefix('Rp '),
+
+                    ])
             ]);
     }
 
@@ -32,7 +70,39 @@ class PengaturanPayrollResource extends Resource
     {
         return $table
             ->columns([
-                //
+                TextColumn::make('karyawan.nama')
+                    ->label('Nama')
+                    ->searchable(),
+                TextColumn::make('gaji_pokok')
+                    ->label('Gaji Poko')
+                    ->money('IDR'),
+                TextColumn::make('tunjangan')
+                    ->toggleable()
+                    ->default('-')
+                    ->label('Tunjangan')
+                    ->money('IDR'),
+                TextColumn::make('makan')
+                    ->label('Uang Makan')
+                    ->default('-')
+                    ->money('IDR'),
+                TextColumn::make('transport')
+                    ->label('Transport')
+                    ->default('-')
+                    ->money('IDR'),
+                TextColumn::make('insentif')
+                    ->label('Insentif')
+                    ->default('-')
+                    ->money('IDR'),
+                TextColumn::make('fungsional')
+                    ->label('Funsional')
+                    ->toggleable()
+                    ->default('-')
+                    ->money('IDR'),
+                TextColumn::make('fungsional_it')
+                    ->label('Funsional IT')
+                    ->toggleable()
+                    ->default('-')
+                    ->money('IDR'),
             ])
             ->filters([
                 //

@@ -26,6 +26,8 @@ class AdminPanelProvider extends PanelProvider
             ->default()
             ->databaseNotifications()
             ->databaseTransactions()
+            ->spa()
+            ->unsavedChangesAlerts()
             ->id('admin')
             ->path('admin')
             ->login()

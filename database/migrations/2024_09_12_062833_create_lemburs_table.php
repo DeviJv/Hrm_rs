@@ -21,6 +21,8 @@ return new class extends Migration
             $table->string('jumlah_jam')->nullable();
             $table->string('harga_lembur')->nullable();
             $table->string('total_lembur')->nullable();
+            $table->string('harga_perjam')->nullable();
+            $table->string('harga_jam_pertama')->nullable();
             $table->timestamps();
         });
     }
