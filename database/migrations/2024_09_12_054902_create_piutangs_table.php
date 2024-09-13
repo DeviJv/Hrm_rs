@@ -14,9 +14,10 @@ return new class extends Migration
         Schema::create('piutangs', function (Blueprint $table) {
             $table->id();
             $table->foreignId('karyawan_id')->constrained('karyawans')->cascadeOnDelete();
-            $table->date('periode');
+            // $table->date('periode');
             $table->string('obat')->nullable();
             $table->string('catering')->nullable();
+            $table->string('status')->default('UNPAID');
             $table->string('sub_total');
             $table->timestamps();
         });

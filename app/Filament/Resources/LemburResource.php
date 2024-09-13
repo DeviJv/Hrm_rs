@@ -83,12 +83,13 @@ class LemburResource extends Resource
                                         } else {
                                             $harga_jam_pertama = $get('harga_lembur') / 173 * 1.5;
                                         }
-                                        $harga_total_jam = $harga_jam_pertama * 2 * $hitung;
-                                        $set('jumlah_jam', $hitung);
-                                        $set('harga_perjam', $harga_perjam);
-                                        $set('harga_jam_pertama', $harga_jam_pertama);
-                                        $set('harga_total_jam', $harga_total_jam);
-                                        $set('total_lembur', $harga_jam_pertama + $harga_total_jam);
+                                        $harga_total_jam = $harga_perjam * 2 * $hitung;
+                                        $set('jumlah_jam', round($hitung));
+                                        $set('harga_perjam', round($harga_perjam));
+                                        $set('harga_jam_pertama', round($harga_jam_pertama));
+                                        $set('harga_total_jam', round($harga_total_jam));
+                                        $set('total_lembur', round($harga_jam_pertama + $harga_total_jam));
+                                        $set('is_holiday', false);
                                     }
                                 }
                             })
@@ -114,12 +115,14 @@ class LemburResource extends Resource
                                     } else {
                                         $harga_jam_pertama = $get('harga_lembur') / 173 * 1.5;
                                     }
-                                    $harga_total_jam = $harga_jam_pertama * 2 * $hitung;
-                                    $set('jumlah_jam', $hitung);
-                                    $set('harga_perjam', $harga_perjam);
-                                    $set('harga_jam_pertama', $harga_jam_pertama);
-                                    $set('harga_total_jam', $harga_total_jam);
-                                    $set('total_lembur', $harga_jam_pertama + $harga_total_jam);
+                                    $harga_total_jam = $harga_perjam * 2 * $hitung;
+                                    $set('jumlah_jam', round($hitung));
+                                    $set('harga_perjam', round($harga_perjam));
+                                    $set('harga_jam_pertama', round($harga_jam_pertama));
+                                    $set('harga_total_jam', round($harga_total_jam));
+                                    $set('total_lembur', round($harga_jam_pertama + $harga_total_jam));
+                                    $set('total_lembur', round($harga_jam_pertama + $harga_total_jam));
+                                    $set('is_holiday', false);
                                 }
                             })
                             ->required(),
@@ -142,12 +145,13 @@ class LemburResource extends Resource
                                     } else {
                                         $harga_jam_pertama = $get('harga_lembur') / 173 * 1.5;
                                     }
-                                    $harga_total_jam = $harga_jam_pertama * 2 * $hitung;
-                                    $set('jumlah_jam', $hitung);
-                                    $set('harga_perjam', $harga_perjam);
-                                    $set('harga_jam_pertama', $harga_jam_pertama);
-                                    $set('harga_total_jam', $harga_total_jam);
-                                    $set('total_lembur', $harga_jam_pertama + $harga_total_jam);
+                                    $harga_total_jam = $harga_perjam * 2 * $hitung;
+                                    $set('jumlah_jam', round($hitung));
+                                    $set('harga_perjam', round($harga_perjam));
+                                    $set('harga_jam_pertama', round($harga_jam_pertama));
+                                    $set('harga_total_jam', round($harga_total_jam));
+                                    $set('total_lembur', round($harga_jam_pertama + $harga_total_jam));
+                                    $set('is_holiday', false);
                                 }
                             })
                             ->required(),
@@ -171,12 +175,13 @@ class LemburResource extends Resource
                                     } else {
                                         $harga_jam_pertama = $get('harga_lembur') / 173 * 1.5;
                                     }
-                                    $harga_total_jam = $harga_jam_pertama * 2 * $hitung;
-                                    $set('jumlah_jam', $hitung);
-                                    $set('harga_perjam', $harga_perjam);
-                                    $set('harga_jam_pertama', $harga_jam_pertama);
-                                    $set('harga_total_jam', $harga_total_jam);
-                                    $set('total_lembur', $harga_jam_pertama + $harga_total_jam);
+                                    $harga_total_jam = $harga_perjam * 2 * $hitung;
+                                    $set('jumlah_jam', round($hitung));
+                                    $set('harga_perjam', round($harga_perjam));
+                                    $set('harga_jam_pertama', round($harga_jam_pertama));
+                                    $set('harga_total_jam', round($harga_total_jam));
+                                    $set('total_lembur', round($harga_jam_pertama + $harga_total_jam));
+                                    $set('is_holiday', false);
                                 }
                             })
                             ->required(),
@@ -232,12 +237,12 @@ class LemburResource extends Resource
                                 } else {
                                     $harga_jam_pertama = $get('harga_lembur') / 173 * 1.5;
                                 }
-                                $harga_total_jam = $harga_jam_pertama * 2 * $hitung;
-                                $set('jumlah_jam', $hitung);
-                                $set('harga_perjam', $harga_perjam);
-                                $set('harga_jam_pertama', $harga_jam_pertama);
-                                $set('harga_total_jam', $harga_total_jam);
-                                $set('total_lembur', $harga_jam_pertama + $harga_total_jam);
+                                $harga_total_jam = $harga_perjam * 2 * $hitung;
+                                $set('jumlah_jam', round($hitung));
+                                $set('harga_perjam', round($harga_perjam));
+                                $set('harga_jam_pertama', round($harga_jam_pertama));
+                                $set('harga_total_jam', round($harga_total_jam));
+                                $set('total_lembur', round($harga_jam_pertama + $harga_total_jam));
                             })
                             ->dehydrated(false),
                     ])
@@ -266,7 +271,6 @@ class LemburResource extends Resource
                     ->label('Tanggal Selesai'),
                 Tables\Columns\TextColumn::make('jumlah_jam')
                     ->label('Jumlah Jam')
-
                     ->searchable(),
                 Tables\Columns\TextColumn::make('harga_lembur')
                     ->money('IDR')

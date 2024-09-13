@@ -12,9 +12,11 @@ use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Textarea;
+use Illuminate\Database\Eloquent\Model;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\DatePicker;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Contracts\Support\Htmlable;
 use App\Filament\Resources\KaryawanResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\KaryawanResource\RelationManagers;
@@ -24,6 +26,7 @@ class KaryawanResource extends Resource
     protected static ?string $model = Karyawan::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $recordTitleAttribute = 'nama';
 
     public static function form(Form $form): Form
     {
@@ -182,5 +185,19 @@ class KaryawanResource extends Resource
             'create' => Pages\CreateKaryawan::route('/create'),
             'edit' => Pages\EditKaryawan::route('/{record}/edit'),
         ];
+    }
+
+    public static function getGlobalSearchEloquentQuery(): Builder
+    {
+        return parent::getGlobalSearchEloquentQuery();
+    }
+    public static function getGloballySearchableAttributes(): array
+    {
+        return ['nama'];
+    }
+
+    public static function getGlobalSearchResultTitle(Model $record): string | Htmlable
+    {
+        return $record->nama;
     }
 }
