@@ -26,6 +26,7 @@ use Filament\Notifications\Notification;
 use Filament\Forms\Components\DatePicker;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Notifications\Actions\Action;
+use App\Filament\Resources\PiutangResource;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Filament\Forms\Components\Actions\Action as FAction;
 use App\Filament\Resources\TransaksiPayrollResource\Pages;
@@ -74,9 +75,24 @@ class TransaksiPayrollResource extends Resource
                                             ])
                                             ->send();
                                     }
+                                    if (!empty($karyawan->bank)) {
+                                        if ($karyawan->bank == "bri") {
+                                            $set('payment_method', 'transfer');
+                                        } else {
+                                            $set('payment_method', 'transfer_non_bri');
+                                        }
+                                    } else {
+                                        $set('payment_method', 'tunai');
+                                    }
                                     $set('transport', $pengaturan_payroll->transport);
                                     $set('gaji_pokok', $pengaturan_payroll->gaji_pokok);
                                     $set('makan', $pengaturan_payroll->makan);
+                                    $set('insentif', $pengaturan_payroll->insentif ? $pengaturan_payroll->insentif : 0);
+                                    $set('fungsional', $pengaturan_payroll->fungsional);
+                                    $set('fungsional_it', $pengaturan_payroll->fungsional_it);
+                                    $set('jabatan', $pengaturan_payroll->tunjangan);
+                                    $set('bpjs_kesehatan', $pengaturan_payroll->bpjs_kesehatan);
+                                    $set('bpjs_ketenagakerjaan', $pengaturan_payroll->bpjs_ketenagakerjaan);
                                     $set('sub_total_1', ($pengaturan_payroll->gaji_pokok + $pengaturan_payroll->transport + $pengaturan_payroll->makan));
                                     $get_piutang = Piutang::where('karyawan_id', $get('karyawan_id'))->whereMonth('created_at', '=', date('m', strtotime($get('created_at'))))
                                         ->where('status', 'UNPAID')->first();
@@ -84,13 +100,38 @@ class TransaksiPayrollResource extends Resource
                                         ->where('status', 'UNPAID')->first();
                                     $total_lembur = Lembur::where('karyawan_id', $get('karyawan_id'))->whereMonth('tgl_lembur', '=', date('m', strtotime($get('created_at'))))
                                         ->sum('total_lembur');
-
-                                    $tenor_koperasi = explode(" ", $get_koperasi->tenor);
-                                    $set('koperasi', $get_koperasi->tagihan / $tenor_koperasi[0]);
-                                    $set('piutang', $get_piutang->sub_total);
+                                    if (!empty($get_piutang)) {
+                                        $set('piutang', $get_piutang->sub_total);
+                                    }
+                                    if (!empty($get_koperasi)) {
+                                        $tenor_koperasi = explode(" ", $get_koperasi->tenor);
+                                        $set('koperasi', $get_koperasi->tagihan / $tenor_koperasi[0]);
+                                    }
                                     $set('lembur', round(ceil($total_lembur), PHP_ROUND_HALF_UP));
                                 }
                             }),
+                        Select::make('payment_method')
+                            ->label('Metode Pembayaran')
+                            ->searchable()
+                            ->required()
+                            ->options([
+                                "tunai" => 'tunai',
+                                "transfer" => 'transfer',
+                                "transfer_non_bri" => 'transfer non bri',
+                            ])
+                            ->hintAction(
+                                FAction::make('ubah_bank')
+                                    ->label('Ubah Bank?')
+                                    ->icon('heroicon-o-arrow-path')
+                                    ->url(function (Get $get, $state) {
+                                        if (filled($state)) {
+                                            return KaryawanResource::getUrl('edit', ['record' => Karyawan::where('id', $get('karyawan_id'))->first()]);
+                                        }
+                                    }, $shouldOpenInNewTab = true),
+                                // ->action(function (Set $set, $state) {
+                                //     $set('price', $state);
+                                // })
+                            ),
                         Fieldset::make('Sub Total 1')
                             ->columns(['sm' => 1, 'md' => 2, 'lg' => 3])
                             ->schema([
@@ -127,17 +168,21 @@ class TransaksiPayrollResource extends Resource
                             ->schema([
                                 TextInput::make('penyesuaian')
                                     ->currencyMask(thousandSeparator: ',', decimalSeparator: '.', precision: 2)
+                                    ->default(0)
                                     ->prefix('Rp '),
                                 TextInput::make('insentif')
                                     ->currencyMask(thousandSeparator: ',', decimalSeparator: '.', precision: 2)
                                     ->prefix('Rp '),
                                 TextInput::make('fungsional')
+                                    ->default(0)
                                     ->currencyMask(thousandSeparator: ',', decimalSeparator: '.', precision: 2)
                                     ->prefix('Rp '),
                                 TextInput::make('fungsional_it')
+                                    ->default(0)
                                     ->currencyMask(thousandSeparator: ',', decimalSeparator: '.', precision: 2)
                                     ->prefix('Rp '),
                                 TextInput::make('jabatan')
+                                    ->default(0)
                                     ->currencyMask(thousandSeparator: ',', decimalSeparator: '.', precision: 2)
                                     ->prefix('Rp '),
                                 TextInput::make('sub_total_2')
@@ -150,10 +195,9 @@ class TransaksiPayrollResource extends Resource
                                             ->icon('heroicon-m-arrow-path')
                                             ->requiresConfirmation()
                                             ->action(function (Set $set, Get $get, $state) {
-                                                $hitung = $get('sub_total_1') + $get('penyesuaian') + $get('insentif') + $get('fungsional') + $get('fungsional_it') + $get('jabatan');
+                                                $hitung = (int)$get('sub_total_1') + (int)$get('penyesuaian') + (int)$get('insentif') + $get('fungsional') + $get('fungsional_it') + $get('jabatan');
                                                 $set('sub_total_2', $hitung);
                                                 $get_absensi = Tidak_masuk::where('karyawan_id', $get('karyawan_id'))->where('keterangan', 'izin')
-                                                    ->orWhere('keterangan', 'tanpa_keterangan')
                                                     ->whereMonth('tgl_mulai', '=', date('m', strtotime($get('created_at'))))->count();
                                                 $get_tgl_terakhir = Carbon::parse($get('created_at'))->endOfMonth();
                                                 $set('tidak_masuk', ($hitung / $get_tgl_terakhir->day) * $get_absensi);
@@ -168,13 +212,16 @@ class TransaksiPayrollResource extends Resource
                             ->schema([
                                 TextInput::make('bpjs_kesehatan')
                                     ->required()
+                                    ->default(0)
                                     ->currencyMask(thousandSeparator: ',', decimalSeparator: '.', precision: 2)
                                     ->prefix('Rp '),
                                 TextInput::make('ketenagakerjaan')
                                     ->required()
+                                    ->default(0)
                                     ->currencyMask(thousandSeparator: ',', decimalSeparator: '.', precision: 2)
                                     ->prefix('Rp '),
                                 TextInput::make('pajak')
+                                    ->default(0)
                                     ->required()
                                     ->currencyMask(thousandSeparator: ',', decimalSeparator: '.', precision: 2)
                                     ->prefix('Rp '),
@@ -186,18 +233,60 @@ class TransaksiPayrollResource extends Resource
                                 TextInput::make('tidak_masuk')
                                     ->label('Izin')
                                     ->required()
+                                    ->default(0)
                                     ->currencyMask(thousandSeparator: ',', decimalSeparator: '.', precision: 2)
-                                    ->prefix('Rp '),
+                                    ->prefix('Rp ')
+                                    ->hintAction(
+                                        FAction::make('check_izin')
+                                            ->label('Cek Izin?')
+                                            ->icon('heroicon-o-magnifying-glass')
+                                            ->url(function (Get $get, $state) {
+                                                if (filled($get('karyawan_id'))) {
+                                                    $bulan = Carbon::parse($get('created_at'));
+                                                    $tgl_pertama = $bulan->startOfMonth()->toDateString();
+                                                    $tgl_akhir = $bulan->endOfMonth()->toDateString();
+                                                    return TidakMasukResource::getUrl('index', ["&tableFilters[created_at][karyawan_id]={$get('karyawan_id')}&tableFilters[created_at][keterangan]=izin&tableFilters[created_at][created_from]={$tgl_pertama}&tableFilters[created_at][created_until]={$tgl_akhir}"]);
+                                                }
+                                            }, $shouldOpenInNewTab = true),
+                                    ),
                                 TextInput::make('piutang')
                                     ->label('Piutang Obat & Catering')
                                     ->required()
+                                    ->default(0)
                                     ->currencyMask(thousandSeparator: ',', decimalSeparator: '.', precision: 2)
-                                    ->prefix('Rp '),
+                                    ->prefix('Rp ')
+                                    ->hintAction(
+                                        FAction::make('check_piutang')
+                                            ->label('Cek Piutang?')
+                                            ->icon('heroicon-o-magnifying-glass')
+                                            ->url(function (Get $get, $state) {
+                                                if (filled($get('karyawan_id'))) {
+                                                    $bulan = Carbon::parse($get('created_at'));
+                                                    $tgl_pertama = $bulan->startOfMonth()->toDateString();
+                                                    $tgl_akhir = $bulan->endOfMonth()->toDateString();
+                                                    return PiutangResource::getUrl('index', ["&tableFilters[created_at][karyawan_id]={$get('karyawan_id')}&tableFilters[created_at][status]=UNPAID&tableFilters[created_at][created_from]={$tgl_pertama}&tableFilters[created_at][created_until]={$tgl_akhir}"]);
+                                                }
+                                            }, $shouldOpenInNewTab = true),
+                                    ),
                                 TextInput::make('koperasi')
                                     ->label('Koperasi')
                                     ->required()
+                                    ->default(0)
                                     ->currencyMask(thousandSeparator: ',', decimalSeparator: '.', precision: 2)
-                                    ->prefix('Rp '),
+                                    ->prefix('Rp ')
+                                    ->hintAction(
+                                        FAction::make('check_koperasi')
+                                            ->label('Cek Koperasi?')
+                                            ->icon('heroicon-o-magnifying-glass')
+                                            ->url(function (Get $get, $state) {
+                                                if (filled($get('karyawan_id'))) {
+                                                    $bulan = Carbon::parse($get('created_at'));
+                                                    $tgl_pertama = $bulan->startOfMonth()->toDateString();
+                                                    $tgl_akhir = $bulan->endOfMonth()->toDateString();
+                                                    return KoperasiResource::getUrl('index', ["&tableFilters[created_at][karyawan_id]={$get('karyawan_id')}&tableFilters[created_at][status]=UNPAID&tableFilters[created_at][created_from]={$tgl_pertama}&tableFilters[created_at][created_until]={$tgl_akhir}"]);
+                                                }
+                                            }, $shouldOpenInNewTab = true),
+                                    ),
                             ]),
 
                         TextInput::make('lembur')

@@ -2,14 +2,17 @@
 
 namespace App\Filament\Resources;
 
+use Carbon\Carbon;
 use Filament\Forms;
 use Filament\Tables;
+use App\Models\Karyawan;
 use App\Models\Koperasi;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
 use Filament\Resources\Resource;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Section;
+use Filament\Tables\Filters\Indicator;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\DatePicker;
 use Illuminate\Database\Eloquent\Builder;
@@ -83,7 +86,65 @@ class KoperasiResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
+                Tables\Filters\Filter::make('created_at')
+                    ->form([
+                        Forms\Components\Select::make('karyawan_id')
+                            ->label('Karyawan')
+                            ->preload()
+                            ->searchable()
+                            ->relationship('karyawan', 'nama'),
+                        Forms\Components\Select::make('status')
+                            ->label('Status')
+                            ->searchable()
+                            ->options([
+                                "PAID" => "PAID",
+                                "UNPAID" => "UNPAID",
+                            ]),
+                        Forms\Components\DatePicker::make('created_from')
+                            ->label('Tanggal Mulai')
+                            ->placeholder(fn($state): string => 'Dec 18, ' . now()->subYear()->format('Y')),
+                        Forms\Components\DatePicker::make('created_until')
+                            ->label('Tanggal Akhir')
+                            ->placeholder(fn($state): string => now()->format('M d, Y')),
+                    ])
+                    ->query(function (Builder $query, array $data): Builder {
+                        return $query
+                            ->when(
+                                $data['karyawan_id'] ?? null,
+                                fn(Builder $query, $data): Builder => $query->where('karyawan_id', '=', $data),
+                            )
+                            ->when(
+                                $data['status'] ?? null,
+                                fn(Builder $query, $data): Builder => $query->where('status', '=', $data),
+                            )
+                            ->when(
+                                $data['created_from'] ?? null,
+                                fn(Builder $query, $date): Builder => $query->whereDate('created_at', '>=', $date),
+                            )
+                            ->when(
+                                $data['created_until'] ?? null,
+                                fn(Builder $query, $date): Builder => $query->whereDate('created_at', '<=', $date),
+                            );
+                    })
+                    ->indicateUsing(function (array $data): array {
+                        $indicators = [];
+                        if ($data['karyawan_id'] ?? null) {
+                            $cus = Karyawan::where('id', $data['karyawan_id'])->pluck('nama')->first();
+                            $indicators[] = Indicator::make('Karyawan :' . $cus)
+                                ->removeField('karyawan_id');
+                        }
+                        if ($data['status'] ?? null) {
+                            $indicators['status'] = $data['status'];
+                        }
+                        if ($data['created_from'] ?? null) {
+                            $indicators['created_from'] = 'Tanggal Mulai ' . Carbon::parse($data['created_from'])->toFormattedDateString();
+                        }
+                        if ($data['created_until'] ?? null) {
+                            $indicators['created_until'] = 'Tanggal Akhir ' . Carbon::parse($data['created_until'])->toFormattedDateString();
+                        }
+
+                        return $indicators;
+                    }),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

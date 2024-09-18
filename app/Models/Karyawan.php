@@ -10,12 +10,12 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 class Karyawan extends Model
 {
     use HasFactory;
-    protected function casts(): array
-    {
-        return [
-            'tgl_masuk' => 'date:Y-m-d',
-        ];
-    }
+    // protected function casts(): array
+    // {
+    //     return [
+    //         'tgl_masuk' => 'date:Y-m-d',
+    //     ];
+    // }
 
     public function document(): HasOne
     {

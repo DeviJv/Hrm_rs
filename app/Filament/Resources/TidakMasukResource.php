@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use Carbon\Carbon;
 use Filament\Forms;
 use Filament\Tables;
 use Filament\Forms\Get;
@@ -11,17 +12,19 @@ use App\Models\TidakMasuk;
 use Filament\Tables\Table;
 use App\Models\Tidak_masuk;
 use Filament\Resources\Resource;
+use App\Models\PengaturanTidakMasuk;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Section;
+use Filament\Tables\Filters\Indicator;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
 use Illuminate\Database\Eloquent\Builder;
+use Filament\Tables\Columns\Summarizers\Sum;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\TidakMasukResource\Pages;
 use App\Filament\Resources\TidakMasukResource\RelationManagers;
-use App\Models\PengaturanTidakMasuk;
 
 class TidakMasukResource extends Resource
 {
@@ -90,11 +93,69 @@ class TidakMasukResource extends Resource
                     ->date(),
                 TextColumn::make('tgl_akhir')
                     ->date(),
+                TextColumn::make('jumlah_hari')
+                    ->summarize(Sum::make()),
                 TextColumn::make('backup.nama'),
+
 
             ])
             ->filters([
-                //
+                Tables\Filters\Filter::make('created_at')
+                    ->form([
+                        Forms\Components\Select::make('karyawan_id')
+                            ->label('Karyawan')
+                            ->preload()
+                            ->searchable()
+                            ->relationship('karyawan', 'nama'),
+                        Forms\Components\Select::make('keterangan')
+                            ->label('Keterangan')
+                            ->searchable()
+                            ->options(fn() => PengaturanTidakMasuk::pluck('nama', 'nama')),
+                        Forms\Components\DatePicker::make('created_from')
+                            ->label('Tanggal Mulai')
+                            ->placeholder(fn($state): string => 'Dec 18, ' . now()->subYear()->format('Y')),
+                        Forms\Components\DatePicker::make('created_until')
+                            ->label('Tanggal Akhir')
+                            ->placeholder(fn($state): string => now()->format('M d, Y')),
+                    ])
+                    ->query(function (Builder $query, array $data): Builder {
+                        return $query
+                            ->when(
+                                $data['karyawan_id'] ?? null,
+                                fn(Builder $query, $data): Builder => $query->where('karyawan_id', '=', $data),
+                            )
+                            ->when(
+                                $data['keterangan'] ?? null,
+                                fn(Builder $query, $data): Builder => $query->where('keterangan', '=', $data),
+                            )
+                            ->when(
+                                $data['created_from'] ?? null,
+                                fn(Builder $query, $date): Builder => $query->whereDate('tgl_mulai', '>=', $date),
+                            )
+                            ->when(
+                                $data['created_until'] ?? null,
+                                fn(Builder $query, $date): Builder => $query->whereDate('tgl_mulai', '<=', $date),
+                            );
+                    })
+                    ->indicateUsing(function (array $data): array {
+                        $indicators = [];
+                        if ($data['karyawan_id'] ?? null) {
+                            $cus = Karyawan::where('id', $data['karyawan_id'])->pluck('nama')->first();
+                            $indicators[] = Indicator::make('Karyawan : ' . $cus)
+                                ->removeField('karyawan_id');
+                        }
+                        if ($data['keterangan'] ?? null) {
+                            $indicators['keterangan'] = 'Keterangan : ' . $data['keterangan'];
+                        }
+                        if ($data['created_from'] ?? null) {
+                            $indicators['created_from'] = 'Tanggal Mulai : ' . Carbon::parse($data['created_from'])->toFormattedDateString();
+                        }
+                        if ($data['created_until'] ?? null) {
+                            $indicators['created_until'] = 'Tanggal Akhir : ' . Carbon::parse($data['created_until'])->toFormattedDateString();
+                        }
+
+                        return $indicators;
+                    }),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

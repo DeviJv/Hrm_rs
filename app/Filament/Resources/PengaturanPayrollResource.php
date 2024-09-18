@@ -40,6 +40,7 @@ class PengaturanPayrollResource extends Resource
                             ->unique(Payroll::class, 'karyawan_id', ignoreRecord: true)
                             ->required(),
                         TextInput::make('tunjangan')
+                            ->label('Jabatan')
                             ->currencyMask(thousandSeparator: ',', decimalSeparator: '.', precision: 2)
                             ->prefix('Rp '),
                         TextInput::make('makan')
@@ -58,7 +59,10 @@ class PengaturanPayrollResource extends Resource
                         TextInput::make('fungsional_it')
                             ->currencyMask(thousandSeparator: ',', decimalSeparator: '.', precision: 2)
                             ->prefix('Rp '),
-                        TextInput::make('penyesuaian')
+                        TextInput::make('bpjs_kesehatan')
+                            ->currencyMask(thousandSeparator: ',', decimalSeparator: '.', precision: 2)
+                            ->prefix('Rp '),
+                        TextInput::make('bpjs_ketenagakerjaan')
                             ->currencyMask(thousandSeparator: ',', decimalSeparator: '.', precision: 2)
                             ->prefix('Rp '),
 
@@ -76,32 +80,42 @@ class PengaturanPayrollResource extends Resource
                 TextColumn::make('gaji_pokok')
                     ->label('Gaji Poko')
                     ->money('IDR'),
-                TextColumn::make('tunjangan')
-                    ->toggleable()
-                    ->default('-')
-                    ->label('Tunjangan')
-                    ->money('IDR'),
                 TextColumn::make('makan')
                     ->label('Uang Makan')
-                    ->default('-')
+                    ->default(0)
                     ->money('IDR'),
                 TextColumn::make('transport')
                     ->label('Transport')
-                    ->default('-')
+                    ->default(0)
                     ->money('IDR'),
                 TextColumn::make('insentif')
                     ->label('Insentif')
-                    ->default('-')
+                    ->default(0)
+                    ->money('IDR'),
+                TextColumn::make('tunjangan')
+                    ->toggleable()
+                    ->default(0)
+                    ->label('Jabatan')
                     ->money('IDR'),
                 TextColumn::make('fungsional')
                     ->label('Funsional')
                     ->toggleable()
-                    ->default('-')
+                    ->default(0)
                     ->money('IDR'),
                 TextColumn::make('fungsional_it')
                     ->label('Funsional IT')
                     ->toggleable()
-                    ->default('-')
+                    ->default(0)
+                    ->money('IDR'),
+                TextColumn::make('bpjs_kesehatan')
+                    ->label('BPJS Kesehatan')
+                    ->toggleable()
+                    ->default(0)
+                    ->money('IDR'),
+                TextColumn::make('bpjs_ketenagakerjaan')
+                    ->label('BPJS Ketenagakerjaan')
+                    ->toggleable()
+                    ->default(0)
                     ->money('IDR'),
             ])
             ->filters([

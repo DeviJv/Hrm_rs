@@ -2,9 +2,10 @@
 
 namespace App\Filament\Imports;
 
+use Carbon\Carbon;
 use App\Models\Karyawan;
-use Filament\Actions\Imports\ImportColumn;
 use Filament\Actions\Imports\Importer;
+use Filament\Actions\Imports\ImportColumn;
 use Filament\Actions\Imports\Models\Import;
 
 class KaryawanImporter extends Importer
@@ -30,14 +31,13 @@ class KaryawanImporter extends Importer
             ImportColumn::make('jabatan')
                 ->rules(['max:255']),
             ImportColumn::make('tgl_masuk')
-                // ->castStateUsing(function ($state) {
-                //     if (blank($state)) {
-                //         return null;
-                //     }
-                //     $state = date('Y-m-d', strtotime($state));
-                //     return $state;
-                // })
-                ->rules(['date']),
+                ->castStateUsing(function ($state) {
+                    if (blank($state)) {
+                        return null;
+                    }
+                    $state = Carbon::createFromFormat('d/m/Y', $state)->format('Y-m-d');
+                    return $state;
+                })->rules(['date']),
             ImportColumn::make('tgl_lahir')
                 ->rules(['max:255']),
             ImportColumn::make('status')
