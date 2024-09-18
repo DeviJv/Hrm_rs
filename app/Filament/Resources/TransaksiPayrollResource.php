@@ -293,7 +293,20 @@ class TransaksiPayrollResource extends Resource
                             ->label('Total Lembur')
                             ->readOnly()
                             ->currencyMask(thousandSeparator: ',', decimalSeparator: '.', precision: 2)
-                            ->prefix('Rp '),
+                            ->prefix('Rp ')
+                            ->hintAction(
+                                FAction::make('check_lembur')
+                                    ->label('Cek Lembur?')
+                                    ->icon('heroicon-o-magnifying-glass')
+                                    ->url(function (Get $get, $state) {
+                                        if (filled($get('karyawan_id'))) {
+                                            $bulan = Carbon::parse($get('created_at'));
+                                            $tgl_pertama = $bulan->startOfMonth()->toDateString();
+                                            $tgl_akhir = $bulan->endOfMonth()->toDateString();
+                                            return LemburResource::getUrl('index', ["&tableFilters[created_at][karyawan_id]={$get('karyawan_id')}&tableFilters[created_at][created_from]={$tgl_pertama}&tableFilters[created_at][created_until]={$tgl_akhir}"]);
+                                        }
+                                    }, $shouldOpenInNewTab = true),
+                            ),
                         TextInput::make('total')
                             ->label('Total Payroll')
                             ->readOnly()
