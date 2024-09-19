@@ -21,6 +21,7 @@ use Illuminate\Database\Eloquent\Builder;
 use App\Filament\Resources\PiutangResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\PiutangResource\RelationManagers;
+use App\Filament\Resources\PiutangResource\RelationManagers\PembayaransRelationManager;
 
 class PiutangResource extends Resource
 {
@@ -174,7 +175,7 @@ class PiutangResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            PembayaransRelationManager::class
         ];
     }
 

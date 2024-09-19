@@ -1,10 +1,20 @@
 <?php
 
 use Carbon\Carbon;
+use App\Models\Perusahaan;
+use App\Models\TransaksiPayroll;
+use App\Http\Controllers\DownloadPdf;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    $date = Carbon::createFromFormat('d/m/Y', '09/09/2024')->format('Y-m-d');
-    dd($date);
+    $perusahaan = Perusahaan::first();
+    $data = [
+        'records' => TransaksiPayroll::all(),
+        'perusahaan' => $perusahaan
+    ];
+    // return view('pdf.slip_gaji', $data);
+    $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('pdf.slip_gaji', $data);
+    return $pdf->stream();
     // return view('welcome');
 });
+Route::get('/slip_gaji/', [DownloadPdf::class, 'slip_gaji'])->name('pdf.slip_gaji');

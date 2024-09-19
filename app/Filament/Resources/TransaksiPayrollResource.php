@@ -13,13 +13,19 @@ use Filament\Forms\Set;
 use App\Models\Karyawan;
 use App\Models\Koperasi;
 use Filament\Forms\Form;
+use App\Models\Perusahaan;
 use Filament\Tables\Table;
 use App\Models\Tidak_masuk;
+use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\TransaksiPayroll;
 use Filament\Resources\Resource;
+use App\Models\PembayaranPiutang;
+use App\Models\PembayaranKoperasi;
 use Illuminate\Support\HtmlString;
 use Filament\Forms\Components\Select;
+use Illuminate\Support\Facades\Blade;
 use Filament\Forms\Components\Section;
+use Filament\Tables\Filters\Indicator;
 use Filament\Forms\Components\Fieldset;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TextInput;
@@ -29,6 +35,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Filament\Notifications\Actions\Action;
 use App\Filament\Resources\PiutangResource;
 use Filament\Tables\Columns\Summarizers\Sum;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Filament\Forms\Components\Actions\Action as FAction;
 use App\Filament\Resources\TransaksiPayrollResource\Pages;
@@ -59,7 +66,7 @@ class TransaksiPayrollResource extends Resource
                             ->preload()
                             // ->unique(Lembur::class, 'karyawan_id', ignoreRecord: true)
                             ->live()
-                            ->afterStateUpdated(function ($state, Set $set, Get $get) {
+                            ->afterStateUpdated(function ($state, Set $set, Get $get, $operation) {
                                 if (filled($state) && filled($get('created_at'))) {
                                     $karyawan = Karyawan::where('id', $state)->first();
                                     $pengaturan_payroll = Payroll::where('karyawan_id', $state)->first();
@@ -78,7 +85,7 @@ class TransaksiPayrollResource extends Resource
                                             ->send();
                                     }
                                     if (!empty($karyawan->bank)) {
-                                        if ($karyawan->bank == "bri") {
+                                        if ($karyawan->bank = "bri") {
                                             $set('payment_method', 'transfer');
                                         } else {
                                             $set('payment_method', 'transfer_non_bri');
@@ -98,17 +105,26 @@ class TransaksiPayrollResource extends Resource
                                     $set('sub_total_1', ($pengaturan_payroll->gaji_pokok + $pengaturan_payroll->transport + $pengaturan_payroll->makan));
                                     $get_piutang = Piutang::where('karyawan_id', $get('karyawan_id'))->whereMonth('created_at', '=', date('m', strtotime($get('created_at'))))
                                         ->where('status', 'UNPAID')->first();
-                                    $get_koperasi = Koperasi::where('karyawan_id', $get('karyawan_id'))->whereMonth('created_at', '=', date('m', strtotime($get('created_at'))))
-                                        ->where('status', 'UNPAID')->first();
+                                    $get_koperasi = Koperasi::where('karyawan_id', $get('karyawan_id'))->where('status', 'UNPAID')->first();
                                     $total_lembur = Lembur::where('karyawan_id', $get('karyawan_id'))->whereMonth('tgl_lembur', '=', date('m', strtotime($get('created_at'))))
                                         ->sum('total_lembur');
-                                    if (!empty($get_piutang)) {
-                                        $set('piutang', $get_piutang->sub_total);
+                                    if ($operation == "create") {
+                                        if (!empty($get_piutang)) {
+                                            $set('piutang', $get_piutang->sub_total);
+                                        }
+                                        if (!empty($get_koperasi)) {
+                                            $tenor_koperasi = explode(" ", $get_koperasi->tenor);
+                                            $pembayaran_koperasi = PembayaranKoperasi::where('koperasi_id', $get_koperasi->id)->sum('nominal');
+                                            if ($pembayaran_koperasi == 0) {
+                                                $tagihan = $get_koperasi->tagihan / $tenor_koperasi[0];
+                                                $get_bunga =  ($get_koperasi->tagihan / 100) * 2;
+                                                $set('koperasi', $get_bunga + $tagihan);
+                                            } else {
+                                                $set('koperasi', $get_koperasi->tagihan / $tenor_koperasi[0]);
+                                            }
+                                        }
                                     }
-                                    if (!empty($get_koperasi)) {
-                                        $tenor_koperasi = explode(" ", $get_koperasi->tenor);
-                                        $set('koperasi', $get_koperasi->tagihan / $tenor_koperasi[0]);
-                                    }
+
                                     $set('lembur', round(ceil($total_lembur), PHP_ROUND_HALF_UP));
                                 }
                             }),
@@ -200,7 +216,7 @@ class TransaksiPayrollResource extends Resource
                                             ->icon('heroicon-m-arrow-path')
                                             ->requiresConfirmation()
                                             ->modalHeading('Jumlahkan (SUB TOTAL 1 + PENYESUAIAN + INSENTIF + FUNGSIONAL UMUM + FUNGSIONAL KHUSUS + JABATAN)')
-                                            ->modalSubmitActionLabel('GASSSS AEEE BANGGG!')
+
                                             ->action(function (Set $set, Get $get, $state) {
                                                 $hitung = (int)$get('sub_total_1') + (int)$get('penyesuaian') + (int)$get('insentif') + $get('fungsional') + $get('fungsional_it') + $get('jabatan');
                                                 $set('sub_total_2', $hitung);
@@ -244,7 +260,7 @@ class TransaksiPayrollResource extends Resource
                                             ->icon('heroicon-m-arrow-path')
                                             ->requiresConfirmation()
                                             ->modalHeading('Jumlahkan (BPJS KESEHATAN + BPJS KETENAGAKERJAAN + PAJAK)')
-                                            ->modalSubmitActionLabel('GASSSS AEEE BANGGG!')
+
                                             ->action(function (Set $set, Get $get, $state) {
                                                 $hitung = (int)$get('bpjs_kesehatan') + (int)$get('ketenagakerjaan') + (int)$get('pajak');
                                                 $set('sub_total_3', $hitung);
@@ -283,6 +299,12 @@ class TransaksiPayrollResource extends Resource
                                     ->default(0)
                                     ->currencyMask(thousandSeparator: ',', decimalSeparator: '.', precision: 2)
                                     ->prefix('Rp ')
+                                    ->readOnly(function ($operation) {
+                                        if ($operation == "edit") {
+                                            return true;
+                                        }
+                                        return false;
+                                    })
                                     ->hintAction(
                                         FAction::make('check_piutang')
                                             ->label('Cek Piutang?')
@@ -302,6 +324,12 @@ class TransaksiPayrollResource extends Resource
                                     ->default(0)
                                     ->currencyMask(thousandSeparator: ',', decimalSeparator: '.', precision: 2)
                                     ->prefix('Rp ')
+                                    ->readOnly(function ($operation) {
+                                        if ($operation == "edit") {
+                                            return true;
+                                        }
+                                        return false;
+                                    })
                                     ->hintAction(
                                         FAction::make('check_koperasi')
                                             ->label('Cek Koperasi?')
@@ -327,7 +355,7 @@ class TransaksiPayrollResource extends Resource
                                             ->icon('heroicon-m-arrow-path')
                                             ->requiresConfirmation()
                                             ->modalHeading('Jumlahkan (IZIN + PIUTANG OBAT & CATERING + KOPERASI)')
-                                            ->modalSubmitActionLabel('GASSSS AEEE BANGGG!')
+
                                             ->action(function (Set $set, Get $get, $state) {
                                                 $hitung = (int)$get('tidak_masuk') + (int)$get('piutang') + (int)$get('koperasi');
                                                 $set('sub_total_4', $hitung);
@@ -367,7 +395,7 @@ class TransaksiPayrollResource extends Resource
                                     ->icon('heroicon-m-arrow-path')
                                     ->requiresConfirmation()
                                     ->modalHeading('Jumlahkan (SUB TOTAL 2 - SUB TOTAL KEWAJIBAN KARYAWAN & SUB TOTAL POTONGAN KARYAWAN)')
-                                    ->modalSubmitActionLabel('GASSSS AEEE BANGGG!')
+
                                     ->action(function (Set $set, Get $get, $state) {
                                         $hitung = (int)$get('sub_total_2') - (int)$get('sub_total_3') - (int)$get('sub_total_4');
                                         $set('total', $hitung);
@@ -422,6 +450,7 @@ class TransaksiPayrollResource extends Resource
                 TextColumn::make('pajak')
                     ->money('IDR'),
                 TextColumn::make('tidak_masuk')
+                    ->label('Izin')
                     ->money('IDR'),
                 TextColumn::make('piutang')
                     ->money('IDR'),
@@ -432,14 +461,111 @@ class TransaksiPayrollResource extends Resource
                     ->money('IDR'),
             ])
             ->filters([
-                //
+                Tables\Filters\Filter::make('created_at')
+                    ->form([
+                        Forms\Components\Select::make('karyawan_id')
+                            ->label('Karyawan')
+                            ->preload()
+                            ->searchable()
+                            ->relationship('karyawan', 'nama'),
+
+                        Forms\Components\DatePicker::make('created_from')
+                            ->label('Tanggal Mulai')
+                            ->placeholder(fn($state): string => 'Dec 18, ' . now()->subYear()->format('Y')),
+                        Forms\Components\DatePicker::make('created_until')
+                            ->label('Tanggal Akhir')
+                            ->placeholder(fn($state): string => now()->format('M d, Y')),
+                    ])
+                    ->query(function (Builder $query, array $data): Builder {
+                        return $query
+                            ->when(
+                                $data['karyawan_id'] ?? null,
+                                fn(Builder $query, $data): Builder => $query->where('karyawan_id', '=', $data),
+                            )
+                            ->when(
+                                $data['created_from'] ?? null,
+                                fn(Builder $query, $date): Builder => $query->whereDate('created_at', '>=', $date),
+                            )
+                            ->when(
+                                $data['created_until'] ?? null,
+                                fn(Builder $query, $date): Builder => $query->whereDate('created_at', '<=', $date),
+                            );
+                    })
+                    ->indicateUsing(function (array $data): array {
+                        $indicators = [];
+                        if ($data['karyawan_id'] ?? null) {
+                            $cus = Karyawan::where('id', $data['karyawan_id'])->pluck('nama')->first();
+                            $indicators[] = Indicator::make('Karyawan : ' . $cus)
+                                ->removeField('karyawan_id');
+                        }
+
+                        if ($data['created_from'] ?? null) {
+                            $indicators['created_from'] = 'Tanggal Mulai : ' . Carbon::parse($data['created_from'])->toFormattedDateString();
+                        }
+                        if ($data['created_until'] ?? null) {
+                            $indicators['created_until'] = 'Tanggal Akhir : ' . Carbon::parse($data['created_until'])->toFormattedDateString();
+                        }
+
+                        return $indicators;
+                    }),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\BulkAction::make('cetak_pdf')
+                        ->color('info')
+                        ->icon('heroicon-o-printer')
+                        ->action(function (Collection $records) {
+                            $perusahaan = Perusahaan::first();
+
+                            $records = $records->toQuery()->with('karyawan.tidak_masuks', fn($q) => $q->where('keterangan', 'izin'))->get();
+                            $data = [
+                                'records' => $records,
+                                'perusahaan' => $perusahaan,
+                                // 'perusahaan' => $perusahaan
+                            ];
+                            session()->put('slip_gaji', $data);
+                            return redirect()->route('pdf.slip_gaji');
+                            // $pdf = Pdf::loadView('pdf.slip_gaji', $data);
+                            // return response()->streamDownload($pdf->download('slip_gaji.pdf'));
+                            // return response()->streamDownload(function () use ($data) {
+                            //     echo Pdf::loadHtml(
+                            //         Blade::render('pdf.slip_gaji', $data)
+                            //     )->stream();
+                            // }, 'slip_gaji.pdf');
+                        })
+                        ->label('Cetak Slip Gaji'),
+                    Tables\Actions\DeleteBulkAction::make()
+                        ->databaseTransaction()
+                        ->requiresConfirmation()
+                        ->form([
+                            TextInput::make('password')
+                                ->required()
+                                ->password()
+                                ->currentPassword()
+                        ])
+                        ->before(function (Collection $records) {
+                            foreach ($records as $record) {
+                                if ($record->piutang > 0) {
+                                    $get_piutang = Piutang::where('karyawan_id', $record->karyawan_id)
+                                        ->whereMonth('created_at', '=', date('m', strtotime($record->created_at)))->first();
+                                    $pembayaran_piutang = PembayaranPiutang::where('piutang_id', $get_piutang->id)
+                                        ->whereDate('created_at', '=', $record->created_at)->delete();
+                                    $get_piutang->status = "UNPAID";
+                                    $get_piutang->save();
+                                }
+                                if ($record->koperasi > 0) {
+                                    $koperasi = Koperasi::where('karyawan_id', $record->karyawan_id)
+                                        ->whereMonth('created_at', '=', date('m', strtotime($record->created_at)))->first();
+                                    $pembayaran_koperasi = PembayaranKoperasi::where('koperasi_id', $koperasi->id)
+                                        ->whereDate('created_at', '=', $record->created_at)->delete();
+                                    $koperasi->status = "UNPAID";
+                                    $koperasi->save();
+                                }
+                            }
+                        }),
                 ]),
             ]);
     }

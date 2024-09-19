@@ -19,6 +19,7 @@ use Illuminate\Database\Eloquent\Builder;
 use App\Filament\Resources\KoperasiResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\KoperasiResource\RelationManagers;
+use App\Filament\Resources\KoperasiResource\RelationManagers\PembayaransRelationManager;
 
 class KoperasiResource extends Resource
 {
@@ -159,7 +160,7 @@ class KoperasiResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            PembayaransRelationManager::class
         ];
     }
 
