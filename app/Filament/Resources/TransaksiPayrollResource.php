@@ -206,7 +206,7 @@ class TransaksiPayrollResource extends Resource
                                                 $set('sub_total_2', $hitung);
                                                 $set('total', '');
                                                 $get_absensi = Tidak_masuk::where('karyawan_id', $get('karyawan_id'))->where('keterangan', 'izin')
-                                                    ->whereMonth('tgl_mulai', '=', date('m', strtotime($get('created_at'))))->count();
+                                                    ->whereMonth('tgl_mulai', '=', date('m', strtotime($get('created_at'))))->sum('jumlah_hari');
                                                 $get_tgl_terakhir = Carbon::parse($get('created_at'))->endOfMonth();
                                                 $set('tidak_masuk', ($hitung / $get_tgl_terakhir->day) * $get_absensi);
                                             })
