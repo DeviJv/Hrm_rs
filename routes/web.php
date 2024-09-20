@@ -18,3 +18,4 @@ Route::get('/', function () {
     // return view('welcome');
 });
 Route::get('/slip_gaji/', [DownloadPdf::class, 'slip_gaji'])->name('pdf.slip_gaji');
+Route::get('/surat_tugas/', [DownloadPdf::class, 'surat_tugas'])->name('pdf.surat_tugas');

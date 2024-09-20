@@ -56,7 +56,7 @@ function terbilang($x)
     </style>
 </head>
 
-<body class="mx-auto container mt-10 text-xs" id="cetak">
+<body class="mx-auto container mt-10 text-xs antialiased" id="cetak">
     @foreach ($records as $record)
         <table style="width: 100%">
             <tbody>
@@ -192,7 +192,13 @@ function terbilang($x)
                         <div class="flex flex-row items-center justify-between px-8 container w-full">
                             <div class="w-1/3 font-semibold">Catering / Pembelian Obat / Lain-lain/Admin Beda Bank
                             </div>
-                            <div class="w-1/2 text-right"> Rp {{ number_format($record->piutang) }}</div>
+                            <div class="w-1/2 text-right">
+                                @if ($record->payment_method == 'transfer_non_bri')
+                                    Rp {{ number_format($record->piutang + 2900) }}
+                                @else
+                                    Rp {{ number_format($record->piutang) }}
+                                @endif
+                            </div>
                         </div>
                         <div class="flex flex-row items-center justify-between px-8 container w-full">
                             <div class="w-1/3 font-semibold">Tidak Masuk/Izin

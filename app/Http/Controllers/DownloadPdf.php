@@ -11,4 +11,9 @@ class DownloadPdf extends Controller
         $data = session()->get('slip_gaji');
         return view('pdf.slip_gaji', $data);
     }
+    public function surat_tugas()
+    {
+        $data = session()->get('surat_tugas');
+        return view('pdf.surat_tugas', $data);
+    }
 }

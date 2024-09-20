@@ -47,6 +47,7 @@ class PerusahaanResource extends Resource
                                     ->numeric()
                                     ->required(),
                                 Forms\Components\TextInput::make('telpon_2'),
+                                Forms\Components\TextInput::make('website'),
 
                             ])
                             ->columns(2),
@@ -64,6 +65,10 @@ class PerusahaanResource extends Resource
                                             ->imageEditor(),
                                     ])
                                     ->collapsible(),
+                                FileUpload::make('stample')
+                                    ->directory('stample')
+                                    ->image()
+                                    ->imageEditor(),
                             ]),
 
                     ])
@@ -118,6 +123,6 @@ class PerusahaanResource extends Resource
 
     public static function canCreate(): bool
     {
-        return true;
+        return false;
     }
 }
