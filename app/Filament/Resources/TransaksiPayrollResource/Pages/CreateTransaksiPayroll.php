@@ -34,7 +34,7 @@ class CreateTransaksiPayroll extends CreateRecord
             Notification::make()
                 ->danger()
                 ->title("Ops Input Transaksi Payroll Gagal!")
-                ->body("Mohon maaf <b>{$session_name}</b> Data Payroll <b>{$karyawan->nama}</b> Pada Bulan " . date('m', strtotime($data['created_at'])) . " Sudah Di Input!.")
+                ->body("Maaf <b>{$session_name}</b> Data Payroll <b>{$karyawan->nama}</b> Pada Bulan " . date('m', strtotime($data['created_at'])) . " Sudah Di Input!.")
                 ->send();
             $this->halt();
         }

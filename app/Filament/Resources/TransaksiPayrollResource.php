@@ -22,6 +22,7 @@ use Filament\Resources\Resource;
 use App\Models\PembayaranPiutang;
 use App\Models\PembayaranKoperasi;
 use Illuminate\Support\HtmlString;
+use Filament\Tables\Grouping\Group;
 use Filament\Forms\Components\Select;
 use Illuminate\Support\Facades\Blade;
 use Filament\Forms\Components\Section;
@@ -34,10 +35,14 @@ use Filament\Forms\Components\DatePicker;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Notifications\Actions\Action;
 use App\Filament\Resources\PiutangResource;
+use Filament\Actions\Exports\Models\Export;
 use Filament\Tables\Columns\Summarizers\Sum;
 use Illuminate\Database\Eloquent\Collection;
+use Filament\Tables\Actions\ExportBulkAction;
+use App\Filament\Exports\TransaksiPayrollExporter;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Filament\Forms\Components\Actions\Action as FAction;
+use App\Filament\Exports\TransaksiPayrollWithBankExporter;
 use App\Filament\Resources\TransaksiPayrollResource\Pages;
 use App\Filament\Resources\TransaksiPayrollResource\RelationManagers;
 
@@ -72,6 +77,7 @@ class TransaksiPayrollResource extends Resource
                                     $pengaturan_payroll = Payroll::where('karyawan_id', $state)->first();
                                     if (empty($pengaturan_payroll)) {
                                         $set('harga_lembur', '');
+                                        $set('karyawan_id', '');
                                         return
                                             Notification::make()
                                             ->title("Ops Sepertinya <b>{$karyawan->nama}</b> Belum Punya Pengaturan Gaji Poko,dll ")
@@ -85,7 +91,7 @@ class TransaksiPayrollResource extends Resource
                                             ->send();
                                     }
                                     if (!empty($karyawan->bank)) {
-                                        if ($karyawan->bank = "bri") {
+                                        if (strtolower($karyawan->bank) == "bri") {
                                             $set('payment_method', 'transfer');
                                         } else {
                                             $set('payment_method', 'transfer_non_bri');
@@ -398,6 +404,9 @@ class TransaksiPayrollResource extends Resource
 
                                     ->action(function (Set $set, Get $get, $state) {
                                         $hitung = (int)$get('sub_total_2') - (int)$get('sub_total_3') - (int)$get('sub_total_4');
+                                        if ($get('payment_method') == "transfer_non_bri") {
+                                            $hitung = $hitung - 2900;
+                                        }
                                         $set('total', $hitung);
                                     })
                             ),
@@ -409,6 +418,11 @@ class TransaksiPayrollResource extends Resource
     {
         return $table
             ->defaultSort('created_at', 'desc')
+            ->defaultGroup('payment_method')
+            ->groups([
+                Group::make('payment_method')
+                    ->collapsible(),
+            ])
             ->columns([
                 TextColumn::make('created_at')
                     ->label('Tanggal Transaksi')
@@ -468,7 +482,15 @@ class TransaksiPayrollResource extends Resource
                             ->preload()
                             ->searchable()
                             ->relationship('karyawan', 'nama'),
-
+                        Select::make('payment_method')
+                            ->label('Metode Pembayaran')
+                            ->searchable()
+                            ->required()
+                            ->options([
+                                "tunai" => 'tunai',
+                                "transfer" => 'transfer',
+                                "transfer_non_bri" => 'transfer non bri',
+                            ]),
                         Forms\Components\DatePicker::make('created_from')
                             ->label('Tanggal Mulai')
                             ->placeholder(fn($state): string => 'Dec 18, ' . now()->subYear()->format('Y')),
@@ -481,6 +503,10 @@ class TransaksiPayrollResource extends Resource
                             ->when(
                                 $data['karyawan_id'] ?? null,
                                 fn(Builder $query, $data): Builder => $query->where('karyawan_id', '=', $data),
+                            )
+                            ->when(
+                                $data['payment_method'] ?? null,
+                                fn(Builder $query, $data): Builder => $query->where('payment_method', '=', $data),
                             )
                             ->when(
                                 $data['created_from'] ?? null,
@@ -498,7 +524,9 @@ class TransaksiPayrollResource extends Resource
                             $indicators[] = Indicator::make('Karyawan : ' . $cus)
                                 ->removeField('karyawan_id');
                         }
-
+                        if ($data['payment_method'] ?? null) {
+                            $indicators['payment_method'] = 'Payment Method : ' . $data['payment_method'];
+                        }
                         if ($data['created_from'] ?? null) {
                             $indicators['created_from'] = 'Tanggal Mulai : ' . Carbon::parse($data['created_from'])->toFormattedDateString();
                         }
@@ -537,6 +565,15 @@ class TransaksiPayrollResource extends Resource
                             // }, 'slip_gaji.pdf');
                         })
                         ->label('Cetak Slip Gaji'),
+                    ExportBulkAction::make()
+                        ->color('primary')
+                        ->label('Export Payroll')
+                        ->exporter(TransaksiPayrollExporter::class),
+                    ExportBulkAction::make()
+                        ->color('primary')
+                        ->label('Export Payroll With Bank')
+                        ->exporter(TransaksiPayrollWithBankExporter::class)
+                        ->fileName(fn(Export $export): string => "Transaksi Payroll With Bank-{$export->getKey()}"),
                     Tables\Actions\DeleteBulkAction::make()
                         ->databaseTransaction()
                         ->requiresConfirmation()
