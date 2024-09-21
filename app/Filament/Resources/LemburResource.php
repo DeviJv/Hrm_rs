@@ -19,12 +19,14 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Section;
 use Filament\Tables\Filters\Indicator;
 use Filament\Forms\Components\Checkbox;
+use App\Filament\Exports\LemburExporter;
 use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\TimePicker;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Notifications\Actions\Action;
+use Filament\Tables\Actions\ExportBulkAction;
 use App\Filament\Resources\LemburResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\LemburResource\RelationManagers;
@@ -343,6 +345,9 @@ class LemburResource extends Resource
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
+                    ExportBulkAction::make()
+                        ->color('info')
+                        ->exporter(LemburExporter::class),
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ]);
