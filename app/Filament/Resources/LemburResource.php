@@ -26,6 +26,7 @@ use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\TimePicker;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Notifications\Actions\Action;
+use Filament\Tables\Columns\Summarizers\Sum;
 use Filament\Tables\Actions\ExportBulkAction;
 use App\Filament\Resources\LemburResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -281,6 +282,7 @@ class LemburResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('total_lembur')
                     ->money('IDR')
+                    ->summarize(Sum::make()->label('Total')->money('IDR'))
                     ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
