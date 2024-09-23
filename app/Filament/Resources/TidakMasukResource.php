@@ -44,6 +44,25 @@ class TidakMasukResource extends Resource
                             ->searchable()
                             ->relationship('karyawan', 'nama')
                             ->preload()
+                            ->default(function () {
+                                $roles = auth()->user()->roles;
+                                if ($roles->contains('super_admin')) {
+                                    return "";
+                                } else {
+                                    $karyawan = Karyawan::where('id', auth()->user()->karyawan_id)->first();
+                                    return $karyawan->id;
+                                }
+                                // if()
+                            })
+                            ->disabled(function () {
+                                $roles = auth()->user()->roles;
+                                if ($roles->contains('super_admin')) {
+                                    return false;
+                                } else {
+                                    return true;
+                                }
+                            })
+                            ->dehydrated()
                             ->required(),
                         Select::make('keterangan')
                             ->label('Keterangan')
@@ -96,8 +115,13 @@ class TidakMasukResource extends Resource
                 TextColumn::make('jumlah_hari')
                     ->summarize(Sum::make()),
                 TextColumn::make('backup.nama'),
-
-
+                TextColumn::make('status')
+                    ->badge()
+                    ->color(fn(string $state): string => match ($state) {
+                        'pending' => 'info',
+                        'approved' => 'success',
+                        'decline' => 'danger',
+                    })
             ])
             ->filters([
                 Tables\Filters\Filter::make('created_at')

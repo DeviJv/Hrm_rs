@@ -21,6 +21,10 @@ class Karyawan extends Model
     {
         return $this->hasOne(Document::class);
     }
+    public function user(): HasOne
+    {
+        return $this->hasOne(User::class);
+    }
     public function tidak_masuks(): HasMany
     {
         return $this->hasMany(Tidak_masuk::class, 'karyawan_id', 'id');

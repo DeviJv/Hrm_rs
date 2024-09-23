@@ -2,14 +2,17 @@
 
 namespace App\Filament\Resources\TidakMasukResource\Pages;
 
+use App\Models\User;
 use Filament\Actions;
+use App\Models\Karyawan;
 use App\Models\Tidak_masuk;
+use App\Models\PengaturanTidakMasuk;
 use Illuminate\Database\Eloquent\Model;
 use Filament\Notifications\Notification;
+use Filament\Notifications\Actions\Action;
 use Filament\Resources\Pages\CreateRecord;
 use App\Filament\Resources\TidakMasukResource;
-use App\Models\Karyawan;
-use App\Models\PengaturanTidakMasuk;
+use Filament\Notifications\Events\DatabaseNotificationsSent;
 
 class CreateTidakMasuk extends CreateRecord
 {
@@ -64,5 +67,68 @@ class CreateTidakMasuk extends CreateRecord
             }
         }
         // Runs before the form fields are saved to the database.
+    }
+
+    protected function afterCreate(): void
+    {
+        $session_name = auth()->user()->name;
+        $data = $this->data;
+
+        $user_notif = User::role('PJ SDM')->get();
+        $auth_user = auth()->user()->name;
+        $karyawan = Karyawan::where('id', $data['karyawan_id'])->first();
+        $karyawan_backup = Karyawan::where('id', $data['backup_karyawan'])->first();
+
+        if ($data['keterangan'] == "cuti") {
+            Notification::make()
+                ->icon('heroicon-o-information-circle')
+                ->iconColor('info')
+                ->title("Hai Kamu Punya Info Baru Nih")
+                ->body("Saudara <b>{$karyawan->nama}</b> Telah Mengajukan Cuti Untuk <b>{$data['keperluan']}</b>, Dengan Backup Karyawan <b>{$karyawan_backup->nama}</b> <br/>Pada Tanggal <b>" . date('d/m/Y', strtotime($this->record->tgl_mulai)) . "</b> Sampai Ke <b>" . date('d/m/Y', strtotime($this->record->tgl_mulai)) . "</b>.")
+                ->actions([
+                    Action::make('setujui')
+                        ->label('Ok! Setuju')
+                        ->color('success')
+                        ->markAsRead()
+                        ->url(fn() => route('cuti.approve', $this->record)),
+                    Action::make('tolak')
+                        ->label('Engga Ah Tolak Aja!')
+                        ->markAsRead()
+                        ->url(fn() => route('cuti.decline', $this->record))
+                        ->color('danger'),
+                    Action::make('detail')
+                        ->label('Eh Tunggu!')
+                        ->url(fn() => TidakMasukResource::getUrl('edit', ['record' => $this->record]), $shouldOpenInNewTab = true)
+                        ->color('info'),
+
+                ])
+                ->sendToDatabase($user_notif);
+            foreach ($user_notif as $user) {
+                event(new DatabaseNotificationsSent($user));
+            }
+            Notification::make()
+                ->icon('heroicon-o-information-circle')
+                ->iconColor('info')
+                ->title("Hai Kamu Punya Info Baru Nih")
+                ->body("Saudara <b>{$karyawan->nama}</b> Telah Mengajukan Cuti Untuk <b>{$data['keperluan']}</b>, Dengan Backup Karyawan <b>{$karyawan_backup->nama}</b> <br/>Pada Tanggal <b>" . date('d/m/Y', strtotime($this->record->tgl_mulai)) . "</b> Sampai Ke <b>" . date('d/m/Y', strtotime($this->record->tgl_mulai)) . "</b>.")
+                ->actions([
+                    Action::make('setujui')
+                        ->label('Ok! Setuju')
+                        ->color('success')
+                        ->markAsRead()
+                        ->url(fn() => route('cuti.approve', $this->record)),
+                    Action::make('tolak')
+                        ->label('Engga Ah Tolak Aja!')
+                        ->markAsRead()
+                        ->url(fn() => route('cuti.decline', $this->record))
+                        ->color('danger'),
+                    Action::make('detail')
+                        ->label('Eh Tunggu!')
+                        ->url(fn() => TidakMasukResource::getUrl('edit', ['record' => $this->record]), $shouldOpenInNewTab = true)
+                        ->color('info'),
+
+                ])
+                ->broadcast($user_notif);
+        }
     }
 }

@@ -20,6 +20,14 @@ class Tidak_masuk extends Model
     {
         return $this->belongsTo(Karyawan::class);
     }
+    public function approved(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'approved_by', 'id');
+    }
+    public function decline(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'decline_by', 'id');
+    }
 
     public function backup(): BelongsTo
     {
