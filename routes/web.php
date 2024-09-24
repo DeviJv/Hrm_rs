@@ -8,6 +8,7 @@ use App\Http\Controllers\DownloadPdf;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
+
     $perusahaan = Perusahaan::first();
     $data = [
         'records' => TransaksiPayroll::all(),

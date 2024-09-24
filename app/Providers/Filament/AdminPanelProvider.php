@@ -24,6 +24,7 @@ class AdminPanelProvider extends PanelProvider
     public function panel(Panel $panel): Panel
     {
         return $panel
+            ->profile()
             ->default()
             ->databaseNotifications()
             ->databaseNotificationsPolling(null)

@@ -4,6 +4,7 @@ namespace App\Policies;
 
 use App\Models\User;
 use App\Models\Tidak_masuk;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class Tidak_masukPolicy
@@ -23,6 +24,9 @@ class Tidak_masukPolicy
      */
     public function view(User $user, Tidak_masuk $tidakMasuk): bool
     {
+        if (auth()->user()->hasRole('karyawan')) {
+            return $user->can('view_tidak::masuk') && $user->karyawan_id === $tidakMasuk->karyawan_id;
+        }
         return $user->can('view_tidak::masuk');
     }
 
@@ -39,6 +43,9 @@ class Tidak_masukPolicy
      */
     public function update(User $user, Tidak_masuk $tidakMasuk): bool
     {
+        if (auth()->user()->hasRole('karyawan')) {
+            return $user->can('update_tidak::masuk') && $user->karyawan_id === $tidakMasuk->karyawan_id;
+        }
         return $user->can('update_tidak::masuk');
     }
 
@@ -47,6 +54,9 @@ class Tidak_masukPolicy
      */
     public function delete(User $user, Tidak_masuk $tidakMasuk): bool
     {
+        if (auth()->user()->hasRole('karyawan')) {
+            return $user->can('delete_tidak::masuk') && $user->karyawan_id === $tidakMasuk->karyawan_id;
+        }
         return $user->can('delete_tidak::masuk');
     }
 
@@ -63,6 +73,9 @@ class Tidak_masukPolicy
      */
     public function forceDelete(User $user, Tidak_masuk $tidakMasuk): bool
     {
+        if (auth()->user()->hasRole('karyawan')) {
+            return $user->can('force_delete_tidak::masuk') && $user->karyawan_id === $tidakMasuk->karyawan_id;
+        }
         return $user->can('force_delete_tidak::masuk');
     }
 

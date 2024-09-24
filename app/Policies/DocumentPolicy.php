@@ -23,6 +23,9 @@ class DocumentPolicy
      */
     public function view(User $user, Document $document): bool
     {
+        if (auth()->user()->hasRole('karyawan')) {
+            return $user->can('view_document') && $user->karyawan_id === $document->karyawan_id;
+        }
         return $user->can('view_document');
     }
 
@@ -39,6 +42,9 @@ class DocumentPolicy
      */
     public function update(User $user, Document $document): bool
     {
+        if (auth()->user()->hasRole('karyawan')) {
+            return $user->can('update_document') && $user->karyawan_id === $document->karyawan_id;
+        }
         return $user->can('update_document');
     }
 
@@ -47,6 +53,9 @@ class DocumentPolicy
      */
     public function delete(User $user, Document $document): bool
     {
+        if (auth()->user()->hasRole('karyawan')) {
+            return $user->can('delete_document') && $user->karyawan_id === $document->karyawan_id;
+        }
         return $user->can('delete_document');
     }
 
