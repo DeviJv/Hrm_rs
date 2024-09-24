@@ -70,9 +70,11 @@ class TidakMasukResource extends Resource
                             ->required(),
                         TextInput::make('keperluan'),
                         DatePicker::make('tgl_mulai')
+                            ->label('Tanggal Mulai')
                             // ->minDate(now())
                             ->required(),
                         DatePicker::make('tgl_akhir')
+                            ->label('Tanggal Masuk')
                             ->afterOrEqual('tgl_mulai')
                             ->required(),
                         Select::make('backup_karyawan')
