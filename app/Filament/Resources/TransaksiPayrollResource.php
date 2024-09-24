@@ -565,11 +565,11 @@ class TransaksiPayrollResource extends Resource
                             // }, 'slip_gaji.pdf');
                         })
                         ->label('Cetak Slip Gaji'),
-                    ExportBulkAction::make()
+                    ExportBulkAction::make('export_payroll')
                         ->color('primary')
                         ->label('Export Payroll')
                         ->exporter(TransaksiPayrollExporter::class),
-                    ExportBulkAction::make()
+                    ExportBulkAction::make('export_payroll_with_bank')
                         ->color('primary')
                         ->label('Export Payroll With Bank')
                         ->exporter(TransaksiPayrollWithBankExporter::class)
