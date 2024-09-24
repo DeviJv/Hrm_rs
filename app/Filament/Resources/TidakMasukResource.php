@@ -30,7 +30,8 @@ class TidakMasukResource extends Resource
 {
     protected static ?string $model = Tidak_masuk::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-document-text';
+    protected static ?string $pluralModelLabel = 'Pengajuan Cuti/Izin';
 
     public static function form(Form $form): Form
     {
@@ -46,17 +47,15 @@ class TidakMasukResource extends Resource
                             ->preload()
                             ->default(function () {
                                 $roles = auth()->user()->roles;
-                                if ($roles->contains('super_admin')) {
-                                    return "";
+                                if ($roles->contains('name', 'super_admin')) {;
                                 } else {
                                     $karyawan = Karyawan::where('id', auth()->user()->karyawan_id)->first();
                                     return $karyawan->id;
                                 }
-                                // if()
                             })
                             ->disabled(function () {
                                 $roles = auth()->user()->roles;
-                                if ($roles->contains('super_admin')) {
+                                if ($roles->contains('name', 'super_admin')) {
                                     return false;
                                 } else {
                                     return true;

@@ -33,6 +33,9 @@ class AdminPanelProvider extends PanelProvider
             ->unsavedChangesAlerts()
             ->id('admin')
             ->path('admin')
+            // ->collapsedSidebarWidth("2rem")
+            ->sidebarWidth("18rem")
+            ->sidebarCollapsibleOnDesktop()
             ->login()
             ->colors([
                 'primary' => Color::Amber,
@@ -43,6 +46,7 @@ class AdminPanelProvider extends PanelProvider
                 Pages\Dashboard::class,
             ])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
+            ->viteTheme('resources/css/filament/admin/theme.css')
             ->plugins([
                 GlobalSearchModalPlugin::make(),
                 \BezhanSalleh\FilamentShield\FilamentShieldPlugin::make()

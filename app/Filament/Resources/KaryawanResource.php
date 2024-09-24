@@ -28,7 +28,7 @@ class KaryawanResource extends Resource
 {
     protected static ?string $model = Karyawan::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-user-circle';
     protected static ?string $recordTitleAttribute = 'nama';
 
     public static function form(Form $form): Form

@@ -74,7 +74,7 @@ class CreateTidakMasuk extends CreateRecord
         $session_name = auth()->user()->name;
         $data = $this->data;
 
-        $user_notif = User::role('PJ SDM')->get();
+        $user_notif = User::role('approval')->get();
         $auth_user = auth()->user()->name;
         $karyawan = Karyawan::where('id', $data['karyawan_id'])->first();
         $karyawan_backup = Karyawan::where('id', $data['backup_karyawan'])->first();

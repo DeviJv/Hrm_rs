@@ -18,19 +18,19 @@ class Tidak_masuk extends Model
 
     public function karyawan(): BelongsTo
     {
-        return $this->belongsTo(Karyawan::class);
+        return $this->belongsTo(Karyawan::class)->where('aktif', true);
     }
     public function approved(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'approved_by', 'id');
+        return $this->belongsTo(User::class, 'approved_by', 'id')->where('aktif', true);
     }
     public function decline(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'decline_by', 'id');
+        return $this->belongsTo(User::class, 'decline_by', 'id')->where('aktif', true);
     }
 
     public function backup(): BelongsTo
     {
-        return $this->belongsTo(Karyawan::class, 'backup_karyawan', 'id');
+        return $this->belongsTo(Karyawan::class, 'backup_karyawan', 'id')->where('aktif', true);
     }
 }
