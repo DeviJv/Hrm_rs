@@ -8,29 +8,27 @@ use Filament\Forms\Set;
 use App\Models\Karyawan;
 use Filament\Forms\Form;
 use App\Models\Perusahaan;
-use App\Models\SuratTugas;
 use Filament\Tables\Table;
+use App\Models\SuratPaklaring;
 use Filament\Resources\Resource;
 use Illuminate\Support\HtmlString;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Checkbox;
-use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\FileUpload;
-use Filament\Forms\Components\RichEditor;
+use Filament\Forms\Components\DatePicker;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Filament\Forms\Components\DateTimePicker;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
-use App\Filament\Resources\SuratTugasResource\Pages;
-use App\Filament\Resources\SuratTugasResource\RelationManagers;
+use App\Filament\Resources\SuratPaklaringResource\Pages;
+use App\Filament\Resources\SuratPaklaringResource\RelationManagers;
 
-class SuratTugasResource extends Resource
+class SuratPaklaringResource extends Resource
 {
-    protected static ?string $model = SuratTugas::class;
+    protected static ?string $model = SuratPaklaring::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-briefcase';
+    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     public static function form(Form $form): Form
     {
@@ -38,20 +36,20 @@ class SuratTugasResource extends Resource
             ->schema([
                 Section::make()
                     ->columns(['sm' => 1, 'md' => 3, 'lg' => 3])
-                    ->description(new HtmlString('Note : untuk <b>ALAMAT DIREKTUR</b> Dan <b>STAMPLE</b> di dapat module perusahaan'))
+                    ->description(new HtmlString('Note : untuk <b>ALAMAT PERUSAHAAN</b> Dan <b>STAMPLE</b> di dapat module perusahaan'))
 
                     ->schema([
                         TextInput::make('no_surat')
                             ->default(function () {
-                                $surat_tugas = SuratTugas::count();
-                                return "No." . $surat_tugas + 1 . "/SRTTGS/RSIA-BS/SDM/I/" . date('Y');
+                                $surat_paklaring = SuratPaklaring::count();
+                                return "No." . $surat_paklaring + 1 . "/RSIABS-PK/SDM/" . date('m') . "/" . date('Y');
                             })
                             ->disabled()
                             ->dehydrated()
                             ->required()
                             ->maxLength(32)
-                            ->unique(SuratTugas::class, 'no_surat', ignoreRecord: true),
-                        Select::make('direktur')
+                            ->unique(SuratPaklaring::class, 'no_surat', ignoreRecord: true),
+                        Select::make('manager')
                             ->required()
                             ->dehydrated(false)
                             ->live()
@@ -62,9 +60,9 @@ class SuratTugasResource extends Resource
                                 if (filled($state)) {
                                     $karyawan = Karyawan::where('nama', $state)->first();
                                     $perusahaan = Perusahaan::first();
-                                    $set('nama_direktur', $karyawan->nama);
-                                    $set('jabatan_direktur', $karyawan->jabatan);
-                                    $set('alamat_direktur', $perusahaan->alamat);
+                                    $set('nama_manager', $karyawan->nama);
+                                    $set('jabatan_manager', $karyawan->jabatan);
+                                    $set('alamat', $perusahaan->alamat);
                                 }
                             }),
                         Select::make('karyawan')
@@ -73,7 +71,7 @@ class SuratTugasResource extends Resource
                             ->live()
                             ->searchable()
                             ->preload()
-                            ->options(fn() => Karyawan::where('aktif', true)->pluck('nama', 'nama'))
+                            ->options(fn() => Karyawan::where('aktif', false)->pluck('nama', 'nama'))
                             ->afterStateUpdated(function ($state, Set $set) {
                                 if (filled($state)) {
                                     $karyawan = Karyawan::where('nama', $state)->first();
@@ -81,31 +79,40 @@ class SuratTugasResource extends Resource
                                     $set('nama_karyawan', $karyawan->nama);
                                     $set('jabatan_karyawan', $karyawan->jabatan);
                                     $set('nik_karyawan', $karyawan->nik);
+                                    $set('unit_karyawan', $karyawan->nakes);
+                                    $set('department_karyawan', $karyawan->department);
+                                    $set('alamat_karyawan', $karyawan->alamat);
+                                    $set('tgl_masuk', $karyawan->tgl_masuk);
                                 }
                             }),
-                        DateTimePicker::make('created_at')
-                            ->label('Tanggal Dan Jam Tugas')
+                        DatePicker::make('tgl_masuk')
+                            ->label('Tanggal Masuk')
                             ->required(),
-                        TextInput::make('nama_direktur')
-                            ->label('Nama direktur'),
-                        TextInput::make('jabatan_direktur')
-                            ->label('Jabatan direktur'),
-                        TextInput::make('alamat_direktur')
-                            ->label('Alamat direktur'),
+                        DatePicker::make('tgl_keluar')
+                            ->label('Tanggal Keluar')
+                            ->required(),
+                        TextInput::make('nama_manager')
+                            ->label('Nama manager'),
+                        TextInput::make('jabatan_manager')
+                            ->label('Jabatan manager'),
+                        TextInput::make('alamat')
+                            ->label('Alamat Kantor'),
                         TextInput::make('nama_karyawan')
                             ->label('Nama Karyawan'),
                         TextInput::make('nik_karyawan')
                             ->label('Nik Karyawan'),
                         TextInput::make('jabatan_karyawan')
                             ->label('Jabatan Karyawan'),
-                        TextInput::make('tempat')
-                            ->label('Tempat'),
+                        TextInput::make('unit_karyawan')
+                            ->label('Unit Karyawan'),
+                        TextInput::make('department_karyawan')
+                            ->label('Department Karyawan'),
+                        TextInput::make('alamat_karyawan')
+                            ->label('Alamat Karyawan'),
                         Checkbox::make('stemple')
                             ->inline(false)
                             ->default(true)
                             ->label('Tampilkan Stample?'),
-                        Textarea::make('tugas')
-                            ->columnSpanfull(),
 
                     ])
             ]);
@@ -115,25 +122,38 @@ class SuratTugasResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('created_at')
-                    ->label('Tanggal Surat Tugas')
-                    ->dateTime()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('no_surat'),
-                Tables\Columns\TextColumn::make('nama_direktur'),
-                Tables\Columns\TextColumn::make('jabatan_direktur'),
-                Tables\Columns\TextColumn::make('alamat_direktur')
-                    ->words(5),
-                Tables\Columns\TextColumn::make('nama_karyawan'),
-                Tables\Columns\TextColumn::make('nik_karyawan'),
-                Tables\Columns\TextColumn::make('jabatan_karyawan'),
-
-                Tables\Columns\TextColumn::make('tempat')
-                    ->words(4),
-                Tables\Columns\TextColumn::make('tugas')
-                    ->markdown(),
+                Tables\Columns\TextColumn::make('no_surat')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('nama_manager')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('jabatan_manager')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('alamat')
+                    ->label('Alamat Kantor')
+                    ->words(5)
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('nama_karyawan')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('nik_karyawan')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('unit_karyawan')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('department_karyawan')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('jabatan_karyawan')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('alamat_karyawan')
+                    ->words(5)
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('tgl_keluar')
+                    ->date()
+                    ->searchable(),
                 Tables\Columns\IconColumn::make('stemple')
                     ->boolean(),
+                Tables\Columns\TextColumn::make('created_at')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
@@ -156,11 +176,11 @@ class SuratTugasResource extends Resource
                                 'records' => $records,
                                 'perusahaan' => $perusahaan,
                             ];
-                            session()->put('surat_tugas', $data);
-                            return $livewire->js('window.open(\'' . route('pdf.surat_tugas') . '\', \'_blank\');');
+                            session()->put('surat_paklaring', $data);
+                            return $livewire->js('window.open(\'' . route('pdf.surat_paklaring') . '\', \'_blank\');');
                             // return redirect()->;
                         })
-                        ->label('Cetak Surat Tugas'),
+                        ->label('Cetak Surat Paklaring'),
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ]);
@@ -176,9 +196,9 @@ class SuratTugasResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListSuratTugas::route('/'),
-            'create' => Pages\CreateSuratTugas::route('/create'),
-            'edit' => Pages\EditSuratTugas::route('/{record}/edit'),
+            'index' => Pages\ListSuratPaklarings::route('/'),
+            'create' => Pages\CreateSuratPaklaring::route('/create'),
+            'edit' => Pages\EditSuratPaklaring::route('/{record}/edit'),
         ];
     }
 }

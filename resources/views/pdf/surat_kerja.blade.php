@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <title>Surat Tugas</title>
+    <title>Surat Keterangan Bekerja</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"
         integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg=="
@@ -40,11 +40,12 @@
                 src="{{ asset('RSIA Bunda Suryatni Letterhead.png') }}">
         </div>
         <div class="text-center uppercase mt-44">
-            <h2 class="underline text-2xl">surat tugas</h2>
+            <h2 class="underline text-xl">surat keterangan bekerja</h2>
             <h4 class="text-lg">Nomor : {{ $record->no_surat }}</h4>
         </div>
         <div class="space-y-1.5">
-            <h3 class="mt-10">Yang bertanda tangan di bawah ini :</h3>
+            <h3 class="mt-10 mb-4">Dengan Hormat,</h3>
+            <h3 class="">Yang bertanda tangan di bawah ini :</h3>
             <div class="flex flex-row w-auto items-start">
                 <div class="w-[4%]">
                     Nama
@@ -53,7 +54,7 @@
                     :
                 </div>
                 <div class="w-1/2">
-                    {{ $record->nama_direktur }}
+                    {{ $record->nama_manager }}
                 </div>
             </div>
             <div class="flex flex-row w-auto items-start">
@@ -64,7 +65,18 @@
                     :
                 </div>
                 <div class="w-1/2">
-                    {{ $record->jabatan_direktur }}
+                    {{ $record->jabatan_manager }}
+                </div>
+            </div>
+            <div class="flex flex-row w-auto items-start">
+                <div class="w-[4%]">
+                    Nama Perusahaan
+                </div>
+                <div class="w-24">
+                    :
+                </div>
+                <div class="w-1/2">
+                    {{ $perusahaan->nama }}
                 </div>
             </div>
             <div class="flex flex-row w-auto items-start">
@@ -75,12 +87,13 @@
                     :
                 </div>
                 <div class="w-1/2">
-                    {{ $record->alamat_direktur }}
+                    {{ $record->alamat }}
                 </div>
             </div>
         </div>
         <div class="space-y-1.5">
-            <h3 class="mt-10">Dengan ini menerangkan bahwa nama-nama dibawah ini :</h3>
+            <h3 class="mt-6">Dengan ini menerangkan bahwa perusahaan kami memiliki tenaga kerja dengan data sebagai
+                berikut :</h3>
             <div class="flex flex-row w-auto items-start">
                 <div class="w-[4%]">
                     Nama
@@ -94,86 +107,57 @@
             </div>
             <div class="flex flex-row items-center">
                 <div class="w-[4%]">
-                    NIK
+                    Unit/Jabatan
                 </div>
                 <div class="w-24">
                     :
                 </div>
                 <div class="w-1/2">
-                    {{ $record->nik_karyawan }}
+                    {{ $record->unit_karyawan }} / {{ $record->jabatan_karyawan }}
                 </div>
             </div>
             <div class="flex flex-row items-center">
                 <div class="w-[4%]">
-                    Jabatan
+                    Alamat
                 </div>
                 <div class="w-24">
                     :
                 </div>
                 <div class="w-1/2">
-                    {{ $record->jabatan_karyawan }}
+                    {{ $record->alamat_karyawan }}
                 </div>
             </div>
+            <div class="flex flex-row items-center">
+                <div class="w-[4%]">
+                    Tanggal Masuk
+                </div>
+                <div class="w-24">
+                    :
+                </div>
+                <div class="w-1/2">
+                    {{ date('F Y', strtotime($record->tgl_masuk)) }} - Sekarang
+                </div>
+            </div>
+
         </div>
 
-        <p class="w-full mt-3 px-8">
-            Adalah benar karyawan {{ $perusahaan->nama }} yang kami tugaskan untuk <br />
+        <p class="w-full mt-3 px-8 text-xs">
+            Demikian surat keterangan ini kami buat untuk digunakan sebagaimana mestinya. <br />
         </p>
-        <p class=" mb-3">
-            <span class="font-semibold italic">{{ $record->tugas }}</span> yang dilaksakan pada :
+        <p class="text-xs">
+            Atas perhatiannya kami ucapkan terima kasih. <br />
         </p>
-        <div class="flex flex-row items-center">
-            <div class="w-[4%]">
-                Hari
-            </div>
-            <div class="w-24">
-                :
-            </div>
+
+
+        <div class="flex flex-row items-end justify-end  mt-5 break-after-page">
+
             <div class="w-1/2">
-                {{ $today = \Carbon\Carbon::parse($record->created_at)->isoFormat('dddd') }}
-            </div>
-        </div>
-        <div class="flex flex-row items-center">
-            <div class="w-[4%]">
-                Tanggal
-            </div>
-            <div class="w-24">
-                :
-            </div>
-            <div class="w-1/2">
-                {{ $today = \Carbon\Carbon::parse($record->created_at)->isoFormat('D MMMM Y') }}
-            </div>
-        </div>
-        <div class="flex flex-row items-center">
-            <div class="w-[4%]">
-                Pukul
-            </div>
-            <div class="w-24">
-                :
-            </div>
-            <div class="w-1/2">
-                {{ $today = \Carbon\Carbon::parse($record->created_at)->isoFormat('H:mm:ss') }} WIB s/d Selesai
-            </div>
-        </div>
-        <p class="px-8 mt-2">Demikian surat tugas ini dibuat untuk dapat dipergunakan sebagaimana<br />
-        </p>
-        <p>mestinya, atas perhatian dan kerjasamanya kami ucapkan terima kasih.</p>
-        <div class="flex flex-row items-start justify-between mt-5 break-after-page">
-            <div class="w-1/2">
-                Diterima oleh,<br />
-                Pejabat yang berwenang
-                <div class="mt-20">
-                    (.....................................)
-                    <br />
-                    Nip :
-                </div>
-            </div>
-            <div class="w-1/2">
-                {{ $today = \Carbon\Carbon::parse($record->created_at)->isoFormat('D MMMM Y') }}<br />
+                Bogor, {{ $today = \Carbon\Carbon::parse($record->created_at)->isoFormat('D MMMM Y') }}<br />
+                Hormat kami,
                 @if ($record->stemple)
                     <img class="h-24 w-28" src="{{ asset($perusahaan->stample) }}">
-                    <span class="underline">{{ $record->nama_direktur }}</span><br />
-                    {{ $record->jabatan_direktur }}
+                    <span class="underline">{{ $record->nama_manager }}</span><br />
+                    {{ $record->jabatan_manager }}
                 @else
                     <div class="mt-20">
                         (.........................)
@@ -211,7 +195,7 @@
     };
     window.onload = (event) => {
         html2pdf().set(opt).from(element).save(
-            'Slip-gaji.pdf'
+            'surat-paklaring.pdf'
         );
     };
 </script>

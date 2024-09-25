@@ -16,4 +16,14 @@ class DownloadPdf extends Controller
         $data = session()->get('surat_tugas');
         return view('pdf.surat_tugas', $data);
     }
+    public function surat_paklaring()
+    {
+        $data = session()->get('surat_paklaring');
+        return view('pdf.surat_paklaring', $data);
+    }
+    public function kb()
+    {
+        $data = session()->get('surat_kb');
+        return view('pdf.surat_kerja', $data);
+    }
 }

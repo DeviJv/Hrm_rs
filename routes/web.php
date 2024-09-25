@@ -21,6 +21,8 @@ Route::get('/', function () {
 });
 Route::get('/slip_gaji/', [DownloadPdf::class, 'slip_gaji'])->name('pdf.slip_gaji');
 Route::get('/surat_tugas/', [DownloadPdf::class, 'surat_tugas'])->name('pdf.surat_tugas');
+Route::get('/surat_paklaring/', [DownloadPdf::class, 'surat_paklaring'])->name('pdf.surat_paklaring');
+Route::get('/kb/', [DownloadPdf::class, 'kb'])->name('pdf.kb');
 Route::get('/approve/cuti/{tidak_masuk}', [CutiAction::class, 'approve'])->name('cuti.approve');
 Route::get('/approve/cuti_force/{tidak_masuk}', [CutiAction::class, 'approve_force'])->name('cuti.approve.force');
 Route::get('/decline/cuti/{tidak_masuk}', [CutiAction::class, 'decline'])->name('cuti.decline');
