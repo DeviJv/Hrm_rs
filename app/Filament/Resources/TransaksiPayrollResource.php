@@ -112,7 +112,9 @@ class TransaksiPayrollResource extends Resource
                                     $get_piutang = Piutang::where('karyawan_id', $get('karyawan_id'))->whereMonth('created_at', '=', date('m', strtotime($get('created_at'))))
                                         ->where('status', 'UNPAID')->first();
                                     $get_koperasi = Koperasi::where('karyawan_id', $get('karyawan_id'))->where('status', 'UNPAID')->first();
-                                    $total_lembur = Lembur::where('karyawan_id', $get('karyawan_id'))->whereMonth('tgl_lembur', '=', date('m', strtotime($get('created_at'))))
+                                    $total_lembur = Lembur::where('karyawan_id', $get('karyawan_id'))
+                                        ->whereMonth('tgl_lembur', '=', date('m', strtotime($get('created_at'))))
+                                        ->where('status', 'approved')
                                         ->sum('total_lembur');
                                     if ($operation == "create") {
                                         if (!empty($get_piutang)) {
@@ -228,7 +230,9 @@ class TransaksiPayrollResource extends Resource
                                                 $set('sub_total_2', $hitung);
                                                 $set('total', '');
                                                 $get_absensi = Tidak_masuk::where('karyawan_id', $get('karyawan_id'))->where('keterangan', 'izin')
-                                                    ->whereMonth('tgl_mulai', '=', date('m', strtotime($get('created_at'))))->sum('jumlah_hari');
+                                                    ->whereMonth('tgl_mulai', '=', date('m', strtotime($get('created_at'))))
+                                                    ->where('status', 'approved')
+                                                    ->sum('jumlah_hari');
                                                 $get_tgl_terakhir = Carbon::parse($get('created_at'))->endOfMonth();
                                                 $set('tidak_masuk', ($hitung / $get_tgl_terakhir->day) * $get_absensi);
                                             })
