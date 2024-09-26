@@ -155,6 +155,17 @@
                 {{ $today = \Carbon\Carbon::parse($record->created_at)->isoFormat('H:mm:ss') }} WIB s/d Selesai
             </div>
         </div>
+        <div class="flex flex-row items-center">
+            <div class="w-[4%]">
+                Tempat
+            </div>
+            <div class="w-24">
+                :
+            </div>
+            <div class="w-1/2">
+                {{ $record->tempat }}
+            </div>
+        </div>
         <p class="px-8 mt-2">Demikian surat tugas ini dibuat untuk dapat dipergunakan sebagaimana<br />
         </p>
         <p>mestinya, atas perhatian dan kerjasamanya kami ucapkan terima kasih.</p>

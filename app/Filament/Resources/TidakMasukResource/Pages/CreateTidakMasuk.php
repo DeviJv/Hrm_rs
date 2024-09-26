@@ -7,7 +7,9 @@ use Filament\Actions;
 use App\Models\Karyawan;
 use App\Models\Tidak_masuk;
 use App\Models\PengaturanTidakMasuk;
+use Filament\Actions\Action as FAction;
 use Illuminate\Database\Eloquent\Model;
+use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Filament\Notifications\Actions\Action;
 use Filament\Resources\Pages\CreateRecord;
@@ -17,6 +19,20 @@ use Filament\Notifications\Events\DatabaseNotificationsSent;
 class CreateTidakMasuk extends CreateRecord
 {
     protected static string $resource = TidakMasukResource::class;
+
+    protected function getCreateFormAction(): FAction
+    {
+        return FAction::make('create')
+            ->action(fn() => $this->create())
+            ->requiresConfirmation()
+            ->form([
+                TextInput::make('password')
+                    ->password()
+                    ->required()
+                    ->rules(['current_password'])
+            ])
+            ->keyBindings(['mod+s']);
+    }
     protected function mutateFormDataBeforeCreate(array $data): array
     {
         $dari = date_create($data['tgl_mulai']);
@@ -25,6 +41,7 @@ class CreateTidakMasuk extends CreateRecord
         $data['jumlah_hari'] = $hitung->d;
         return $data;
     }
+
     protected function beforeCreate(): void
     {
         $data = $this->data;
