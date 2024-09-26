@@ -13,7 +13,7 @@ class Koperasi extends Model
 
     public function karyawan(): BelongsTo
     {
-        return $this->belongsTo(Karyawan::class)->where('aktif', true);
+        return $this->belongsTo(Karyawan::class);
     }
     public function pembayarans(): HasMany
     {

@@ -23,6 +23,9 @@ class LemburPolicy
      */
     public function view(User $user, Lembur $lembur): bool
     {
+        if (auth()->user()->hasRole('karyawan')) {
+            return $user->can('view_lembur') && $user->karyawan_id === $lembur->karyawan_id;
+        }
         return $user->can('view_lembur');
     }
 
@@ -39,6 +42,9 @@ class LemburPolicy
      */
     public function update(User $user, Lembur $lembur): bool
     {
+        if (auth()->user()->hasRole('karyawan')) {
+            return $user->can('update_lembur') && $user->karyawan_id === $lembur->karyawan_id;
+        }
         return $user->can('update_lembur');
     }
 
@@ -47,6 +53,9 @@ class LemburPolicy
      */
     public function delete(User $user, Lembur $lembur): bool
     {
+        if (auth()->user()->hasRole('karyawan')) {
+            return $user->can('delete_lembur') && $user->karyawan_id === $lembur->karyawan_id;
+        }
         return $user->can('delete_lembur');
     }
 
@@ -104,5 +113,15 @@ class LemburPolicy
     public function reorder(User $user): bool
     {
         return $user->can('reorder_lembur');
+    }
+
+    public function approve(User $user, Lembur $lembur): bool
+    {
+        return $user->can('approve_lembur');
+    }
+
+    public function decline(User $user, Lembur $lembur): bool
+    {
+        return $user->can('decline_lembur');
     }
 }

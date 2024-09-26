@@ -3,12 +3,14 @@
 namespace App\Filament\Widgets;
 
 use App\Models\Lembur;
-use App\Models\PengaturanTidakMasuk;
 use App\Models\Tidak_masuk;
 use Filament\Widgets\Widget;
+use App\Models\PengaturanTidakMasuk;
+use BezhanSalleh\FilamentShield\Traits\HasWidgetShield;
 
 class CutiWidget extends Widget
 {
+    use HasWidgetShield;
     protected static string $view = 'filament.widgets.jadwal-widget';
     protected int | string | array $columnSpan = 'full';
     protected function getViewData(): array

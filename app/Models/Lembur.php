@@ -20,10 +20,19 @@ class Lembur extends Model
 
     public function karyawan(): BelongsTo
     {
-        return $this->belongsTo(Karyawan::class)->where('aktif', true);
+        return $this->belongsTo(Karyawan::class);
     }
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function approved(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'approved_by', 'id');
+    }
+    public function decline(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'decline_by', 'id');
     }
 }

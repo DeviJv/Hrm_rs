@@ -5,10 +5,12 @@ namespace App\Filament\Widgets;
 use Flowframe\Trend\Trend;
 use App\Models\Tidak_masuk;
 use Flowframe\Trend\TrendValue;
+use BezhanSalleh\FilamentShield\Traits\HasWidgetShield;
 use Leandrocfe\FilamentApexCharts\Widgets\ApexChartWidget;
 
 class CutiChart extends ApexChartWidget
 {
+    use HasWidgetShield;
     /**
      * Chart Id
      *

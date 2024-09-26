@@ -111,6 +111,16 @@ class Tidak_masukPolicy
         return $user->can('replicate_tidak::masuk');
     }
 
+    public function approve(User $user, Tidak_masuk $tidakMasuk): bool
+    {
+        return $user->can('approve_tidak::masuk');
+    }
+
+    public function decline(User $user, Tidak_masuk $tidakMasuk): bool
+    {
+        return $user->can('decline_tidak::masuk');
+    }
+
     /**
      * Determine whether the user can reorder.
      */

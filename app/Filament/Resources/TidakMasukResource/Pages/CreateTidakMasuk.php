@@ -84,7 +84,7 @@ class CreateTidakMasuk extends CreateRecord
                 ->icon('heroicon-o-information-circle')
                 ->iconColor('info')
                 ->title("Hai Kamu Punya Info Baru Nih")
-                ->body("Saudara <b>{$karyawan->nama}</b> Telah Mengajukan Cuti Untuk <b>{$data['keperluan']}</b>, Dengan Backup Karyawan <b>{$karyawan_backup->nama}</b> <br/>Pada Tanggal <b>" . date('d/m/Y', strtotime($this->record->tgl_mulai)) . "</b> Sampai Ke <b>" . date('d/m/Y', strtotime($this->record->tgl_mulai)) . "</b>.")
+                ->body("Saudara/i <b>{$karyawan->nama}</b> Telah Mengajukan Cuti Untuk <b>{$data['keperluan']}</b>, Dengan Backup Karyawan <b>{$karyawan_backup->nama}</b> <br/>Pada Tanggal <b>" . date('d/m/Y', strtotime($this->record->tgl_mulai)) . "</b> Sampai Ke <b>" . date('d/m/Y', strtotime($this->record->tgl_mulai)) . "</b>.")
                 ->actions([
                     Action::make('setujui')
                         ->label('Ok! Setuju')
@@ -110,7 +110,7 @@ class CreateTidakMasuk extends CreateRecord
                 ->icon('heroicon-o-information-circle')
                 ->iconColor('info')
                 ->title("Hai Kamu Punya Info Baru Nih")
-                ->body("Saudara <b>{$karyawan->nama}</b> Telah Mengajukan Cuti Untuk <b>{$data['keperluan']}</b>, Dengan Backup Karyawan <b>{$karyawan_backup->nama}</b> <br/>Pada Tanggal <b>" . date('d/m/Y', strtotime($this->record->tgl_mulai)) . "</b> Sampai Ke <b>" . date('d/m/Y', strtotime($this->record->tgl_mulai)) . "</b>.")
+                ->body("Saudara/i <b>{$karyawan->nama}</b> Telah Mengajukan Cuti Untuk <b>{$data['keperluan']}</b>, Dengan Backup Karyawan <b>{$karyawan_backup->nama}</b> <br/>Pada Tanggal <b>" . date('d/m/Y', strtotime($this->record->tgl_mulai)) . "</b> Sampai Ke <b>" . date('d/m/Y', strtotime($this->record->tgl_mulai)) . "</b>.")
                 ->actions([
                     Action::make('setujui')
                         ->label('Ok! Setuju')

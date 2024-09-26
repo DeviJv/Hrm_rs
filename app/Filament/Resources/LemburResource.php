@@ -19,25 +19,42 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Section;
 use Filament\Tables\Filters\Indicator;
 use Filament\Forms\Components\Checkbox;
+use Illuminate\Database\Eloquent\Model;
 use App\Filament\Exports\LemburExporter;
 use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
+use Filament\Tables\Actions\ActionGroup;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\TimePicker;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Notifications\Actions\Action;
 use Filament\Tables\Columns\Summarizers\Sum;
 use Filament\Tables\Actions\ExportBulkAction;
+use Filament\Tables\Actions\Action as TAction;
 use App\Filament\Resources\LemburResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\LemburResource\RelationManagers;
+use BezhanSalleh\FilamentShield\Contracts\HasShieldPermissions;
 
-class LemburResource extends Resource
+class LemburResource extends Resource implements HasShieldPermissions
 {
     protected static ?string $model = Lembur::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-calendar-date-range';
 
+    public static function getPermissionPrefixes(): array
+    {
+        return [
+            'view',
+            'view_any',
+            'create',
+            'update',
+            'delete',
+            'delete_any',
+            'approve',
+            'decline',
+        ];
+    }
     public static function form(Form $form): Form
     {
         return $form
@@ -53,6 +70,22 @@ class LemburResource extends Resource
                             ->preload()
                             // ->unique(Lembur::class, 'karyawan_id', ignoreRecord: true)
                             ->live()
+                            ->default(function () {
+                                $roles = auth()->user()->roles;
+                                if ($roles->contains('name', 'super_admin')) {;
+                                } else {
+                                    $karyawan = Karyawan::where('id', auth()->user()->karyawan_id)->first();
+                                    return $karyawan->id;
+                                }
+                            })
+                            ->disabled(function () {
+                                $roles = auth()->user()->roles;
+                                if ($roles->contains('name', 'super_admin')) {
+                                    return false;
+                                } else {
+                                    return true;
+                                }
+                            })
                             ->afterStateUpdated(function ($state, Set $set, Get $get) {
                                 if (filled($state)) {
                                     $karyawan = Karyawan::where('id', $state)->first();
@@ -98,13 +131,16 @@ class LemburResource extends Resource
                                     }
                                 }
                             })
+                            ->dehydrated()
                             ->required(),
                         DatePicker::make('tgl_lembur')
                             ->live()
                             ->label('Tanggal Lembur')
                             ->afterStateUpdated(function (Get $get, Set $set, $state) {
-                                if (filled($state) && filled($get('jm_mulai')) && filled($get('jm_selesai')) && filled($get('harga_lembur'))) {
+                                if (filled($state)) {
                                     $tgl = $state;
+                                    $pengaturan_payroll = Payroll::where('karyawan_id', $get('karyawan_id'))->first();
+                                    $set('harga_lembur', ($pengaturan_payroll->gaji_pokok + $pengaturan_payroll->makan + $pengaturan_payroll->transport));
 
                                     $dari = date_create('' . $get('tgl_lembur') . '' . $get('jm_mulai') . '');
                                     $sampai = date_create('' . $get('tgl_lembur') . '' . $get('jm_selesai') . '');
@@ -284,6 +320,13 @@ class LemburResource extends Resource
                     ->money('IDR')
                     ->summarize(Sum::make()->label('Total')->money('IDR'))
                     ->searchable(),
+                Tables\Columns\TextColumn::make('status')
+                    ->badge()
+                    ->color(fn(string $state): string => match ($state) {
+                        'pending' => 'info',
+                        'approved' => 'success',
+                        'decline' => 'danger',
+                    }),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -344,6 +387,40 @@ class LemburResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                ActionGroup::make([
+                    TAction::make('setujuii')
+                        ->label('Approve')
+                        ->color('success')
+                        ->form([
+                            TextInput::make('password')
+                                ->password()
+                                ->required()
+                                ->rules(['current_password'])
+                        ])
+                        ->icon('heroicon-o-check-circle')
+                        ->requiresConfirmation()
+                        ->action(function (Model $record) {
+                            $data = $record;
+                            return redirect()->route('lembur.approve', $data);
+                        }),
+                    TAction::make('tolakk')
+                        ->label('Decline')
+                        ->color('danger')
+                        ->form([
+                            TextInput::make('password')
+                                ->password()
+                                ->required()
+                                ->rules(['current_password'])
+                        ])
+                        ->icon('heroicon-o-x-circle')
+                        ->requiresConfirmation()
+                        ->action(function (Model $record) {
+                            $data = $record;
+                            return redirect()->route('lembur.decline', $data);
+                        }),
+                ])
+                    ->icon('heroicon-m-ellipsis-horizontal')
+                    ->visible(fn(Lembur $record): bool => auth()->user()->can('approve_lembur', $record) && auth()->user()->can('decline_lembur', $record)),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -387,5 +464,13 @@ class LemburResource extends Resource
         //bukan tanggal merah
         else : return false;
         endif;
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        if (auth()->user()->hasRole('karyawan')) {
+            return parent::getEloquentQuery()->where('karyawan_id', auth()->user()->karyawan_id);
+        }
+        return parent::getEloquentQuery();
     }
 }

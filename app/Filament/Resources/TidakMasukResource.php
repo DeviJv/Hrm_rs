@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use Carbon\Carbon;
 use Filament\Forms;
+use App\Models\User;
 use Filament\Tables;
 use Filament\Forms\Get;
 use App\Models\Karyawan;
@@ -12,12 +13,15 @@ use App\Models\TidakMasuk;
 use Filament\Tables\Table;
 use App\Models\Tidak_masuk;
 use Filament\Resources\Resource;
+use Filament\Tables\Actions\Action;
 use App\Models\PengaturanTidakMasuk;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Section;
 use Filament\Tables\Filters\Indicator;
 use Filament\Tables\Columns\TextColumn;
+use Illuminate\Database\Eloquent\Model;
 use Filament\Forms\Components\TextInput;
+use Filament\Tables\Actions\ActionGroup;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
 use Illuminate\Database\Eloquent\Builder;
@@ -25,13 +29,29 @@ use Filament\Tables\Columns\Summarizers\Sum;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\TidakMasukResource\Pages;
 use App\Filament\Resources\TidakMasukResource\RelationManagers;
+use BezhanSalleh\FilamentShield\Contracts\HasShieldPermissions;
 
-class TidakMasukResource extends Resource
+class TidakMasukResource extends Resource implements HasShieldPermissions
 {
     protected static ?string $model = Tidak_masuk::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-document-text';
     protected static ?string $pluralModelLabel = 'Pengajuan Cuti/Izin';
+
+    public static function getPermissionPrefixes(): array
+    {
+        return [
+            'view',
+            'view_any',
+            'create',
+            'update',
+            'delete',
+            'delete_any',
+            'publish',
+            'approve',
+            'decline',
+        ];
+    }
 
     public static function form(Form $form): Form
     {
@@ -184,6 +204,40 @@ class TidakMasukResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                ActionGroup::make([
+                    Action::make('setujuii')
+                        ->label('Approve')
+                        ->color('success')
+                        ->form([
+                            TextInput::make('password')
+                                ->password()
+                                ->required()
+                                ->rules(['current_password'])
+                        ])
+                        ->icon('heroicon-o-check-circle')
+                        ->requiresConfirmation()
+                        ->action(function (Model $record) {
+                            $data = $record;
+                            return redirect()->route('cuti.approve', $data);
+                        }),
+                    Action::make('tolakk')
+                        ->label('Decline')
+                        ->color('danger')
+                        ->form([
+                            TextInput::make('password')
+                                ->password()
+                                ->required()
+                                ->rules(['current_password'])
+                        ])
+                        ->icon('heroicon-o-x-circle')
+                        ->requiresConfirmation()
+                        ->action(function (Model $record) {
+                            $data = $record;
+                            return redirect()->route('cuti.decline', $data);
+                        }),
+                ])
+                    ->icon('heroicon-m-ellipsis-horizontal')
+                    ->visible(fn(Tidak_masuk $record): bool => auth()->user()->can('approve_tidak::masuk', $record) && auth()->user()->can('decline_tidak::masuk', $record)),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

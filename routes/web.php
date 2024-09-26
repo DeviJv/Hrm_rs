@@ -5,6 +5,7 @@ use Carbon\Carbon;
 use App\Models\Perusahaan;
 use App\Models\TransaksiPayroll;
 use App\Http\Controllers\DownloadPdf;
+use App\Http\Controllers\LemburAction;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -27,3 +28,8 @@ Route::get('/approve/cuti/{tidak_masuk}', [CutiAction::class, 'approve'])->name(
 Route::get('/approve/cuti_force/{tidak_masuk}', [CutiAction::class, 'approve_force'])->name('cuti.approve.force');
 Route::get('/decline/cuti/{tidak_masuk}', [CutiAction::class, 'decline'])->name('cuti.decline');
 Route::get('/decline/cuti_force/{tidak_masuk}', [CutiAction::class, 'decline_force'])->name('cuti.decline.force');
+
+Route::get('/approve/lembur/{lembur}', [LemburAction::class, 'approve'])->name('lembur.approve');
+Route::get('/approve/lembur_force/{lembur}', [LemburAction::class, 'approve_force'])->name('lembur.approve.force');
+Route::get('/decline/lembur/{lembur}', [LemburAction::class, 'decline'])->name('lembur.decline');
+Route::get('/decline/lembur_force/{lembur}', [LemburAction::class, 'decline_force'])->name('lembur.decline.force');
