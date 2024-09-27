@@ -27,7 +27,7 @@ class SuratKeteranganBekerjaResource extends Resource
 {
     protected static ?string $model = SuratKeteranganBekerja::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-document-chart-bar';
 
     public static function form(Form $form): Form
     {
