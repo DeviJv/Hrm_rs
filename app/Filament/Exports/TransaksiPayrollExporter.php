@@ -3,9 +3,13 @@
 namespace App\Filament\Exports;
 
 use App\Models\TransaksiPayroll;
-use Filament\Actions\Exports\ExportColumn;
 use Filament\Actions\Exports\Exporter;
+use OpenSpout\Common\Entity\Style\Color;
+use OpenSpout\Common\Entity\Style\Style;
+use Filament\Actions\Exports\ExportColumn;
 use Filament\Actions\Exports\Models\Export;
+use OpenSpout\Common\Entity\Style\CellAlignment;
+use OpenSpout\Common\Entity\Style\CellVerticalAlignment;
 
 class TransaksiPayrollExporter extends Exporter
 {
@@ -14,35 +18,51 @@ class TransaksiPayrollExporter extends Exporter
     public static function getColumns(): array
     {
         return [
-            ExportColumn::make('id')
-                ->label('ID'),
             ExportColumn::make('user.name')
                 ->label('Dibuat Oleh'),
             ExportColumn::make('karyawan.nama')
                 ->label('Nama Karyawan'),
-            ExportColumn::make('tunjangan'),
+            ExportColumn::make('karyawan.no_sk')
+                ->label('NPWP'),
+            ExportColumn::make('karyawan.jabatan'),
             ExportColumn::make('gaji_pokok'),
-            ExportColumn::make('makan'),
-            ExportColumn::make('insentif'),
-            ExportColumn::make('bpjs_kesehatan'),
-            ExportColumn::make('ketenagakerjaan'),
-            ExportColumn::make('pajak'),
-            ExportColumn::make('tidak_masuk')
-                ->label('Izin'),
-            ExportColumn::make('piutang'),
-            ExportColumn::make('lembur'),
-            ExportColumn::make('total'),
-            ExportColumn::make('created_at'),
-            ExportColumn::make('updated_at'),
             ExportColumn::make('transport'),
-            ExportColumn::make('koperasi'),
-            ExportColumn::make('jabatan'),
-            ExportColumn::make('payment_method'),
+            ExportColumn::make('makan'),
+            ExportColumn::make('sub_total_1')
+                ->state(function (TransaksiPayroll $record) {
+                    return $record->gaji_pokok + $record->transport + $record->makan;
+                }),
             ExportColumn::make('penyesuaian'),
+            ExportColumn::make('insentif'),
             ExportColumn::make('fungsional')
                 ->label('Fungsional Umum'),
             ExportColumn::make('fungsional_it')
                 ->label('Fungsional Khusus'),
+            ExportColumn::make('jabatan'),
+            ExportColumn::make('sub_total_2')
+                ->state(function (TransaksiPayroll $record) {
+                    return  $record->gaji_pokok + $record->transport + $record->makan + $record->penyesuaian + $record->insentif + $record->fungsional + $record->fungsional_it + $record->jabatan;
+                }),
+            ExportColumn::make('ketenagakerjaan'),
+            ExportColumn::make('bpjs_kesehatan'),
+            ExportColumn::make('pajak'),
+            ExportColumn::make('koperasi'),
+            ExportColumn::make('piutang')
+                ->label('obat/catering/dll'),
+            ExportColumn::make('tidak_masuk')
+                ->label('Izin'),
+            ExportColumn::make('sub_total_3')
+                ->state(function (TransaksiPayroll $record) {
+                    return $record->ketenagakerjaan + $record->bpjs_kesehatan + $record->pajak + $record->koperasi + $record->piutang;
+                }),
+            ExportColumn::make('total')
+                ->label('NET INCOME'),
+            // ExportColumn::make('karyawan.nik_ktp')
+            //     ->label('Nomor Induk Kependudukan'),
+            // ExportColumn::make('karyawan.alamat')
+            //     ->label('Alamat Karyawan'),
+            ExportColumn::make('payment_method'),
+
         ];
     }
 
@@ -55,5 +75,16 @@ class TransaksiPayrollExporter extends Exporter
         }
 
         return $body;
+    }
+
+    public function getXlsxHeaderCellStyle(): ?Style
+    {
+        return (new Style())
+            ->setFontSize(10)
+            ->setFontName('inter')
+            ->setFontColor(Color::rgb(0, 0, 0))
+            ->setBackgroundColor(Color::rgb(27, 179, 32))
+            ->setCellAlignment(CellAlignment::CENTER)
+            ->setCellVerticalAlignment(CellVerticalAlignment::CENTER);
     }
 }

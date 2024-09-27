@@ -2,7 +2,7 @@
     <x-filament::section>
         <div
             class="flex flex-col md:flex-row lg:flex-row space-y-3 items-center justify-between h-full flex-wrap md:justify-around lg:justify-between">
-            <div class="bg-white shadow-md p-6 rounded-2xl border-2 border-gray-50 md:flex ">
+            <div class="bg-white dark:bg shadow-md p-6 rounded-2xl border-2 border-gray-50  ">
                 <div class="flex flex-col">
                     <div>
                         <h2 class="font-bold text-gray-600 text-center">Jumlah Izin
@@ -32,7 +32,7 @@
                     </div>
                 </div>
             </div>
-            <div class="bg-white shadow-md p-6 rounded-2xl border-2 border-gray-50 md:1/3">
+            <div class="bg-white shadow-md p-6 rounded-2xl border-2 border-gray-50 ">
                 <div class="flex flex-col">
                     <div>
                         <h2 class="font-bold text-gray-600 text-center">Jumlah Cuti Saya </h2>
@@ -61,7 +61,7 @@
                     </div>
                 </div>
             </div>
-            <div class="bg-white shadow-md p-6 rounded-2xl border-2 border-gray-50 md:1/3">
+            <div class="bg-white shadow-md p-6 rounded-2xl border-2 border-gray-50 ">
                 <div class="flex flex-col">
                     <div>
                         <h2 class="font-bold text-gray-600 text-center">Jumlah Lembur Saya</h2>
@@ -93,7 +93,7 @@
                     </div>
                 </div>
             </div>
-            <div class="bg-white shadow-md p-6 rounded-2xl border-2 border-gray-50 md:1/3">
+            <div class="bg-white shadow-md p-6 rounded-2xl border-2 border-gray-50 ">
                 <div class="flex flex-col">
                     <div>
                         <h2 class="font-bold text-gray-600 text-center">Pengajuan Cuti/Lembur (Pending), </h2>

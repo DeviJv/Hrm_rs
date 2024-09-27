@@ -49,6 +49,8 @@ class SuratKeteranganBekerjaResource extends Resource
                             ->maxLength(32)
                             ->unique(SuratKeteranganBekerja::class, 'no_surat', ignoreRecord: true),
                         Select::make('manager')
+                            ->label('Pilih Direktur')
+
                             ->required()
                             ->dehydrated(false)
                             ->live()
@@ -88,9 +90,9 @@ class SuratKeteranganBekerjaResource extends Resource
                             ->label('Tanggal Masuk')
                             ->required(),
                         TextInput::make('nama_manager')
-                            ->label('Nama manager'),
+                            ->label('Nama Direktur'),
                         TextInput::make('jabatan_manager')
-                            ->label('Jabatan manager'),
+                            ->label('Jabatan Direktur'),
                         TextInput::make('alamat')
                             ->label('Alamat Kantor'),
                         TextInput::make('nama_karyawan')
@@ -120,8 +122,10 @@ class SuratKeteranganBekerjaResource extends Resource
                 Tables\Columns\TextColumn::make('no_surat')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('nama_manager')
+                    ->label('Nama Direktur')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('jabatan_manager')
+                    ->label('Jabatan Direktur')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('alamat')
                     ->words(5)

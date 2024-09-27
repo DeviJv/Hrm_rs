@@ -50,6 +50,7 @@ class SuratPaklaringResource extends Resource
                             ->maxLength(32)
                             ->unique(SuratPaklaring::class, 'no_surat', ignoreRecord: true),
                         Select::make('manager')
+                            ->label('Pilih Direktur')
                             ->required()
                             ->dehydrated(false)
                             ->live()
@@ -92,9 +93,9 @@ class SuratPaklaringResource extends Resource
                             ->label('Tanggal Keluar')
                             ->required(),
                         TextInput::make('nama_manager')
-                            ->label('Nama manager'),
+                            ->label('Nama Direktur'),
                         TextInput::make('jabatan_manager')
-                            ->label('Jabatan manager'),
+                            ->label('Jabatan Direktur'),
                         TextInput::make('alamat')
                             ->label('Alamat Kantor'),
                         TextInput::make('nama_karyawan')
@@ -125,8 +126,11 @@ class SuratPaklaringResource extends Resource
                 Tables\Columns\TextColumn::make('no_surat')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('nama_manager')
+                    ->label('Nama Direktur')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('jabatan_manager')
+                    ->label('Jabatan Direktur')
+
                     ->searchable(),
                 Tables\Columns\TextColumn::make('alamat')
                     ->label('Alamat Kantor')

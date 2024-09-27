@@ -104,8 +104,10 @@ class KaryawanResource extends Resource
                         TextInput::make('no_rekening')
                             ->maxLength(255),
                         TextInput::make('nip')
+                            ->label('NIP')
                             ->maxLength(255),
                         TextInput::make('no_sk')
+                            ->label('NPWP')
                             ->maxLength(255),
                         Toggle::make('aktif')
                             ->inline(false)
@@ -175,14 +177,19 @@ class KaryawanResource extends Resource
                 Tables\Columns\IconColumn::make('aktif')
                     ->label('Masih Bekerja')
                     ->boolean(),
-                // Tables\Columns\TextColumn::make('bank')
-                //     ->searchable(),
-                // Tables\Columns\TextColumn::make('no_rekening')
-                //     ->searchable(),
-                // Tables\Columns\TextColumn::make('nip')
-                //     ->searchable(),
-                // Tables\Columns\TextColumn::make('no_sk')
-                //     ->searchable(),
+                Tables\Columns\TextColumn::make('bank')
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('no_rekening')
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('nip')
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('no_sk')
+                    ->label('npwp')
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

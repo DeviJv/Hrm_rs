@@ -109,7 +109,7 @@ function terbilang($x)
                 </tr>
                 <tr class="uppercase text-xs">
                     <td class="content-start pt-5">
-                        <h3 class="text-center underline text-lg font-semibold ">PENDAPATAN</h3>
+                        <h3 class="text-center underline text-lg font-semibold items-start">PENDAPATAN</h3>
                         <div class="flex flex-row items-center justify-between px-4 container w-full">
                             <div class="w-1/5 font-semibold">Gaji Poko</div>
                             <div class="w-1/2 text-right"> Rp {{ number_format($record->gaji_pokok) }}</div>
@@ -124,7 +124,7 @@ function terbilang($x)
                         </div>
                     </td>
                     <td>
-                        <h3 class="text-center underline text-lg font-semibold mt-5">tunjangan</h3>
+                        <h3 class="text-center underline text-lg font-semibold items-start">tunjangan</h3>
                         <div class="flex flex-row items-center justify-between px-4 container w-full">
                             <div class="w-1/3 font-semibold">penyesuaian</div>
                             <div class="w-1/2 text-right"> Rp {{ number_format($record->penyesuaian) }}</div>

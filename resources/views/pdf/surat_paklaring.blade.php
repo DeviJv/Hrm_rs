@@ -32,7 +32,7 @@
     </style>
 </head>
 
-<body class=" px-8 mt-1 text-sm antialiased h-full w-full" id="cetak">
+<body class=" px-0 mx-0  text-sm antialiased h-full w-full" id="cetak">
     @foreach ($records as $record)
         <div class="flex items-start">
             {{-- <img class="h-40 w-48" src="{{ asset($perusahaan->logo) }}"> --}}
@@ -43,11 +43,11 @@
             <h2 class="underline text-xl">surat keterangan pengalaman bekerja</h2>
             <h4 class="text-lg">Nomor : {{ $record->no_surat }}</h4>
         </div>
-        <div class="space-y-1.5">
+        <div class="space-y-1.5 text-sm">
             <h3 class="mt-10 mb-4">Dengan Hormat,</h3>
             <h3 class="">Yang bertanda tangan di bawah ini :</h3>
-            <div class="flex flex-row w-auto items-start">
-                <div class="w-[4%]">
+            <div class=" flex flex-row w-auto items-start">
+                <div class="w-[8%]">
                     Nama
                 </div>
                 <div class="w-24">
@@ -58,7 +58,7 @@
                 </div>
             </div>
             <div class="flex flex-row w-auto items-start">
-                <div class="w-[4%]">
+                <div class="w-[8%]">
                     Jabatan
                 </div>
                 <div class="w-24">
@@ -69,7 +69,7 @@
                 </div>
             </div>
             <div class="flex flex-row w-auto items-start">
-                <div class="w-[4%]">
+                <div class="w-[8%]">
                     Nama Perusahaan
                 </div>
                 <div class="w-24">
@@ -80,7 +80,7 @@
                 </div>
             </div>
             <div class="flex flex-row w-auto items-start">
-                <div class="w-[4%]">
+                <div class="w-[8%]">
                     Alamat
                 </div>
                 <div class="w-24">
@@ -94,7 +94,7 @@
         <div class="space-y-1.5">
             <h3 class="mt-6">Dengan ini menerangkan bahwa karyawan atas nama terlampir di bawah ini :</h3>
             <div class="flex flex-row w-auto items-start">
-                <div class="w-[4%]">
+                <div class="w-[8%]">
                     Nama
                 </div>
                 <div class="w-24">
@@ -105,7 +105,7 @@
                 </div>
             </div>
             <div class="flex flex-row items-center">
-                <div class="w-[4%]">
+                <div class="w-[8%]">
                     Unit/Jabatan
                 </div>
                 <div class="w-24">
@@ -116,7 +116,7 @@
                 </div>
             </div>
             <div class="flex flex-row items-center">
-                <div class="w-[4%]">
+                <div class="w-[8%]">
                     Alamat
                 </div>
                 <div class="w-24">
@@ -127,7 +127,7 @@
                 </div>
             </div>
             <div class="flex flex-row items-center">
-                <div class="w-[4%]">
+                <div class="w-[8%]">
                     Tanggal Masuk
                 </div>
                 <div class="w-24">
@@ -138,7 +138,7 @@
                 </div>
             </div>
             <div class="flex flex-row items-center">
-                <div class="w-[4%]">
+                <div class="w-[8%]">
                     Tanggal Keluar
                 </div>
                 <div class="w-24">
