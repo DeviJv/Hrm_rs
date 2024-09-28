@@ -152,7 +152,15 @@ class KoperasiResource extends Resource
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\DeleteBulkAction::make()
+                        ->requiresConfirmation()
+                        ->form([
+                            TextInput::make('password')
+                                ->password()
+                                ->required()
+                                ->rules(['current_password'])
+                        ])
+                        ->keyBindings(['mod+s']),
                 ]),
             ]);
     }
@@ -171,5 +179,13 @@ class KoperasiResource extends Resource
             'create' => Pages\CreateKoperasi::route('/create'),
             'edit' => Pages\EditKoperasi::route('/{record}/edit'),
         ];
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        if (auth()->user()->hasRole('karyawan')) {
+            return parent::getEloquentQuery()->where('karyawan_id', auth()->user()->karyawan_id);
+        }
+        return parent::getEloquentQuery();
     }
 }

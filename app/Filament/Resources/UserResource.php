@@ -17,6 +17,7 @@ use Filament\Resources\Resource;
 use Illuminate\Support\HtmlString;
 use Filament\Tables\Actions\Action;
 use Filament\Support\Enums\FontWeight;
+use Filament\Forms\Components\TextInput;
 use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Builder;
 use App\Filament\Resources\UserResource\Pages;
@@ -169,7 +170,15 @@ class UserResource extends Resource
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\DeleteBulkAction::make()
+                        ->requiresConfirmation()
+                        ->form([
+                            TextInput::make('password')
+                                ->password()
+                                ->required()
+                                ->rules(['current_password'])
+                        ])
+                        ->keyBindings(['mod+s'])
                 ]),
             ])
             ->emptyStateActions([

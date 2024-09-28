@@ -5,18 +5,33 @@ namespace App\Filament\Resources\TransaksiPayrollResource\Pages;
 use Filament\Actions;
 use App\Models\Piutang;
 use App\Models\Karyawan;
+use App\Models\Koperasi;
+use Filament\Actions\Action;
 use App\Models\TransaksiPayroll;
+use App\Models\PembayaranPiutang;
+use App\Models\PembayaranKoperasi;
+use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\CreateRecord;
 use App\Filament\Resources\TransaksiPayrollResource;
-use App\Models\Koperasi;
-use App\Models\PembayaranKoperasi;
-use App\Models\PembayaranPiutang;
 
 class CreateTransaksiPayroll extends CreateRecord
 {
     protected static string $resource = TransaksiPayrollResource::class;
 
+    protected function getCreateFormAction(): Action
+    {
+        return Action::make('create')
+            ->action(fn() => $this->create())
+            ->requiresConfirmation()
+            ->form([
+                TextInput::make('password')
+                    ->password()
+                    ->required()
+                    ->rules(['current_password'])
+            ])
+            ->keyBindings(['mod+s']);
+    }
     protected function mutateFormDataBeforeCreate(array $data): array
     {
 

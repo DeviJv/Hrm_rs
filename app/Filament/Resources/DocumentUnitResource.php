@@ -9,11 +9,12 @@ use Filament\Tables\Table;
 use App\Models\DocumentUnit;
 use Filament\Resources\Resource;
 use Filament\Forms\Components\Section;
+use Filament\Forms\Components\TextInput;
+use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\DocumentUnitResource\Pages;
 use App\Filament\Resources\DocumentUnitResource\RelationManagers;
-use Filament\Tables\Filters\SelectFilter;
 
 class DocumentUnitResource extends Resource
 {
@@ -154,7 +155,15 @@ class DocumentUnitResource extends Resource
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\DeleteBulkAction::make()
+                        ->requiresConfirmation()
+                        ->form([
+                            TextInput::make('password')
+                                ->password()
+                                ->required()
+                                ->rules(['current_password'])
+                        ])
+                        ->keyBindings(['mod+s']),
                 ]),
             ]);
     }

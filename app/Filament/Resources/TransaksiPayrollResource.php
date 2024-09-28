@@ -626,4 +626,12 @@ class TransaksiPayrollResource extends Resource
             'edit' => Pages\EditTransaksiPayroll::route('/{record}/edit'),
         ];
     }
+
+    public static function getEloquentQuery(): Builder
+    {
+        if (auth()->user()->hasRole('karyawan')) {
+            return parent::getEloquentQuery()->where('karyawan_id', auth()->user()->karyawan_id);
+        }
+        return parent::getEloquentQuery();
+    }
 }

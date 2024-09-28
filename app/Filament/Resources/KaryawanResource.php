@@ -211,11 +211,19 @@ class KaryawanResource extends Resource
                     ->options(fn() => Karyawan::groupBy('department')->pluck('department', 'department')),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\EditAction::make()
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\DeleteBulkAction::make()
+                        ->requiresConfirmation()
+                        ->form([
+                            TextInput::make('password')
+                                ->password()
+                                ->required()
+                                ->rules(['current_password'])
+                        ])
+                        ->keyBindings(['mod+s']),
                 ]),
             ]);
     }
@@ -248,5 +256,21 @@ class KaryawanResource extends Resource
     public static function getGlobalSearchResultTitle(Model $record): string | Htmlable
     {
         return $record->nama;
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        if (auth()->user()->hasRole('karyawan')) {
+            return parent::getEloquentQuery()->where('karyawan_id', auth()->user()->karyawan_id);
+        }
+        return parent::getEloquentQuery();
+    }
+
+    public static function canCreate(): bool
+    {
+        if (auth()->user()->hasRole('karyawan')) {
+            return false;
+        }
+        return true;
     }
 }

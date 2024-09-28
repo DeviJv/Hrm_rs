@@ -427,7 +427,15 @@ class LemburResource extends Resource implements HasShieldPermissions
                     ExportBulkAction::make()
                         ->color('info')
                         ->exporter(LemburExporter::class),
-                    Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\DeleteBulkAction::make()
+                        ->requiresConfirmation()
+                        ->form([
+                            TextInput::make('password')
+                                ->password()
+                                ->required()
+                                ->rules(['current_password'])
+                        ])
+                        ->keyBindings(['mod+s']),
                 ]),
             ]);
     }

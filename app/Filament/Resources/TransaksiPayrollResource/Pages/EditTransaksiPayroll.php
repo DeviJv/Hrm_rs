@@ -5,12 +5,13 @@ namespace App\Filament\Resources\TransaksiPayrollResource\Pages;
 use Filament\Actions;
 use App\Models\Piutang;
 use App\Models\Koperasi;
+use Filament\Actions\Action;
 use App\Models\PembayaranPiutang;
+use App\Models\PembayaranKoperasi;
 use Illuminate\Database\Eloquent\Model;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Pages\EditRecord;
 use App\Filament\Resources\TransaksiPayrollResource;
-use App\Models\PembayaranKoperasi;
 
 class EditTransaksiPayroll extends EditRecord
 {
@@ -47,5 +48,19 @@ class EditTransaksiPayroll extends EditRecord
                     }
                 }),
         ];
+    }
+
+    protected function getSaveFormAction(): Action
+    {
+        return Action::make('save')
+            ->action(fn() => $this->save())
+            ->requiresConfirmation()
+            ->form([
+                TextInput::make('password')
+                    ->password()
+                    ->required()
+                    ->rules(['current_password'])
+            ])
+            ->keyBindings(['mod+s']);
     }
 }

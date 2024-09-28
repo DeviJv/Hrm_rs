@@ -176,7 +176,15 @@ class SuratKeteranganBekerjaResource extends Resource
                             // return redirect()->;
                         })
                         ->label('Cetak Surat Keterangan Bekerja'),
-                    Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\DeleteBulkAction::make()
+                        ->requiresConfirmation()
+                        ->form([
+                            TextInput::make('password')
+                                ->password()
+                                ->required()
+                                ->rules(['current_password'])
+                        ])
+                        ->keyBindings(['mod+s']),
                 ]),
             ]);
     }
@@ -195,5 +203,13 @@ class SuratKeteranganBekerjaResource extends Resource
             'create' => Pages\CreateSuratKeteranganBekerja::route('/create'),
             'edit' => Pages\EditSuratKeteranganBekerja::route('/{record}/edit'),
         ];
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        if (auth()->user()->hasRole('karyawan')) {
+            return parent::getEloquentQuery()->where('karyawan_id', auth()->user()->karyawan_id);
+        }
+        return parent::getEloquentQuery();
     }
 }

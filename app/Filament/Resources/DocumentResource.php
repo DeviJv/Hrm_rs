@@ -11,6 +11,7 @@ use Filament\Tables\Table;
 use Filament\Resources\Resource;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Section;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\FileUpload;
 use Illuminate\Database\Eloquent\Builder;
 use App\Filament\Resources\DocumentResource\Pages;
@@ -37,7 +38,23 @@ class DocumentResource extends Resource
                             ->relationship('karyawan', 'nama')
                             ->preload()
                             ->required()
-                            ->options(fn() => Karyawan::doesntHave('document')->pluck('nama', 'id')),
+                            ->options(fn() => Karyawan::doesntHave('document')->pluck('nama', 'id'))
+                            ->default(function () {
+                                $roles = auth()->user()->roles;
+                                if ($roles->contains('name', 'super_admin')) {;
+                                } else {
+                                    $karyawan = Karyawan::where('id', auth()->user()->karyawan_id)->first();
+                                    return $karyawan->id;
+                                }
+                            })
+                            ->disabled(function () {
+                                $roles = auth()->user()->roles;
+                                if ($roles->contains('name', 'super_admin')) {
+                                    return false;
+                                } else {
+                                    return true;
+                                }
+                            }),
                         FileUpload::make('ijazah')
                             ->directory('documents'),
                         FileUpload::make('ktp')
@@ -99,7 +116,15 @@ class DocumentResource extends Resource
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\DeleteBulkAction::make()
+                        ->requiresConfirmation()
+                        ->form([
+                            TextInput::make('password')
+                                ->password()
+                                ->required()
+                                ->rules(['current_password'])
+                        ])
+                        ->keyBindings(['mod+s']),
                 ]),
             ]);
     }

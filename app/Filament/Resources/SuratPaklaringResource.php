@@ -185,7 +185,15 @@ class SuratPaklaringResource extends Resource
                             // return redirect()->;
                         })
                         ->label('Cetak Surat Paklaring'),
-                    Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\DeleteBulkAction::make()
+                        ->requiresConfirmation()
+                        ->form([
+                            TextInput::make('password')
+                                ->password()
+                                ->required()
+                                ->rules(['current_password'])
+                        ])
+                        ->keyBindings(['mod+s']),
                 ]),
             ]);
     }
@@ -204,5 +212,13 @@ class SuratPaklaringResource extends Resource
             'create' => Pages\CreateSuratPaklaring::route('/create'),
             'edit' => Pages\EditSuratPaklaring::route('/{record}/edit'),
         ];
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        if (auth()->user()->hasRole('karyawan')) {
+            return parent::getEloquentQuery()->where('karyawan_id', auth()->user()->karyawan_id);
+        }
+        return parent::getEloquentQuery();
     }
 }

@@ -5,7 +5,9 @@ namespace App\Filament\Resources\TidakMasukResource\Pages;
 use Filament\Actions;
 use App\Models\Karyawan;
 use App\Models\Tidak_masuk;
+use Filament\Actions\Action;
 use App\Models\PengaturanTidakMasuk;
+use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\EditRecord;
 use App\Filament\Resources\TidakMasukResource;
@@ -17,10 +19,30 @@ class EditTidakMasuk extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\DeleteAction::make(),
+            Actions\DeleteAction::make()
+                ->requiresConfirmation()
+                ->form([
+                    TextInput::make('password')
+                        ->password()
+                        ->required()
+                        ->rules(['current_password'])
+                ])
+                ->keyBindings(['mod+s']),
         ];
     }
-
+    protected function getSaveFormAction(): Action
+    {
+        return Action::make('save')
+            ->action(fn() => $this->create())
+            ->requiresConfirmation()
+            ->form([
+                TextInput::make('password')
+                    ->password()
+                    ->required()
+                    ->rules(['current_password'])
+            ])
+            ->keyBindings(['mod+s']);
+    }
     protected function mutateFormDataBeforeSave(array $data): array
     {
         $dari = date_create($data['tgl_mulai']);
@@ -29,6 +51,8 @@ class EditTidakMasuk extends EditRecord
         $data['jumlah_hari'] = $hitung->d;
         return $data;
     }
+
+
     protected function beforeSave(): void
     {
         $data = $this->data;

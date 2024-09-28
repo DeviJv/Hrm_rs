@@ -6,6 +6,8 @@ use App\Models\User;
 use Filament\Actions;
 use App\Models\Lembur;
 use App\Models\Karyawan;
+use Filament\Actions\Action as FAction;
+use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use App\Filament\Resources\LemburResource;
 use Filament\Notifications\Actions\Action;
@@ -16,6 +18,19 @@ class CreateLembur extends CreateRecord
 {
     protected static string $resource = LemburResource::class;
 
+    protected function getCreateFormAction(): FAction
+    {
+        return FAction::make('create')
+            ->action(fn() => $this->create())
+            ->requiresConfirmation()
+            ->form([
+                TextInput::make('password')
+                    ->password()
+                    ->required()
+                    ->rules(['current_password'])
+            ])
+            ->keyBindings(['mod+s']);
+    }
 
     protected function beforeCreate(): void
     {

@@ -2,16 +2,17 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\PengaturanTidakMasukResource\Pages;
-use App\Filament\Resources\PengaturanTidakMasukResource\RelationManagers;
-use App\Models\PengaturanTidakMasuk;
 use Filament\Forms;
-use Filament\Forms\Form;
-use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Forms\Form;
 use Filament\Tables\Table;
+use Filament\Resources\Resource;
+use App\Models\PengaturanTidakMasuk;
+use Filament\Forms\Components\TextInput;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use App\Filament\Resources\PengaturanTidakMasukResource\Pages;
+use App\Filament\Resources\PengaturanTidakMasukResource\RelationManagers;
 
 class PengaturanTidakMasukResource extends Resource
 {
@@ -57,7 +58,15 @@ class PengaturanTidakMasukResource extends Resource
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\DeleteBulkAction::make()
+                        ->requiresConfirmation()
+                        ->form([
+                            TextInput::make('password')
+                                ->password()
+                                ->required()
+                                ->rules(['current_password'])
+                        ])
+                        ->keyBindings(['mod+s'])
                 ]),
             ]);
     }
