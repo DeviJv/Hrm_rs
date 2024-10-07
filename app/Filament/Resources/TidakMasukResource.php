@@ -130,8 +130,10 @@ class TidakMasukResource extends Resource implements HasShieldPermissions
                     ->size(TextColumn\TextColumnSize::Large),
                 TextColumn::make('keperluan'),
                 TextColumn::make('tgl_mulai')
+                    ->label('Tanggal Mulai')
                     ->date(),
                 TextColumn::make('tgl_akhir')
+                    ->label('Tanggal Masuk')
                     ->date(),
                 TextColumn::make('jumlah_hari')
                     ->summarize(Sum::make()),

@@ -114,6 +114,7 @@ class DocumentUnitResource extends Resource
             ->filters([
                 SelectFilter::make('type_document')
                     ->searchable()
+                    ->multiple()
                     ->options([
                         "SPO" => "SPO",
                         "PEDOMAN" => "PEDOMAN",
@@ -122,6 +123,7 @@ class DocumentUnitResource extends Resource
                     ]),
                 SelectFilter::make('unit')
                     ->searchable()
+                    ->multiple()
                     ->options([
                         "IGD" => "IGD",
                         "FARMASI" => "FARMASI",

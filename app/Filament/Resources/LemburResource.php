@@ -139,7 +139,23 @@ class LemburResource extends Resource implements HasShieldPermissions
                             ->afterStateUpdated(function (Get $get, Set $set, $state) {
                                 if (filled($state)) {
                                     $tgl = $state;
+                                    $karyawan = Karyawan::where('id', $get('karyawan_id'))->first();
+
                                     $pengaturan_payroll = Payroll::where('karyawan_id', $get('karyawan_id'))->first();
+                                    if (empty($pengaturan_payroll)) {
+                                        $set('harga_lembur', '');
+                                        return
+                                            Notification::make()
+                                            ->title("Ops Sepertinya <b>{$karyawan->nama}</b> Belum Punya Pengaturan Gaji Poko,dll ")
+                                            ->body('Silahkan klik buat Untuk membuat pengaturan')
+                                            ->warning()
+                                            ->actions([
+                                                Action::make('buat_pengaturan_payroll')
+                                                    ->url(PengaturanPayrollResource::getUrl('create'))
+                                                    ->openUrlInNewTab(),
+                                            ])
+                                            ->send();
+                                    }
                                     $set('harga_lembur', ($pengaturan_payroll->gaji_pokok + $pengaturan_payroll->makan + $pengaturan_payroll->transport));
 
                                     $dari = date_create('' . $get('tgl_lembur') . '' . $get('jm_mulai') . '');
