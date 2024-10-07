@@ -11,7 +11,7 @@
                 window.Echo.private('App.Models.User.<?php echo $user; ?>')
                     .listen('.database-notifications.sent', (event) => {
                         var sound = new Howl({
-                            src: ['{{ asset('notif.mp3') }}'],
+                            src: ['{{ asset('notif.wav') }}'],
                             onplayerror: function() {
                                 sound.once('unlock', function() {
                                     sound.play();
