@@ -169,7 +169,7 @@
             </div>
             <p class="px-8 mt-2 ml-14">Demikian surat tugas ini dibuat untuk dapat dipergunakan sebagaimana<br />
             </p>
-            <p>mestinya, atas perhatian dan kerjasamanya kami ucapkan terima kasih.</p>
+            <p class="ml-16">mestinya, atas perhatian dan kerjasamanya kami ucapkan terima kasih.</p>
             <div class="flex flex-row items-start justify-between mt-5 break-after-page ml-12">
                 <div class="w-1/2">
                     Diterima oleh,<br />
