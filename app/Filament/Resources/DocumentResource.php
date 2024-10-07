@@ -54,7 +54,8 @@ class DocumentResource extends Resource
                                 } else {
                                     return true;
                                 }
-                            }),
+                            })
+                            ->dehydrated(true),
                         FileUpload::make('ijazah')
                             ->directory('documents'),
                         FileUpload::make('ktp')
