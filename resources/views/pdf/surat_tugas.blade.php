@@ -33,7 +33,7 @@
 </head>
 
 <body>
-    <div class=" px-0 mx-0 mt-1 text-sm antialiased h-full w-full" id="cetak">
+    <div class=" px-0 mx-0  mt-1 text-sm antialiased h-full w-full" id="cetak">
         @foreach ($records as $record)
             <div class="flex items-start">
                 {{-- <img class="h-40 w-48" src="{{ asset($perusahaan->logo) }}"> --}}
@@ -44,7 +44,7 @@
                 <h2 class="underline text-2xl">surat tugas</h2>
                 <h4 class="text-lg">Nomor : {{ $record->no_surat }}</h4>
             </div>
-            <div class="space-y-1.5">
+            <div class="space-y-1.5 ml-12">
                 <h3 class="mt-10">Yang bertanda tangan di bawah ini :</h3>
                 <div class="flex flex-row w-auto text-left justify-start">
                     <div class="w-[4%]">
@@ -80,7 +80,7 @@
                     </div>
                 </div>
             </div>
-            <div class="space-y-1.5">
+            <div class="space-y-1.5 ml-12">
                 <h3 class="mt-10">Dengan ini menerangkan bahwa nama-nama dibawah ini :</h3>
                 <div class="flex flex-row w-auto items-start">
                     <div class="w-[4%]">
@@ -117,13 +117,13 @@
                 </div>
             </div>
 
-            <p class="w-full mt-3 px-8">
+            <p class="w-full mt-3 px-8 ml-20">
                 Adalah benar karyawan {{ $perusahaan->nama }} yang kami tugaskan untuk <br />
             </p>
-            <p class=" mb-3">
+            <p class=" mb-3 ml-16">
                 <span class="font-semibold italic">{{ $record->tugas }}</span> yang dilaksakan pada :
             </p>
-            <div class="flex flex-row items-center">
+            <div class="flex flex-row items-center ml-12">
                 <div class="w-[6%]">
                     Hari
                 </div>
@@ -134,7 +134,7 @@
                     {{ $today = \Carbon\Carbon::parse($record->created_at)->isoFormat('dddd') }}
                 </div>
             </div>
-            <div class="flex flex-row items-center">
+            <div class="flex flex-row items-center ml-12">
                 <div class="w-[6%]">
                     Tanggal
                 </div>
@@ -145,7 +145,7 @@
                     {{ $today = \Carbon\Carbon::parse($record->created_at)->isoFormat('D MMMM Y') }}
                 </div>
             </div>
-            <div class="flex flex-row items-center">
+            <div class="flex flex-row items-center ml-12">
                 <div class="w-[6%]">
                     Pukul
                 </div>
@@ -156,7 +156,7 @@
                     {{ $today = \Carbon\Carbon::parse($record->created_at)->isoFormat('H:mm:ss') }} WIB s/d Selesai
                 </div>
             </div>
-            <div class="flex flex-row items-center">
+            <div class="flex flex-row items-center ml-12">
                 <div class="w-[6%]">
                     Tempat
                 </div>
@@ -167,10 +167,10 @@
                     {{ $record->tempat }}
                 </div>
             </div>
-            <p class="px-8 mt-2">Demikian surat tugas ini dibuat untuk dapat dipergunakan sebagaimana<br />
+            <p class="px-8 mt-2 ml-14">Demikian surat tugas ini dibuat untuk dapat dipergunakan sebagaimana<br />
             </p>
             <p>mestinya, atas perhatian dan kerjasamanya kami ucapkan terima kasih.</p>
-            <div class="flex flex-row items-start justify-between mt-5 break-after-page">
+            <div class="flex flex-row items-start justify-between mt-5 break-after-page ml-12">
                 <div class="w-1/2">
                     Diterima oleh,<br />
                     Pejabat yang berwenang
