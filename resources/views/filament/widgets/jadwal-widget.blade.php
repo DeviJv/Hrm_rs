@@ -26,9 +26,9 @@
                         </div>
                     </div>
                     <div class="w-full place-items-end text-right border-t-2 border-gray-100 mt-2">
-                        <a href="{{ \app\Filament\Resources\TidakMasukResource::getUrl() }}"
+                        {{-- <a href="{{ \app\Filament\Resources\TidakMasukResource::getUrl() }}"
                             class="text-gray-500 text-xs font-medium">Lihat
-                            Selengkapnya</a>
+                            Selengkapnya</a> --}}
                     </div>
                 </div>
             </div>
@@ -55,9 +55,9 @@
                         </div>
                     </div>
                     <div class="w-full place-items-end text-right border-t-2 border-gray-100 mt-2">
-                        <a href="{{ \app\Filament\Resources\TidakMasukResource::getUrl() }}"
+                        {{-- <a href="{{ \app\Filament\Resources\TidakMasukResource::getUrl() }}"
                             class="text-gray-500 text-xs font-medium">Lihat
-                            Selengkapnya</a>
+                            Selengkapnya</a> --}}
                     </div>
                 </div>
             </div>
@@ -87,9 +87,9 @@
                         </div>
                     </div>
                     <div class="w-full place-items-end text-right border-t-2 border-gray-100 mt-2">
-                        <a href="{{ \app\Filament\Resources\LemburResource::getUrl() }}"
+                        {{-- <a href="{{ \app\Filament\Resources\LemburResource::getUrl() }}"
                             class="text-gray-500 text-xs font-medium">Lihat
-                            Selengkapnya</a>
+                            Selengkapnya</a> --}}
                     </div>
                 </div>
             </div>
@@ -117,9 +117,9 @@
                         </div>
                     </div>
                     <div class="w-full place-items-end text-right border-t-2 border-gray-100 mt-2">
-                        <a href="{{ \app\Filament\Resources\TidakMasukResource::getUrl() }}"
+                        {{-- <a href="{{ \app\Filament\Resources\TidakMasukResource::getUrl() }}"
                             class="text-gray-500 text-xs font-medium">Lihat
-                            Selengkapnya</a>
+                            Selengkapnya</a> --}}
                     </div>
                 </div>
             </div>

@@ -68,6 +68,7 @@ class LemburResource extends Resource implements HasShieldPermissions
                             ->searchable()
                             ->relationship('karyawan', 'nama')
                             ->preload()
+                            ->dehydrated(true)
                             // ->unique(Lembur::class, 'karyawan_id', ignoreRecord: true)
                             ->live()
                             ->default(function () {
@@ -131,7 +132,6 @@ class LemburResource extends Resource implements HasShieldPermissions
                                     }
                                 }
                             })
-                            ->dehydrated()
                             ->required(),
                         DatePicker::make('tgl_lembur')
                             ->live()
