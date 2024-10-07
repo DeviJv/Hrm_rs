@@ -36,8 +36,8 @@
     @foreach ($records as $record)
         <div class="flex items-start">
             {{-- <img class="h-40 w-48" src="{{ asset($perusahaan->logo) }}"> --}}
-            <img class="h-[1040px] pr-5 w-screen -z-30 bg-no-repeat absolute"
-                src="{{ asset('RSIA Bunda Suryatni Letterhead.png') }}">
+            {{-- <img class="h-[1040px] pr-5 w-screen -z-30 bg-no-repeat absolute"
+                src="{{ asset('RSIA Bunda Suryatni Letterhead.png') }}"> --}}
         </div>
         <div class="text-center uppercase mt-44">
             <h2 class="underline text-xl">surat keterangan bekerja</h2>
