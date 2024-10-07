@@ -43,7 +43,7 @@
             <h2 class="underline text-xl">surat keterangan pengalaman bekerja</h2>
             <h4 class="text-lg">Nomor : {{ $record->no_surat }}</h4>
         </div>
-        <div class="space-y-1.5 text-sm">
+        <div class="space-y-1.5 text-sm ml-12">
             <h3 class="mt-10 mb-4">Dengan Hormat,</h3>
             <h3 class="">Yang bertanda tangan di bawah ini :</h3>
             <div class=" flex flex-row w-auto items-start">
@@ -91,8 +91,8 @@
                 </div>
             </div>
         </div>
-        <div class="space-y-1.5">
-            <h3 class="mt-6">Dengan ini menerangkan bahwa karyawan atas nama terlampir di bawah ini :</h3>
+        <div class="space-y-1.5 ml-12">
+            <h3 class="mt-6 mb-4">Dengan ini menerangkan bahwa karyawan atas nama terlampir di bawah ini :</h3>
             <div class="flex flex-row w-auto items-start">
                 <div class="w-[8%]">
                     Nama
@@ -150,17 +150,17 @@
             </div>
         </div>
 
-        <p class="w-full mt-3 px-8 text-xs">
+        <p class="w-full mt-3 px-8 text-xs ml-20">
             Yang bersangkutan telah memberikan kontribusi yang baik kepada perusahaan selama bekerja <br />
         </p>
-        <p class="text-xs">
+        <p class="text-xs ml-16">
             tidak pernah melakukan perbuatan yang merugikan perusahaan kami. Demikian surat keterangan <br />
         </p>
-        <p class="text-xs mb-3">
+        <p class="text-xs mb-3 ml-16">
             bekerja ini dibuat agar dapat dipergunakan sebagaimana mestinya. <br />
         </p>
 
-        <div class="flex flex-row items-end justify-end  mt-5 break-after-page">
+        <div class="flex flex-row items-end justify-end  mt-5 break-after-page ml-12">
 
             <div class="w-1/2">
                 Bogor, {{ $today = \Carbon\Carbon::parse($record->created_at)->isoFormat('D MMMM Y') }}<br />

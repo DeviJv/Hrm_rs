@@ -43,7 +43,7 @@
             <h2 class="underline text-xl">surat keterangan bekerja</h2>
             <h4 class="text-lg">Nomor : {{ $record->no_surat }}</h4>
         </div>
-        <div class="space-y-1.5">
+        <div class="space-y-1.5 ml-12">
             <h3 class="mt-10 mb-4">Dengan Hormat,</h3>
             <h3 class="">Yang bertanda tangan di bawah ini :</h3>
             <div class="flex flex-row w-auto items-start">
@@ -91,7 +91,7 @@
                 </div>
             </div>
         </div>
-        <div class="space-y-1.5">
+        <div class="space-y-1.5 ml-12">
             <h3 class="mt-6">Dengan ini menerangkan bahwa perusahaan kami memiliki tenaga kerja dengan data sebagai
                 berikut :</h3>
             <div class="flex flex-row w-auto items-start">
@@ -141,15 +141,15 @@
 
         </div>
 
-        <p class="w-full mt-3 px-8 text-xs">
+        <p class="w-full mt-3 px-8 text-xs ml-20">
             Demikian surat keterangan ini kami buat untuk digunakan sebagaimana mestinya. <br />
         </p>
-        <p class="text-xs">
+        <p class="text-xs ml-16">
             Atas perhatiannya kami ucapkan terima kasih. <br />
         </p>
 
 
-        <div class="flex flex-row items-end justify-end  mt-5 break-after-page">
+        <div class="flex flex-row items-end justify-end  mt-5 break-after-page ml-12">
 
             <div class="w-1/2">
                 Bogor, {{ $today = \Carbon\Carbon::parse($record->created_at)->isoFormat('D MMMM Y') }}<br />
