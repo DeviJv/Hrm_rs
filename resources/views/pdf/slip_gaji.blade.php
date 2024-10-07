@@ -63,7 +63,7 @@ function terbilang($x)
                 <tr>
                     <td style="width: 50%;">
                         <center><img width="250" height="220"
-                                src="data:image/png;base64,{{ base64_encode(file_get_contents(asset($perusahaan->logo))) }}">
+                                src="data:image/png;base64,{{ base64_encode(file_get_contents(asset('storage/' . $perusahaan->logo))) }}">
                         </center>
                     </td>
                     <td style="width: 50%;">

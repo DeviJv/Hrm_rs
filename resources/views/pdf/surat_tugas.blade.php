@@ -181,9 +181,9 @@
                     </div>
                 </div>
                 <div class="w-1/2">
-                    {{ $today = \Carbon\Carbon::parse($record->created_at)->isoFormat('D MMMM Y') }}<br />
+                    Bogor, {{ $today = \Carbon\Carbon::parse($record->created_at)->isoFormat('D MMMM Y') }}<br />
                     @if ($record->stemple)
-                        <img class="h-24 w-28" src="{{ asset($perusahaan->stample) }}">
+                        <img class="h-24 w-28" src="{{ asset('storage/' . $perusahaan->stample) }}">
                         <span class="underline">{{ $record->nama_direktur }}</span><br />
                         {{ $record->jabatan_direktur }}
                     @else
