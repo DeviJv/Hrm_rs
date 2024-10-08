@@ -9,12 +9,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Tidak_masuk extends Model
 {
     use HasFactory;
-    protected function casts(): array
-    {
-        return [
-            'tgl_mulai' => 'date:Y-m-d',
-        ];
-    }
+    // protected function casts(): array
+    // {
+    //     return [
+    //         'tgl_mulai' => 'date:Y-m-d',
+    //         'tgl_akhir' => 'date:Y-m-d',
+    //     ];
+    // }
 
     public function karyawan(): BelongsTo
     {

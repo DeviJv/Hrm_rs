@@ -141,6 +141,9 @@ class TidakMasukResource extends Resource implements HasShieldPermissions
                 TextColumn::make('jumlah_hari')
                     ->summarize(Sum::make()),
                 TextColumn::make('backup.nama'),
+                Tables\Columns\TextColumn::make('document')
+                    ->label('Document')
+                    ->view('filament.tables.columns.lampiran_tdk_masuk'),
                 TextColumn::make('status')
                     ->badge()
                     ->color(fn(string $state): string => match ($state) {

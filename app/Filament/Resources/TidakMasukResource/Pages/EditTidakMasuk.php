@@ -33,7 +33,7 @@ class EditTidakMasuk extends EditRecord
     protected function getSaveFormAction(): Action
     {
         return Action::make('save')
-            ->action(fn() => $this->create())
+            ->action(fn() => $this->save())
             ->requiresConfirmation()
             ->form([
                 TextInput::make('password')
@@ -64,37 +64,42 @@ class EditTidakMasuk extends EditRecord
         $karyawan = Karyawan::where('id', $data['karyawan_id'])->first();
         $check_tgl = Tidak_masuk::where('karyawan_id', $data['karyawan_id'])
             ->whereDate('tgl_mulai', '=', $data['tgl_mulai'])->count();
-        if ($check_tgl > 0) {
-            Notification::make()
-                ->danger()
-                ->title("Pengajuan <strong>{$data['keterangan']}</strong> Gagal!")
-                ->body("Mohon maaf <b>{$session_name}</b> tanggal mulai yang kamu Masukan Sudah Ada!.")
-                ->send();
-            $this->halt();
+        if ($data['tgl_mulai'] != date('Y-m-d', strtotime($this->record->tgl_mulai)) && $data['tgl_akhir'] != date('Y-m-d', strtotime($this->record->tgl_akhir))) {
+
+            if ($check_tgl > 0) {
+                Notification::make()
+                    ->danger()
+                    ->title("Pengajuan <strong>{$data['keterangan']}</strong> Gagal!")
+                    ->body("Mohon maaf <b>{$session_name}</b> tanggal mulai yang kamu Masukan Sudah Ada!.")
+                    ->send();
+                $this->halt();
+            }
         }
-        $check_kuota = Tidak_masuk::where('karyawan_id', $data['karyawan_id'])->where('keterangan', $data['keterangan'])
+        $check_kuota = Tidak_masuk::where('karyawan_id', $data['karyawan_id'])->where('keterangan', 'cuti')
             ->whereMonth('tgl_mulai', '=', date('m', strtotime($data['tgl_mulai'])))->sum('jumlah_hari');
-
         if ($data['keterangan'] == "cuti") {
-            if ($hitung->d > $get_kuota->maximal) {
-                Notification::make()
-                    ->danger()
-                    ->title("Pengajuan <strong>{$data['keterangan']}</strong> Gagal!")
-                    ->body("Mohon Maaf <b>{$session_name}</b> Kuota <b>{$karyawan->nama}</b> Untuk <b>{$data['keterangan']}</b> Bulan <strong>" . date('F', strtotime($data['tgl_mulai'])) . "</strong> Sudah Penuh!.")
-                    ->send();
-                $this->halt();
-            }
 
-            if ((int)$check_kuota >= $get_kuota->maximal) {
-                Notification::make()
-                    ->danger()
-                    ->title("Pengajuan <strong>{$data['keterangan']}</strong> Gagal!")
-                    ->body("Mohon Maaf <b>{$session_name}</b> Kuota <b>{$karyawan->nama}</b> Untuk <b>{$data['keterangan']}</b> Bulan <strong>" . date('F', strtotime($data['tgl_mulai'])) . "</strong> Sudah Penuh!.")
-                    ->send();
-                $this->halt();
+            if ($data['tgl_mulai'] == date('Y-m-d', strtotime($this->record->tgl_mulai)) && $data['tgl_akhir'] == date('Y-m-d', strtotime($this->record->tgl_akhir))) {
+            } else {
+                $check_kuota = $check_kuota - $this->record->jumlah_hari;
+                if (($hitung->d + $check_kuota) > $get_kuota->maximal) {
+                    Notification::make()
+                        ->danger()
+                        ->title("Pengajuan <strong>{$data['keterangan']}</strong> Gagal!")
+                        ->body("Mohon Maaf <b>{$session_name}</b> Kuota <b>{$karyawan->nama}</b> Untuk <b>{$data['keterangan']}</b> Bulan <strong>" . date('F', strtotime($data['tgl_mulai'])) . "</strong> Sudah Penuh!.")
+                        ->send();
+                    $this->halt();
+                }
+                if ((int)$check_kuota >= $get_kuota->maximal) {
+                    Notification::make()
+                        ->danger()
+                        ->title("Pengajuan <strong>{$data['keterangan']}</strong> Gagal!")
+                        ->body("Mohon Maaf <b>{$session_name}</b> Kuota <b>{$karyawan->nama}</b> Untuk <b>{$data['keterangan']}</b> Bulan <strong>" . date('F', strtotime($data['tgl_mulai'])) . "</strong> Sudah Penuh!.")
+                        ->send();
+                    $this->halt();
+                }
             }
+            // Runs before the form fields are saved to the database.
         }
-
-        // Runs before the form fields are saved to the database.
     }
 }

@@ -61,7 +61,7 @@ class CreateTidakMasuk extends CreateRecord
                 ->send();
             $this->halt();
         }
-        $check_kuota = Tidak_masuk::where('karyawan_id', $data['karyawan_id'])->where('keterangan', $data['keterangan'])
+        $check_kuota = Tidak_masuk::where('karyawan_id', $data['karyawan_id'])->where('keterangan', 'cuti')
             ->whereMonth('tgl_mulai', '=', date('m', strtotime($data['tgl_mulai'])))->sum('jumlah_hari');
 
         if ($data['keterangan'] == "cuti") {
@@ -73,7 +73,6 @@ class CreateTidakMasuk extends CreateRecord
                     ->send();
                 $this->halt();
             }
-
             if ((int)$check_kuota >= $get_kuota->maximal) {
                 Notification::make()
                     ->danger()
