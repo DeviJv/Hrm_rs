@@ -72,17 +72,18 @@ class CreateTransaksiPayroll extends CreateRecord
         }
 
         if ($data['koperasi'] > 0) {
-            $koperasi = Koperasi::where('karyawan_id', $data['karyawan_id'])
-                ->whereMonth('created_at', '=', date('m', strtotime($data['created_at'])))->first();
-            $bayar_piutang = PembayaranKoperasi::create([
-                "koperasi_id" => $koperasi->id,
-                "nominal" => $data['koperasi'],
-                "created_at" => $data['created_at']
-            ]);
-            $sum_pembayaran_koperasi = PembayaranKoperasi::where('koperasi_id', $koperasi->id)->sum('nominal');
-            if ($koperasi->tagihan <= $sum_pembayaran_koperasi) {
-                $koperasi->status = "PAID";
-                $koperasi->save();
+            $koperasi = Koperasi::where('karyawan_id', $data['karyawan_id'])->where('status', "UNPAID")->first();
+            if ($koperasi != null) {
+                $bayar_piutang = PembayaranKoperasi::create([
+                    "koperasi_id" => $koperasi->id,
+                    "nominal" => $data['koperasi'],
+                    "created_at" => $data['created_at']
+                ]);
+                $sum_pembayaran_koperasi = PembayaranKoperasi::where('koperasi_id', $koperasi->id)->sum('nominal');
+                if ($koperasi->tagihan <= $sum_pembayaran_koperasi) {
+                    $koperasi->status = "PAID";
+                    $koperasi->save();
+                }
             }
         }
     }

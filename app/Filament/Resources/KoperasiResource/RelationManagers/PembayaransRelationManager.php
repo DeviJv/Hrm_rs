@@ -21,15 +21,22 @@ class PembayaransRelationManager extends RelationManager
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('id')
+
+                Forms\Components\DatePicker::make('created_at')
+                    ->label('Tanggal Bayar')
+                    ->default(now())
+                    ->required(),
+                Forms\Components\TextInput::make('nominal')
                     ->required()
-                    ->maxLength(255),
+                    ->currencyMask(thousandSeparator: ',', decimalSeparator: '.', precision: 2)
+                    ->prefix('Rp ')
+                    ->numeric(),
             ]);
     }
 
     public function isReadOnly(): bool
     {
-        return true;
+        return false;
     }
     public function table(Table $table): Table
     {

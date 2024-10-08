@@ -48,13 +48,9 @@ class KoperasiResource extends Resource
                             ->required()
                             ->currencyMask(thousandSeparator: ',', decimalSeparator: '.', precision: 2)
                             ->prefix('Rp '),
-                        Select::make('tenor')
-                            ->options([
-                                '1 Bulan' => '1 BULAN',
-                                '3 Bulan' => '3 BULAN',
-                                '6 Bulan' => '6 BULAN',
-                                '1 Tahun' => '1 TAHUN',
-                            ])
+                        TextInput::make('tenor')
+                            ->required()
+                            ->numeric(),
                     ])
             ]);
     }
