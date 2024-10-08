@@ -117,11 +117,7 @@ class LemburResource extends Resource implements HasShieldPermissions
                                             $hitung = $hitung->h;
                                         }
                                         $harga_perjam = $get('harga_lembur') / 173;
-                                        if (static::tanggalMerah($tgl)) {
-                                            $harga_jam_pertama = $get('harga_lembur') / 173 * 2;
-                                        } else {
-                                            $harga_jam_pertama = $get('harga_lembur') / 173 * 1.5;
-                                        }
+                                        $harga_jam_pertama = $get('harga_lembur') / 173 * 1.5;
                                         $harga_total_jam = $harga_perjam * 2 * $hitung;
                                         $set('jumlah_jam', round($hitung));
                                         $set('harga_perjam', round($harga_perjam));
@@ -168,11 +164,7 @@ class LemburResource extends Resource implements HasShieldPermissions
                                         $hitung = $hitung->h;
                                     }
                                     $harga_perjam = $get('harga_lembur') / 173;
-                                    if (static::tanggalMerah($tgl)) {
-                                        $harga_jam_pertama = $get('harga_lembur') / 173 * 2;
-                                    } else {
-                                        $harga_jam_pertama = $get('harga_lembur') / 173 * 1.5;
-                                    }
+                                    $harga_jam_pertama = $get('harga_lembur') / 173 * 1.5;
                                     $harga_total_jam = $harga_perjam * 2 * $hitung;
                                     $set('jumlah_jam', round($hitung));
                                     $set('harga_perjam', round($harga_perjam));
@@ -198,11 +190,7 @@ class LemburResource extends Resource implements HasShieldPermissions
                                         $hitung = $hitung->h;
                                     }
                                     $harga_perjam = $get('harga_lembur') / 173;
-                                    if (static::tanggalMerah($tgl)) {
-                                        $harga_jam_pertama = $get('harga_lembur') / 173 * 2;
-                                    } else {
-                                        $harga_jam_pertama = $get('harga_lembur') / 173 * 1.5;
-                                    }
+                                    $harga_jam_pertama = $get('harga_lembur') / 173 * 1.5;
                                     $harga_total_jam = $harga_perjam * 2 * $hitung;
                                     $set('jumlah_jam', round($hitung));
                                     $set('harga_perjam', round($harga_perjam));
@@ -228,11 +216,7 @@ class LemburResource extends Resource implements HasShieldPermissions
                                         $hitung = $hitung->h;
                                     }
                                     $harga_perjam = $get('harga_lembur') / 173;
-                                    if (static::tanggalMerah($tgl)) {
-                                        $harga_jam_pertama = $get('harga_lembur') / 173 * 2;
-                                    } else {
-                                        $harga_jam_pertama = $get('harga_lembur') / 173 * 1.5;
-                                    }
+                                    $harga_jam_pertama = $get('harga_lembur') / 173 * 1.5;
                                     $harga_total_jam = $harga_perjam * 2 * $hitung;
                                     $set('jumlah_jam', round($hitung));
                                     $set('harga_perjam', round($harga_perjam));
