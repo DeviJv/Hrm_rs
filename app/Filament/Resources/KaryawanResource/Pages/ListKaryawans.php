@@ -2,11 +2,13 @@
 
 namespace App\Filament\Resources\KaryawanResource\Pages;
 
+use App\Filament\Exports\KaryawanExporter;
 use App\Filament\Imports\KaryawanImporter;
 use Filament\Actions;
 use Filament\Actions\ImportAction;
 use Filament\Resources\Pages\ListRecords;
 use App\Filament\Resources\KaryawanResource;
+use Filament\Actions\ExportAction;
 
 class ListKaryawans extends ListRecords
 {
@@ -17,6 +19,8 @@ class ListKaryawans extends ListRecords
         return [
             ImportAction::make()
                 ->importer(KaryawanImporter::class),
+            ExportAction::make()
+                ->importer(KaryawanExporter::class),
             Actions\CreateAction::make(),
         ];
     }
