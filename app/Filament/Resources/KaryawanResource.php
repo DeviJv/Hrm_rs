@@ -200,15 +200,15 @@ class KaryawanResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                SelectFilter::make('aktif')
-                    ->label('Masih Bekerja')
-                    ->options([
-                        0 => "Tidak Berkerja",
-                        1 => "Sedang Berkerja",
-                    ]),
-                SelectFilter::make('department')
-                    ->searchable()
-                    ->options(fn() => Karyawan::groupBy('department')->pluck('department', 'department')),
+                // SelectFilter::make('aktif')
+                //     ->label('Masih Bekerja')
+                //     ->options([
+                //         0 => "Tidak Berkerja",
+                //         1 => "Sedang Berkerja",
+                //     ]),
+                // SelectFilter::make('department')
+                //     ->searchable()
+                //     ->options(fn() => Karyawan::groupBy('department')->pluck('department', 'department')),
             ])
             ->actions([
                 Tables\Actions\EditAction::make()
