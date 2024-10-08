@@ -118,6 +118,7 @@ class TidakMasukResource extends Resource implements HasShieldPermissions
             ->columns([
                 TextColumn::make('karyawan.nama')
                     ->label('Nama')
+                    ->sortable()
                     ->searchable(),
                 TextColumn::make('karyawan.jabatan')
                     ->label('Jabatan')
@@ -131,9 +132,11 @@ class TidakMasukResource extends Resource implements HasShieldPermissions
                 TextColumn::make('keperluan'),
                 TextColumn::make('tgl_mulai')
                     ->label('Tanggal Mulai')
+                    ->sortable()
                     ->date(),
                 TextColumn::make('tgl_akhir')
                     ->label('Tanggal Masuk')
+                    ->sortable()
                     ->date(),
                 TextColumn::make('jumlah_hari')
                     ->summarize(Sum::make()),
