@@ -85,18 +85,30 @@ class PengaturanPayrollResource extends Resource
                     ->sortable()
                     ->searchable(),
                 TextColumn::make('gaji_pokok')
-                    ->label('Gaji Poko')
-                    ->money('IDR'),
-                TextColumn::make('makan')
-                    ->label('Uang Makan')
-                    ->default(0)
+                    ->label('Gaji Pokok')
                     ->money('IDR'),
                 TextColumn::make('transport')
                     ->label('Transport')
                     ->default(0)
                     ->money('IDR'),
+                TextColumn::make('makan')
+                    ->label('Uang Makan')
+                    ->default(0)
+                    ->money('IDR'),
+
                 TextColumn::make('insentif')
                     ->label('Insentif')
+                    ->default(0)
+                    ->money('IDR'),
+
+                TextColumn::make('fungsional')
+                    ->label('Fungsional Umum')
+                    ->toggleable()
+                    ->default(0)
+                    ->money('IDR'),
+                TextColumn::make('fungsional_it')
+                    ->label('Fungsional Khusus')
+                    ->toggleable()
                     ->default(0)
                     ->money('IDR'),
                 TextColumn::make('tunjangan')
@@ -104,13 +116,8 @@ class PengaturanPayrollResource extends Resource
                     ->default(0)
                     ->label('Jabatan')
                     ->money('IDR'),
-                TextColumn::make('fungsional')
-                    ->label('Funsional')
-                    ->toggleable()
-                    ->default(0)
-                    ->money('IDR'),
-                TextColumn::make('fungsional_it')
-                    ->label('Funsional IT')
+                TextColumn::make('bpjs_ketenagakerjaan')
+                    ->label('BPJS Ketenagakerjaan')
                     ->toggleable()
                     ->default(0)
                     ->money('IDR'),
@@ -119,11 +126,8 @@ class PengaturanPayrollResource extends Resource
                     ->toggleable()
                     ->default(0)
                     ->money('IDR'),
-                TextColumn::make('bpjs_ketenagakerjaan')
-                    ->label('BPJS Ketenagakerjaan')
-                    ->toggleable()
-                    ->default(0)
-                    ->money('IDR'),
+
+
             ])
             ->filters([
                 //
