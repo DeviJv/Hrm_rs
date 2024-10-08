@@ -129,6 +129,7 @@ class KaryawanResource extends Resource
                     ->label('NIK')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('nama')
+                    ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('agama')
                     ->searchable(),

@@ -76,6 +76,7 @@ class PengaturanPayrollResource extends Resource
             ->columns([
                 TextColumn::make('karyawan.nama')
                     ->label('Nama')
+                    ->sortable()
                     ->searchable(),
                 TextColumn::make('gaji_pokok')
                     ->label('Gaji Poko')
