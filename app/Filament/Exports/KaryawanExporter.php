@@ -15,64 +15,34 @@ class KaryawanExporter extends Exporter
     public static function getColumns(): array
     {
         return [
-            ExportColumn::make('nik')
-                ->rules(['max:255']),
-            ExportColumn::make('nama')
-                ->requiredMapping()
-                ->rules(['required', 'max:255']),
-            ExportColumn::make('jk')
-                ->rules(['max:255']),
-            ExportColumn::make('agama')
-                ->rules(['max:255']),
-            ExportColumn::make('nakes')
-                ->rules(['max:255']),
-            ExportColumn::make('department')
-                ->rules(['max:255']),
-            ExportColumn::make('jabatan')
-                ->rules(['max:255']),
-            ExportColumn::make('tgl_masuk')
-                ->castStateUsing(function ($state) {
-                    if (blank($state)) {
-                        return null;
-                    }
-                    $state = Carbon::createFromFormat('d/m/Y', $state)->format('Y-m-d');
-                    return $state;
-                })->rules(['date']),
-            ExportColumn::make('tgl_lahir')
-                ->rules(['max:255']),
-            ExportColumn::make('status')
-                ->rules(['max:255']),
-            ExportColumn::make('nik_ktp')
-                ->rules(['max:255']),
-            ExportColumn::make('pendidikan')
-                ->rules(['max:255']),
-            ExportColumn::make('universitas')
-                ->rules(['max:255']),
-            ExportColumn::make('no_ijazah')
-                ->rules(['max:255']),
-            ExportColumn::make('str')
-                ->rules(['max:255']),
-            ExportColumn::make('masa_berlaku')
-                ->rules(['max:255']),
-            ExportColumn::make('sip')
-                ->rules(['max:255']),
-            ExportColumn::make('no_tlp')
-                ->rules(['max:255']),
-            ExportColumn::make('email')
-                ->rules(['max:255']),
+            ExportColumn::make('nik'),
+            ExportColumn::make('nama'),
+            ExportColumn::make('jk'),
+            ExportColumn::make('agama'),
+            ExportColumn::make('nakes'),
+            ExportColumn::make('department'),
+            ExportColumn::make('jabatan'),
+            ExportColumn::make('tgl_masuk'),
+            ExportColumn::make('tgl_lahir'),
+            ExportColumn::make('status'),
+            ExportColumn::make('nik_ktp'),
+            ExportColumn::make('pendidikan'),
+            ExportColumn::make('universitas'),
+            ExportColumn::make('no_ijazah'),
+            ExportColumn::make('str'),
+            ExportColumn::make('masa_berlaku'),
+            ExportColumn::make('sip'),
+            ExportColumn::make('no_tlp'),
+            ExportColumn::make('email'),
             ExportColumn::make('alamat'),
             // ExportColumn::make('aktif')
             //     ->requiredMapping()
             //     ->boolean()
             //     ->rules(['required', 'boolean']),
-            ExportColumn::make('bank')
-                ->rules(['max:255']),
-            ExportColumn::make('no_rekening')
-                ->rules(['max:255']),
-            ExportColumn::make('nip')
-                ->rules(['max:255']),
-            ExportColumn::make('no_sk')
-                ->rules(['max:255']),
+            ExportColumn::make('bank'),
+            ExportColumn::make('no_rekening'),
+            ExportColumn::make('nip'),
+            ExportColumn::make('no_sk'),
         ];
     }
 

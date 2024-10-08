@@ -14,9 +14,9 @@ class PayrollImporter extends Importer
     public static function getColumns(): array
     {
         return [
-            ImportColumn::make('karyawan.nama')
-                ->requiredMapping()
-                ->rules(['required', 'max:255']),
+            ImportColumn::make('karyawan')
+                ->label('nama karyawan')
+                ->relationship(resolveUsing: 'nama'),
             ImportColumn::make('gaji_pokok'),
             ImportColumn::make('transport'),
             ImportColumn::make('makan'),
@@ -24,7 +24,8 @@ class PayrollImporter extends Importer
                 ->label('Fungsional'),
             ImportColumn::make('fungsional_it')
                 ->label('Fungsional Khusus'),
-            ImportColumn::make('tunjangan'),
+            ImportColumn::make('tunjangan')
+                ->label('Jabatan'),
             ImportColumn::make('bpjs_kesehatan'),
             ImportColumn::make('bpjs_ketenagakerjaan'),
         ];
