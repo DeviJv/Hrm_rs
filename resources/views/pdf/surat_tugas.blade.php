@@ -184,11 +184,11 @@
                     Bogor, {{ $today = \Carbon\Carbon::parse($record->created_at)->isoFormat('D MMMM Y') }}<br />
                     @if ($record->stemple)
                         <img class="h-24 w-28" src="{{ asset('storage/' . $perusahaan->stample) }}">
-                        <span class="underline">{{ $record->nama_direktur }}</span><br />
+                        <span class="underline">{{ '( ' . $record->nama_direktur . ' ) ' }}</span><br />
                         {{ $record->jabatan_direktur }}
                     @else
                         <div class="mt-20">
-                            (.........................)
+                            {{ '( ' . $record->nama_direktur . ' ) ' }}
                             <br />
                             {{ $record->jabatan_direktur }}
                         </div>
