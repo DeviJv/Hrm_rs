@@ -17,22 +17,14 @@ class PayrollImporter extends Importer
             ImportColumn::make('karyawan.nama')
                 ->requiredMapping()
                 ->rules(['required', 'max:255']),
-            ImportColumn::make('gaji_pokok')
-                ->rules(['required', 'max:255']),
-            ImportColumn::make('transport')
-                ->rules(['required', 'max:255']),
-            ImportColumn::make('makan')
-                ->rules(['required', 'max:255']),
-            ImportColumn::make('fungsional')
-                ->rules(['required', 'max:255']),
-            ImportColumn::make('fungsional_it')
-                ->rules(['required', 'max:255']),
-            ImportColumn::make('tunjangan')
-                ->rules(['required', 'max:255']),
-            ImportColumn::make('bpjs_kesehatan')
-                ->rules(['required', 'max:255']),
-            ImportColumn::make('bpjs_ketenagakerjaan')
-                ->rules(['required', 'max:255']),
+            ImportColumn::make('gaji_pokok'),
+            ImportColumn::make('transport'),
+            ImportColumn::make('makan'),
+            ImportColumn::make('fungsional'),
+            ImportColumn::make('fungsional_it'),
+            ImportColumn::make('tunjangan'),
+            ImportColumn::make('bpjs_kesehatan'),
+            ImportColumn::make('bpjs_ketenagakerjaan'),
         ];
     }
 
