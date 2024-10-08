@@ -8,18 +8,18 @@ use App\Http\Controllers\DownloadPdf;
 use App\Http\Controllers\LemburAction;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
+// Route::get('/', function () {
 
-    $perusahaan = Perusahaan::first();
-    $data = [
-        'records' => TransaksiPayroll::all(),
-        'perusahaan' => $perusahaan
-    ];
-    // return view('pdf.slip_gaji', $data);
-    $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('pdf.slip_gaji', $data);
-    return $pdf->stream();
-    // return view('welcome');
-});
+//     $perusahaan = Perusahaan::first();
+//     $data = [
+//         'records' => TransaksiPayroll::all(),
+//         'perusahaan' => $perusahaan
+//     ];
+//     // return view('pdf.slip_gaji', $data);
+//     $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('pdf.slip_gaji', $data);
+//     return $pdf->stream();
+//     // return view('welcome');
+// });
 Route::get('/slip_gaji/', [DownloadPdf::class, 'slip_gaji'])->name('pdf.slip_gaji');
 Route::get('/surat_tugas/', [DownloadPdf::class, 'surat_tugas'])->name('pdf.surat_tugas');
 Route::get('/surat_paklaring/', [DownloadPdf::class, 'surat_paklaring'])->name('pdf.surat_paklaring');

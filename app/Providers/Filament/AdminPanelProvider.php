@@ -35,7 +35,7 @@ class AdminPanelProvider extends PanelProvider
             ->spa()
             ->unsavedChangesAlerts()
             ->id('admin')
-            ->path('admin')
+            ->path('')
             // ->collapsedSidebarWidth("2rem")
             ->sidebarWidth("18rem")
             ->sidebarCollapsibleOnDesktop()
