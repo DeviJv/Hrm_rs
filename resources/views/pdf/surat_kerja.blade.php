@@ -162,7 +162,7 @@
                     <div class="mt-20 underline">
                         {{ '( ' . $record->nama_manager . ' ) ' }}
                         <br />
-                        {{ $record->jabatan_direktur }}
+                        {{ $record->jabatan_manager }}
                     </div>
                 @endif
             </div>
