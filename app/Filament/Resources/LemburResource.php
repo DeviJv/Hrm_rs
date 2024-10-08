@@ -325,13 +325,13 @@ class LemburResource extends Resource implements HasShieldPermissions
                     ->money('IDR')
                     ->summarize(Sum::make()->label('Total')->money('IDR'))
                     ->searchable(),
-                Tables\Columns\TextColumn::make('status')
-                    ->badge()
-                    ->color(fn(string $state): string => match ($state) {
-                        'pending' => 'info',
-                        'approved' => 'success',
-                        'decline' => 'danger',
-                    }),
+                // Tables\Columns\TextColumn::make('status')
+                //     ->badge()
+                //     ->color(fn(string $state): string => match ($state) {
+                //         'pending' => 'info',
+                //         'approved' => 'success',
+                //         'decline' => 'danger',
+                //     }),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -392,40 +392,40 @@ class LemburResource extends Resource implements HasShieldPermissions
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
-                ActionGroup::make([
-                    TAction::make('setujuii')
-                        ->label('Approve')
-                        ->color('success')
-                        ->form([
-                            TextInput::make('password')
-                                ->password()
-                                ->required()
-                                ->rules(['current_password'])
-                        ])
-                        ->icon('heroicon-o-check-circle')
-                        ->requiresConfirmation()
-                        ->action(function (Model $record) {
-                            $data = $record;
-                            return redirect()->route('lembur.approve', $data);
-                        }),
-                    TAction::make('tolakk')
-                        ->label('Decline')
-                        ->color('danger')
-                        ->form([
-                            TextInput::make('password')
-                                ->password()
-                                ->required()
-                                ->rules(['current_password'])
-                        ])
-                        ->icon('heroicon-o-x-circle')
-                        ->requiresConfirmation()
-                        ->action(function (Model $record) {
-                            $data = $record;
-                            return redirect()->route('lembur.decline', $data);
-                        }),
-                ])
-                    ->icon('heroicon-m-ellipsis-horizontal')
-                    ->visible(fn(Lembur $record): bool => auth()->user()->can('approve_lembur', $record) && auth()->user()->can('decline_lembur', $record)),
+                // ActionGroup::make([
+                //     TAction::make('setujuii')
+                //         ->label('Approve')
+                //         ->color('success')
+                //         ->form([
+                //             TextInput::make('password')
+                //                 ->password()
+                //                 ->required()
+                //                 ->rules(['current_password'])
+                //         ])
+                //         ->icon('heroicon-o-check-circle')
+                //         ->requiresConfirmation()
+                //         ->action(function (Model $record) {
+                //             $data = $record;
+                //             return redirect()->route('lembur.approve', $data);
+                //         }),
+                //     TAction::make('tolakk')
+                //         ->label('Decline')
+                //         ->color('danger')
+                //         ->form([
+                //             TextInput::make('password')
+                //                 ->password()
+                //                 ->required()
+                //                 ->rules(['current_password'])
+                //         ])
+                //         ->icon('heroicon-o-x-circle')
+                //         ->requiresConfirmation()
+                //         ->action(function (Model $record) {
+                //             $data = $record;
+                //             return redirect()->route('lembur.decline', $data);
+                //         }),
+                // ])
+                //     ->icon('heroicon-m-ellipsis-horizontal')
+                //     ->visible(fn(Lembur $record): bool => auth()->user()->can('approve_lembur', $record) && auth()->user()->can('decline_lembur', $record)),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

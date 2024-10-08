@@ -114,7 +114,7 @@ class TransaksiPayrollResource extends Resource
                                     $get_koperasi = Koperasi::where('karyawan_id', $get('karyawan_id'))->where('status', 'UNPAID')->first();
                                     $total_lembur = Lembur::where('karyawan_id', $get('karyawan_id'))
                                         ->whereMonth('tgl_lembur', '=', date('m', strtotime($get('created_at'))))
-                                        ->where('status', 'approved')
+                                        // ->where('status', 'approved')
                                         ->sum('total_lembur');
                                     if ($operation == "create") {
                                         if (!empty($get_piutang)) {

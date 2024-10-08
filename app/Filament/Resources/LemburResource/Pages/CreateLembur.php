@@ -60,54 +60,54 @@ class CreateLembur extends CreateRecord
         $auth_user = auth()->user()->name;
         $karyawan = Karyawan::where('id', $data['karyawan_id'])->first();
 
-        Notification::make()
-            ->icon('heroicon-o-information-circle')
-            ->iconColor('info')
-            ->title("Hai Kamu Punya Info Baru Nih")
-            ->body("Saudara/i <b>{$karyawan->nama}</b> Telah Mengajukan Lembur Pada Tanggal <b>{$data['tgl_lembur']}</b>, Dari Jam <b>{$data['jm_mulai']}</b> Sampai Jam <b>{$data['jm_selesai']}</b><br/>Dengan Total Jumlah Jam <b>" . $data['jumlah_jam'] . "</b> ")
-            ->actions([
-                Action::make('setujui')
-                    ->label('Ok! Setuju')
-                    ->color('success')
-                    ->markAsRead()
-                    ->url(fn() => route('lembur.approve', $this->record)),
-                Action::make('tolak')
-                    ->label('Engga Ah Tolak Aja!')
-                    ->markAsRead()
-                    ->url(fn() => route('lembur.decline', $this->record))
-                    ->color('danger'),
-                Action::make('detail')
-                    ->label('Eh Tunggu!')
-                    ->url(fn() => LemburResource::getUrl('edit', ['record' => $this->record]), $shouldOpenInNewTab = true)
-                    ->color('info'),
+        // Notification::make()
+        //     ->icon('heroicon-o-information-circle')
+        //     ->iconColor('info')
+        //     ->title("Hai Kamu Punya Info Baru Nih")
+        //     ->body("Saudara/i <b>{$karyawan->nama}</b> Telah Mengajukan Lembur Pada Tanggal <b>{$data['tgl_lembur']}</b>, Dari Jam <b>{$data['jm_mulai']}</b> Sampai Jam <b>{$data['jm_selesai']}</b><br/>Dengan Total Jumlah Jam <b>" . $data['jumlah_jam'] . "</b> ")
+        //     ->actions([
+        //         Action::make('setujui')
+        //             ->label('Ok! Setuju')
+        //             ->color('success')
+        //             ->markAsRead()
+        //             ->url(fn() => route('lembur.approve', $this->record)),
+        //         Action::make('tolak')
+        //             ->label('Engga Ah Tolak Aja!')
+        //             ->markAsRead()
+        //             ->url(fn() => route('lembur.decline', $this->record))
+        //             ->color('danger'),
+        //         Action::make('detail')
+        //             ->label('Eh Tunggu!')
+        //             ->url(fn() => LemburResource::getUrl('edit', ['record' => $this->record]), $shouldOpenInNewTab = true)
+        //             ->color('info'),
 
-            ])
-            ->sendToDatabase($user_notif);
-        foreach ($user_notif as $user) {
-            event(new DatabaseNotificationsSent($user));
-        }
-        Notification::make()
-            ->icon('heroicon-o-information-circle')
-            ->iconColor('info')
-            ->title("Hai Kamu Punya Info Baru Nih")
-            ->body("Saudara/i <b>{$karyawan->nama}</b> Telah Mengajukan Lembur Pada Tanggal <b>{$data['tgl_lembur']}</b>, Dari Jam <b>{$data['jm_mulai']}</b> Sampai Jam <b>{$data['jm_selesai']}</b><br/>Dengan Total Jumlah Jam <b>" . $data['jumlah_jam'] . "</b> ")
-            ->actions([
-                Action::make('setujui')
-                    ->label('Ok! Setuju')
-                    ->color('success')
-                    ->markAsRead()
-                    ->url(fn() => route('lembur.approve', $this->record)),
-                Action::make('tolak')
-                    ->label('Engga Ah Tolak Aja!')
-                    ->markAsRead()
-                    ->url(fn() => route('lembur.decline', $this->record))
-                    ->color('danger'),
-                Action::make('detail')
-                    ->label('Eh Tunggu!')
-                    ->url(fn() => LemburResource::getUrl('edit', ['record' => $this->record]), $shouldOpenInNewTab = true)
-                    ->color('info'),
+        //     ])
+        //     ->sendToDatabase($user_notif);
+        // foreach ($user_notif as $user) {
+        //     event(new DatabaseNotificationsSent($user));
+        // }
+        // Notification::make()
+        //     ->icon('heroicon-o-information-circle')
+        //     ->iconColor('info')
+        //     ->title("Hai Kamu Punya Info Baru Nih")
+        //     ->body("Saudara/i <b>{$karyawan->nama}</b> Telah Mengajukan Lembur Pada Tanggal <b>{$data['tgl_lembur']}</b>, Dari Jam <b>{$data['jm_mulai']}</b> Sampai Jam <b>{$data['jm_selesai']}</b><br/>Dengan Total Jumlah Jam <b>" . $data['jumlah_jam'] . "</b> ")
+        //     ->actions([
+        //         Action::make('setujui')
+        //             ->label('Ok! Setuju')
+        //             ->color('success')
+        //             ->markAsRead()
+        //             ->url(fn() => route('lembur.approve', $this->record)),
+        //         Action::make('tolak')
+        //             ->label('Engga Ah Tolak Aja!')
+        //             ->markAsRead()
+        //             ->url(fn() => route('lembur.decline', $this->record))
+        //             ->color('danger'),
+        //         Action::make('detail')
+        //             ->label('Eh Tunggu!')
+        //             ->url(fn() => LemburResource::getUrl('edit', ['record' => $this->record]), $shouldOpenInNewTab = true)
+        //             ->color('info'),
 
-            ])
-            ->broadcast($user_notif);
+        //     ])
+        //     ->broadcast($user_notif);
     }
 }
