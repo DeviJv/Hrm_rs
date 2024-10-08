@@ -39,24 +39,27 @@ class PengaturanPayrollResource extends Resource
                             ->preload()
                             ->unique(Payroll::class, 'karyawan_id', ignoreRecord: true)
                             ->required(),
-                        TextInput::make('tunjangan')
-                            ->label('Jabatan')
+                        TextInput::make('gaji_pokok')
+                            ->currencyMask(thousandSeparator: ',', decimalSeparator: '.', precision: 2)
+                            ->prefix('Rp ')
+                            ->required(),
+                        TextInput::make('transport')
                             ->currencyMask(thousandSeparator: ',', decimalSeparator: '.', precision: 2)
                             ->prefix('Rp '),
                         TextInput::make('makan')
                             ->currencyMask(thousandSeparator: ',', decimalSeparator: '.', precision: 2)
                             ->prefix('Rp '),
-                        TextInput::make('transport')
-                            ->currencyMask(thousandSeparator: ',', decimalSeparator: '.', precision: 2)
-                            ->prefix('Rp '),
-                        TextInput::make('gaji_pokok')
+
+                        TextInput::make('insentif')
                             ->currencyMask(thousandSeparator: ',', decimalSeparator: '.', precision: 2)
                             ->prefix('Rp ')
                             ->required(),
                         TextInput::make('fungsional')
+                            ->label('Fungsional Umum')
                             ->currencyMask(thousandSeparator: ',', decimalSeparator: '.', precision: 2)
                             ->prefix('Rp '),
                         TextInput::make('fungsional_it')
+                            ->label('Fungsional Khusus')
                             ->currencyMask(thousandSeparator: ',', decimalSeparator: '.', precision: 2)
                             ->prefix('Rp '),
                         TextInput::make('bpjs_kesehatan')
@@ -65,7 +68,10 @@ class PengaturanPayrollResource extends Resource
                         TextInput::make('bpjs_ketenagakerjaan')
                             ->currencyMask(thousandSeparator: ',', decimalSeparator: '.', precision: 2)
                             ->prefix('Rp '),
-
+                        TextInput::make('tunjangan')
+                            ->label('Jabatan')
+                            ->currencyMask(thousandSeparator: ',', decimalSeparator: '.', precision: 2)
+                            ->prefix('Rp '),
                     ])
             ]);
     }

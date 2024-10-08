@@ -33,9 +33,10 @@ class PayrollImporter extends Importer
 
     public function resolveRecord(): ?Payroll
     {
+
         // return Payroll::firstOrNew([
         //     // Update existing records, matching them by `$this->data['column_name']`
-        //     'karyawan_id' => $this->data['karyawan.nama'],
+        //     'karyawan_id' => $this->data['nama'],
         // ]);
 
         return new Payroll();
