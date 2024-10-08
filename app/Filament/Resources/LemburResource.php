@@ -114,16 +114,11 @@ class LemburResource extends Resource implements HasShieldPermissions
                                         if ($hitung->h > 6) {
                                             $hitung = $hitung->h - 2;
                                         } else {
-                                            $hitung = $hitung->h;
+                                            $hitung = $hitung->h - 1;
                                         }
                                         $harga_perjam = $get('harga_lembur') / 173;
                                         $harga_jam_pertama = $get('harga_lembur') / 173 * 1.5;
-
-                                        if ($hitung > 6) {
-                                            $harga_total_jam = $harga_perjam * 2 * $hitung - 1;
-                                        } else {
-                                            $harga_total_jam = $harga_perjam * 2 * $hitung;
-                                        }
+                                        $harga_total_jam = $harga_perjam * 2 * $hitung;
                                         $set('jumlah_jam', round($hitung));
                                         $set('harga_perjam', round($harga_perjam));
                                         $set('harga_jam_pertama', round($harga_jam_pertama));
@@ -166,15 +161,11 @@ class LemburResource extends Resource implements HasShieldPermissions
                                     if ($hitung->h > 6) {
                                         $hitung = $hitung->h - 2;
                                     } else {
-                                        $hitung = $hitung->h;
+                                        $hitung = $hitung->h - 1;
                                     }
                                     $harga_perjam = $get('harga_lembur') / 173;
                                     $harga_jam_pertama = $get('harga_lembur') / 173 * 1.5;
-                                    if ($hitung > 6) {
-                                        $harga_total_jam = $harga_perjam * 2 * $hitung - 1;
-                                    } else {
-                                        $harga_total_jam = $harga_perjam * 2 * $hitung;
-                                    }
+                                    $harga_total_jam = $harga_perjam * 2 * $hitung;
                                     $set('jumlah_jam', round($hitung));
                                     $set('harga_perjam', round($harga_perjam));
                                     $set('harga_jam_pertama', round($harga_jam_pertama));
@@ -196,15 +187,13 @@ class LemburResource extends Resource implements HasShieldPermissions
                                     if ($hitung->h > 6) {
                                         $hitung = $hitung->h - 2;
                                     } else {
-                                        $hitung = $hitung->h;
+                                        $hitung = $hitung->h - 1;
                                     }
                                     $harga_perjam = $get('harga_lembur') / 173;
+
                                     $harga_jam_pertama = $get('harga_lembur') / 173 * 1.5;
-                                    if ($hitung > 6) {
-                                        $harga_total_jam = $harga_perjam * 2 * $hitung - 1;
-                                    } else {
-                                        $harga_total_jam = $harga_perjam * 2 * $hitung;
-                                    }
+
+                                    $harga_total_jam = $harga_perjam * 2 * $hitung;
                                     $set('jumlah_jam', round($hitung));
                                     $set('harga_perjam', round($harga_perjam));
                                     $set('harga_jam_pertama', round($harga_jam_pertama));
@@ -226,15 +215,13 @@ class LemburResource extends Resource implements HasShieldPermissions
                                     if ($hitung->h > 6) {
                                         $hitung = $hitung->h - 2;
                                     } else {
-                                        $hitung = $hitung->h;
+                                        $hitung = $hitung->h - 1;
                                     }
                                     $harga_perjam = $get('harga_lembur') / 173;
+
                                     $harga_jam_pertama = $get('harga_lembur') / 173 * 1.5;
-                                    if ($hitung > 6) {
-                                        $harga_total_jam = $harga_perjam * 2 * $hitung - 1;
-                                    } else {
-                                        $harga_total_jam = $harga_perjam * 2 * $hitung;
-                                    }
+
+                                    $harga_total_jam = $harga_perjam * 2 * $hitung;
                                     $set('jumlah_jam', round($hitung));
                                     $set('harga_perjam', round($harga_perjam));
                                     $set('harga_jam_pertama', round($harga_jam_pertama));
@@ -288,7 +275,7 @@ class LemburResource extends Resource implements HasShieldPermissions
                                 if ($hitung->h > 6) {
                                     $hitung = $hitung->h - 2;
                                 } else {
-                                    $hitung = $hitung->h;
+                                    $hitung = $hitung->h - 1;
                                 }
                                 $harga_perjam = $get('harga_lembur') / 173;
                                 if ($state) {
@@ -296,11 +283,7 @@ class LemburResource extends Resource implements HasShieldPermissions
                                 } else {
                                     $harga_jam_pertama = $get('harga_lembur') / 173 * 1.5;
                                 }
-                                if ($hitung > 6) {
-                                    $harga_total_jam = $harga_perjam * 2 * $hitung - 1;
-                                } else {
-                                    $harga_total_jam = $harga_perjam * 2 * $hitung;
-                                }
+                                $harga_total_jam = $harga_perjam * 2 * $hitung;
                                 $set('jumlah_jam', round($hitung));
                                 $set('harga_perjam', round($harga_perjam));
                                 $set('harga_jam_pertama', round($harga_jam_pertama));
