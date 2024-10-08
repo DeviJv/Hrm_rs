@@ -20,7 +20,7 @@ class ListKaryawans extends ListRecords
             ImportAction::make()
                 ->importer(KaryawanImporter::class),
             ExportAction::make()
-                ->importer(KaryawanExporter::class),
+                ->exporter(KaryawanExporter::class),
             Actions\CreateAction::make(),
         ];
     }

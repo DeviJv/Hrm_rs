@@ -20,8 +20,10 @@ class PayrollImporter extends Importer
             ImportColumn::make('gaji_pokok'),
             ImportColumn::make('transport'),
             ImportColumn::make('makan'),
-            ImportColumn::make('fungsional'),
-            ImportColumn::make('fungsional_it'),
+            ImportColumn::make('fungsional')
+                ->label('Fungsional'),
+            ImportColumn::make('fungsional_it')
+                ->label('Fungsional Khusus'),
             ImportColumn::make('tunjangan'),
             ImportColumn::make('bpjs_kesehatan'),
             ImportColumn::make('bpjs_ketenagakerjaan'),
