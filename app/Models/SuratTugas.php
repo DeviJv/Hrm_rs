@@ -7,12 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class SuratTugas extends Model
 {
+    use HasFactory;
 
     protected function casts(): array
     {
         return [
             'stample' => 'boolean',
+            'karyawans' => 'array'
         ];
     }
-    use HasFactory;
 }

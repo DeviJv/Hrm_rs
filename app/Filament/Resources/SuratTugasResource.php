@@ -15,6 +15,7 @@ use Illuminate\Support\HtmlString;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Checkbox;
+use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\FileUpload;
@@ -67,22 +68,6 @@ class SuratTugasResource extends Resource
                                     $set('alamat_direktur', $perusahaan->alamat);
                                 }
                             }),
-                        Select::make('karyawan')
-                            ->required()
-                            ->dehydrated(false)
-                            ->live()
-                            ->searchable()
-                            ->preload()
-                            ->options(fn() => Karyawan::where('aktif', true)->pluck('nama', 'nama'))
-                            ->afterStateUpdated(function ($state, Set $set) {
-                                if (filled($state)) {
-                                    $karyawan = Karyawan::where('nama', $state)->first();
-                                    $perusahaan = Perusahaan::first();
-                                    $set('nama_karyawan', $karyawan->nama);
-                                    $set('jabatan_karyawan', $karyawan->jabatan);
-                                    $set('nik_karyawan', $karyawan->nik);
-                                }
-                            }),
                         DateTimePicker::make('created_at')
                             ->label('Tanggal Dan Jam Tugas')
                             ->required(),
@@ -92,12 +77,33 @@ class SuratTugasResource extends Resource
                             ->label('Jabatan direktur'),
                         TextInput::make('alamat_direktur')
                             ->label('Alamat direktur'),
-                        TextInput::make('nama_karyawan')
-                            ->label('Nama Karyawan'),
-                        TextInput::make('nik_karyawan')
-                            ->label('Nik Karyawan'),
-                        TextInput::make('jabatan_karyawan')
-                            ->label('Jabatan Karyawan'),
+                        Repeater::make('karyawans')
+                            ->columnSpanFull()
+                            ->schema([
+                                Select::make('karyawan')
+                                    ->required()
+                                    ->dehydrated(false)
+                                    ->live()
+                                    ->searchable()
+                                    ->preload()
+                                    ->options(fn() => Karyawan::where('aktif', true)->pluck('nama', 'nama'))
+                                    ->afterStateUpdated(function ($state, Set $set) {
+                                        if (filled($state)) {
+                                            $karyawan = Karyawan::where('nama', $state)->first();
+                                            $perusahaan = Perusahaan::first();
+                                            $set('nama_karyawan', $karyawan->nama);
+                                            $set('jabatan_karyawan', $karyawan->jabatan);
+                                            $set('nik_karyawan', $karyawan->nik);
+                                        }
+                                    }),
+                                TextInput::make('nama_karyawan')
+                                    ->label('Nama Karyawan'),
+                                TextInput::make('nik_karyawan')
+                                    ->label('Nik Karyawan'),
+                                TextInput::make('jabatan_karyawan')
+                                    ->label('Jabatan Karyawan'),
+                            ])
+                            ->columns(4),
                         TextInput::make('tempat')
                             ->label('Tempat'),
                         Checkbox::make('stemple')
@@ -124,10 +130,36 @@ class SuratTugasResource extends Resource
                 Tables\Columns\TextColumn::make('jabatan_direktur'),
                 Tables\Columns\TextColumn::make('alamat_direktur')
                     ->words(5),
-                Tables\Columns\TextColumn::make('nama_karyawan'),
-                Tables\Columns\TextColumn::make('nik_karyawan'),
-                Tables\Columns\TextColumn::make('jabatan_karyawan'),
-
+                Tables\Columns\TextColumn::make('karyawans as nama_karyawan')
+                    ->label("Karyawan")
+                    ->state(function (SuratTugas $record) {
+                        $result = [];
+                        foreach ($record->karyawans as $karyawan) {
+                            $result[] = "{$karyawan['nama_karyawan']}";
+                        }
+                        return $result;
+                    })
+                    ->bulleted(),
+                Tables\Columns\TextColumn::make('karyawans as nik')
+                    ->label("NIK")
+                    ->state(function (SuratTugas $record) {
+                        $result = [];
+                        foreach ($record->karyawans as $karyawan) {
+                            $result[] = "{$karyawan['nik_karyawan']}";
+                        }
+                        return $result;
+                    })
+                    ->bulleted(),
+                Tables\Columns\TextColumn::make('karyawans as jabatan')
+                    ->label("Jabatan")
+                    ->state(function (SuratTugas $record) {
+                        $result = [];
+                        foreach ($record->karyawans as $karyawan) {
+                            $result[] = "{$karyawan['jabatan_karyawan']}";
+                        }
+                        return $result;
+                    })
+                    ->bulleted(),
                 Tables\Columns\TextColumn::make('tempat')
                     ->words(4),
                 Tables\Columns\TextColumn::make('tugas')

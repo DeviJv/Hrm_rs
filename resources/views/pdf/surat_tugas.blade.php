@@ -80,9 +80,31 @@
                     </div>
                 </div>
             </div>
-            <div class="space-y-1.5 ml-12">
-                <h3 class="mt-10">Dengan ini menerangkan bahwa nama-nama dibawah ini :</h3>
-                <div class="flex flex-row w-auto items-start">
+            <h3 class="mt-6 ml-12">Dengan ini menerangkan bahwa nama-nama dibawah ini :</h3>
+
+            @if (count($record->karyawans) > 1)
+                <table class="table table-auto w-[630px] mx-12 mt-3 text-center text-sm">
+                    <thead>
+                        <tr class="text-sm">
+                            <th class="text-sm">No</th>
+                            <th>Nama</th>
+                            <th>NIK</th>
+                            <th>Jabatan</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-sm">
+                        @foreach ($record->karyawans as $k => $karyawan)
+                            <tr class="text-sm">
+                                <td>{{ $k + 1 }}</td>
+                                <td>{{ $karyawan['nama_karyawan'] }}</td>
+                                <td>{{ $karyawan['nik_karyawan'] }}</td>
+                                <td>{{ $karyawan['jabatan_karyawan'] }}</td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            @else
+                <div class="flex flex-row  items-center ml-12 mb-2 mt-2">
                     <div class="w-[4%]">
                         Nama
                     </div>
@@ -90,10 +112,10 @@
                         :
                     </div>
                     <div class="w-1/2">
-                        {{ $record->nama_karyawan }}
+                        {{ $record->karyawans[0]['nama_karyawan'] }}
                     </div>
                 </div>
-                <div class="flex flex-row items-center">
+                <div class="flex flex-row items-center ml-12 mb-2">
                     <div class="w-[4%]">
                         NIK
                     </div>
@@ -101,10 +123,10 @@
                         :
                     </div>
                     <div class="w-1/2">
-                        {{ $record->nik_karyawan }}
+                        {{ $record->karyawans[0]['nik_karyawan'] }}
                     </div>
                 </div>
-                <div class="flex flex-row items-center">
+                <div class="flex flex-row items-center ml-12">
                     <div class="w-[4%]">
                         Jabatan
                     </div>
@@ -112,11 +134,10 @@
                         :
                     </div>
                     <div class="w-1/2">
-                        {{ $record->jabatan_karyawan }}
+                        {{ $record->karyawans[0]['jabatan_karyawan'] }}
                     </div>
                 </div>
-            </div>
-
+            @endif
             <p class="w-full mt-3 px-8 ml-20">
                 Adalah benar karyawan {{ $perusahaan->nama }} yang kami tugaskan untuk <br />
             </p>
