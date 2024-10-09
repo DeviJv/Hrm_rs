@@ -152,7 +152,7 @@
                     :
                 </div>
                 <div class="w-1/2">
-                    {{ $today = \Carbon\Carbon::parse($record->created_at)->isoFormat('dddd') }}
+                    {{ $today = \Carbon\Carbon::parse($record->tgl_tugas)->isoFormat('dddd') }}
                 </div>
             </div>
             <div class="flex flex-row items-center ml-12">
@@ -163,7 +163,7 @@
                     :
                 </div>
                 <div class="w-1/2">
-                    {{ $today = \Carbon\Carbon::parse($record->created_at)->isoFormat('D MMMM Y') }}
+                    {{ $today = \Carbon\Carbon::parse($record->tgl_tugas)->isoFormat('D MMMM Y') }}
                 </div>
             </div>
             <div class="flex flex-row items-center ml-12">
@@ -174,7 +174,7 @@
                     :
                 </div>
                 <div class="w-1/2">
-                    {{ $today = \Carbon\Carbon::parse($record->created_at)->isoFormat('H:mm:ss') }} WIB s/d Selesai
+                    {{ $today = \Carbon\Carbon::parse($record->tgl_tugas)->isoFormat('H:mm:ss') }} WIB s/d Selesai
                 </div>
             </div>
             <div class="flex flex-row items-center ml-12">

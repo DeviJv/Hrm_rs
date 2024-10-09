@@ -68,7 +68,7 @@ class SuratTugasResource extends Resource
                                     $set('alamat_direktur', $perusahaan->alamat);
                                 }
                             }),
-                        DateTimePicker::make('created_at')
+                        DateTimePicker::make('tgl_tugas')
                             ->label('Tanggal Dan Jam Tugas')
                             ->required(),
                         TextInput::make('nama_direktur')
@@ -121,7 +121,7 @@ class SuratTugasResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('created_at')
+                Tables\Columns\TextColumn::make('tgl_tugas')
                     ->label('Tanggal Surat Tugas')
                     ->dateTime()
                     ->sortable(),
@@ -166,6 +166,10 @@ class SuratTugasResource extends Resource
                     ->markdown(),
                 Tables\Columns\IconColumn::make('stemple')
                     ->boolean(),
+                Tables\Columns\TextColumn::make('created_at')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
