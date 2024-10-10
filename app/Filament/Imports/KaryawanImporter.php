@@ -50,12 +50,12 @@ class KaryawanImporter extends Importer
                 ->rules(['max:255']),
             ImportColumn::make('no_ijazah')
                 ->rules(['max:255']),
-            ImportColumn::make('str')
-                ->rules(['max:255']),
-            ImportColumn::make('masa_berlaku')
-                ->rules(['max:255']),
-            ImportColumn::make('sip')
-                ->rules(['max:255']),
+            // ImportColumn::make('str')
+            //     ->rules(['max:255']),
+            // ImportColumn::make('masa_berlaku')
+            //     ->rules(['max:255']),
+            // ImportColumn::make('sip')
+            //     ->rules(['max:255']),
             ImportColumn::make('no_tlp')
                 ->rules(['max:255']),
             ImportColumn::make('email')

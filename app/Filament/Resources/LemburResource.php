@@ -14,6 +14,7 @@ use Filament\Forms\Form;
 use Filament\Tables\Table;
 use Filament\Resources\Resource;
 use Illuminate\Support\HtmlString;
+use Filament\Tables\Grouping\Group;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Section;
@@ -26,6 +27,7 @@ use Filament\Notifications\Notification;
 use Filament\Tables\Actions\ActionGroup;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\TimePicker;
+use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Notifications\Actions\Action;
 use Filament\Tables\Columns\Summarizers\Sum;
@@ -311,6 +313,14 @@ class LemburResource extends Resource implements HasShieldPermissions
     public static function table(Table $table): Table
     {
         return $table
+            ->defaultGroup('karyawan.nama')
+            ->groups([
+                Group::make('karyawan.nama')
+                    ->collapsible(),
+                Group::make('tgl_lembur')
+                    ->collapsible()
+                    ->date(),
+            ])
             ->columns([
                 Tables\Columns\TextColumn::make('user.name')
                     ->label('Dibuat oleh')
@@ -333,11 +343,20 @@ class LemburResource extends Resource implements HasShieldPermissions
                     ->searchable(),
                 Tables\Columns\TextColumn::make('harga_lembur')
                     ->money('IDR')
-                    ->searchable(),
+                    ->summarize(Sum::make()->label('Total')->money('IDR')),
+                Tables\Columns\TextColumn::make('harga_perjam')
+                    ->money('IDR')
+                    ->summarize(Sum::make()->label('Total')->money('IDR')),
+                Tables\Columns\TextColumn::make('harga_jam_pertama')
+                    ->money('IDR')
+                    ->summarize(Sum::make()->label('Total')->money('IDR')),
+                Tables\Columns\TextColumn::make('harga_total_jam')
+                    ->money('IDR')
+                    ->summarize(Sum::make()->label('Total')->money('IDR')),
                 Tables\Columns\TextColumn::make('total_lembur')
                     ->money('IDR')
-                    ->summarize(Sum::make()->label('Total')->money('IDR'))
-                    ->searchable(),
+                    ->summarize(Sum::make()->label('Total')->money('IDR')),
+
                 // Tables\Columns\TextColumn::make('status')
                 //     ->badge()
                 //     ->color(fn(string $state): string => match ($state) {
@@ -355,13 +374,15 @@ class LemburResource extends Resource implements HasShieldPermissions
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
+                SelectFilter::make('karyawan_id')
+                    ->label('Karyawan')
+                    ->preload()
+                    ->searchable()
+                    ->multiple()
+                    ->relationship('karyawan', 'nama'),
                 Tables\Filters\Filter::make('created_at')
                     ->form([
-                        Forms\Components\Select::make('karyawan_id')
-                            ->label('Karyawan')
-                            ->preload()
-                            ->searchable()
-                            ->relationship('karyawan', 'nama'),
+
                         Forms\Components\DatePicker::make('created_from')
                             ->label('Tanggal Mulai')
                             ->placeholder(fn($state): string => 'Dec 18, ' . now()->subYear()->format('Y')),
@@ -371,10 +392,7 @@ class LemburResource extends Resource implements HasShieldPermissions
                     ])
                     ->query(function (Builder $query, array $data): Builder {
                         return $query
-                            ->when(
-                                $data['karyawan_id'] ?? null,
-                                fn(Builder $query, $data): Builder => $query->where('karyawan_id', '=', $data),
-                            )
+
 
                             ->when(
                                 $data['created_from'] ?? null,
@@ -387,11 +405,7 @@ class LemburResource extends Resource implements HasShieldPermissions
                     })
                     ->indicateUsing(function (array $data): array {
                         $indicators = [];
-                        if ($data['karyawan_id'] ?? null) {
-                            $cus = Karyawan::where('id', $data['karyawan_id'])->pluck('nama')->first();
-                            $indicators[] = Indicator::make('Karyawan : ' . $cus)
-                                ->removeField('karyawan_id');
-                        }
+
 
                         if ($data['created_from'] ?? null) {
                             $indicators['created_from'] = 'Tanggal Mulai : ' . Carbon::parse($data['created_from'])->toFormattedDateString();

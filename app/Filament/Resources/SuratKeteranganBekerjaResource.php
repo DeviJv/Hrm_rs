@@ -40,8 +40,9 @@ class SuratKeteranganBekerjaResource extends Resource
                     ->schema([
                         TextInput::make('no_surat')
                             ->default(function () {
+                                $array_bln    = array(1 => "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII");
                                 $surat_paklaring = SuratKeteranganBekerja::count();
-                                return "No." . $surat_paklaring + 1 . "/RSIABS-SKB/SDM/" . date('m') . "/" . date('Y');
+                                return "No." . $surat_paklaring + 1 . "/RSIABS-SKB/SDM/" . $array_bln[date('m')] . "/" . date('Y');
                             })
                             ->disabled()
                             ->dehydrated()

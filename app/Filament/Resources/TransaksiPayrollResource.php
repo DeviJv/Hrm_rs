@@ -32,6 +32,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Filament\Forms\Components\DatePicker;
+use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Notifications\Actions\Action;
 use App\Filament\Resources\PiutangResource;
@@ -479,13 +480,15 @@ class TransaksiPayrollResource extends Resource
                     ->money('IDR'),
             ])
             ->filters([
+                SelectFilter::make('karyawan_id')
+                    ->label('Karyawan')
+                    ->preload()
+                    ->searchable()
+                    ->multiple()
+                    ->relationship('karyawan', 'nama'),
                 Tables\Filters\Filter::make('created_at')
                     ->form([
-                        Forms\Components\Select::make('karyawan_id')
-                            ->label('Karyawan')
-                            ->preload()
-                            ->searchable()
-                            ->relationship('karyawan', 'nama'),
+
                         Select::make('payment_method')
                             ->label('Metode Pembayaran')
                             ->searchable()
@@ -504,10 +507,7 @@ class TransaksiPayrollResource extends Resource
                     ])
                     ->query(function (Builder $query, array $data): Builder {
                         return $query
-                            ->when(
-                                $data['karyawan_id'] ?? null,
-                                fn(Builder $query, $data): Builder => $query->where('karyawan_id', '=', $data),
-                            )
+
                             ->when(
                                 $data['payment_method'] ?? null,
                                 fn(Builder $query, $data): Builder => $query->where('payment_method', '=', $data),
@@ -523,11 +523,7 @@ class TransaksiPayrollResource extends Resource
                     })
                     ->indicateUsing(function (array $data): array {
                         $indicators = [];
-                        if ($data['karyawan_id'] ?? null) {
-                            $cus = Karyawan::where('id', $data['karyawan_id'])->pluck('nama')->first();
-                            $indicators[] = Indicator::make('Karyawan : ' . $cus)
-                                ->removeField('karyawan_id');
-                        }
+
                         if ($data['payment_method'] ?? null) {
                             $indicators['payment_method'] = 'Payment Method : ' . $data['payment_method'];
                         }

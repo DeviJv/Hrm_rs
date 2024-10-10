@@ -84,14 +84,14 @@ class KaryawanResource extends Resource
                             ->maxLength(255),
                         TextInput::make('no_ijazah')
                             ->maxLength(255),
-                        TextInput::make('str')
-                            ->maxLength(255),
-                        DatePicker::make('masa_berlaku')
-                            ->label('Masa Berlaku STR'),
-                        TextInput::make('sip')
-                            ->maxLength(255),
-                        DatePicker::make('masa_berlaku_sip')
-                            ->label('Masa Berlaku SIP'),
+                        // TextInput::make('str')
+                        //     ->maxLength(255),
+                        // DatePicker::make('masa_berlaku')
+                        //     ->label('Masa Berlaku STR'),
+                        // TextInput::make('sip')
+                        //     ->maxLength(255),
+                        // DatePicker::make('masa_berlaku_sip')
+                        //     ->label('Masa Berlaku SIP'),
                         TextInput::make('no_tlp')
                             ->maxLength(255),
                         TextInput::make('email')
@@ -159,18 +159,18 @@ class KaryawanResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('no_ijazah')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('str')
-                    ->label('STR')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('masa_berlaku')
-                    ->label('Masa Berlaku STR')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('sip')
-                    ->label('SIP')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('masa_berlaku_sip')
-                    ->label('Masa Berlaku SIP')
-                    ->searchable(),
+                // Tables\Columns\TextColumn::make('str')
+                //     ->label('STR')
+                //     ->searchable(),
+                // Tables\Columns\TextColumn::make('masa_berlaku')
+                //     ->label('Masa Berlaku STR')
+                //     ->searchable(),
+                // Tables\Columns\TextColumn::make('sip')
+                //     ->label('SIP')
+                //     ->searchable(),
+                // Tables\Columns\TextColumn::make('masa_berlaku_sip')
+                //     ->label('Masa Berlaku SIP')
+                //     ->searchable(),
                 Tables\Columns\TextColumn::make('no_tlp')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('email')

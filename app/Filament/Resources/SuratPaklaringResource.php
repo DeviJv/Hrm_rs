@@ -41,8 +41,10 @@ class SuratPaklaringResource extends Resource
                     ->schema([
                         TextInput::make('no_surat')
                             ->default(function () {
+                                $array_bln    = array(1 => "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII");
+
                                 $surat_paklaring = SuratPaklaring::count();
-                                return "No." . $surat_paklaring + 1 . "/RSIABS-PK/SDM/" . date('m') . "/" . date('Y');
+                                return "No." . $surat_paklaring + 1 . "/RSIABS-PK/SDM/" . $array_bln[date('m')] . "/" . date('Y');
                             })
                             ->disabled()
                             ->dehydrated()
