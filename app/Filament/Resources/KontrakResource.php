@@ -18,7 +18,7 @@ class KontrakResource extends Resource
 {
     protected static ?string $model = Kontrak::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-document-chart-bar';
 
     public static function form(Form $form): Form
     {
@@ -33,8 +33,10 @@ class KontrakResource extends Resource
                             ->searchable()
                             ->required(),
                         Forms\Components\DatePicker::make('tgl_mulai')
+                            ->label('Tanggal Mulai')
                             ->required(),
                         Forms\Components\DatePicker::make('tgl_akhir')
+                            ->label('Tanggal Akhir')
                             ->required()
                     ])
             ]);
@@ -49,9 +51,11 @@ class KontrakResource extends Resource
                     ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('tgl_mulai')
+                    ->label('Tanggal Mulai')
                     ->date()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('tgl_akhir')
+                    ->label('Tanggal Akhir')
                     ->date()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')

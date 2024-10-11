@@ -23,6 +23,7 @@ class PengaturanPayrollResource extends Resource
     protected static ?string $model = Payroll::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-calculator';
+    protected static ?string $navigationGroup = 'Pengaturan';
     protected static ?string $pluralModelLabel = 'Pengaturan Payroll';
 
     public static function form(Form $form): Form

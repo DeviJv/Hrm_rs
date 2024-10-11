@@ -19,6 +19,7 @@ class PengaturanTidakMasukResource extends Resource
     protected static ?string $model = PengaturanTidakMasuk::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-adjustments-horizontal';
+    protected static ?string $navigationGroup = 'Pengaturan';
 
     public static function form(Form $form): Form
     {

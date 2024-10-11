@@ -19,7 +19,9 @@ class PengaturanPajakResource extends Resource
 {
     protected static ?string $model = PengaturanPajak::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-cog-8-tooth';
+    protected static ?string $navigationGroup = 'Pengaturan';
+    protected static ?string $pluralModelLabel = 'Pengaturan Pajak Karyawan';
 
     public static function form(Form $form): Form
     {

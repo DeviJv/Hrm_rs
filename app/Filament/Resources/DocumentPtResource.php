@@ -20,7 +20,7 @@ class DocumentPtResource extends Resource
 {
     protected static ?string $model = Document_pt::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-briefcase';
     protected static ?string $pluralModelLabel = 'Document PT';
 
     public static function form(Form $form): Form

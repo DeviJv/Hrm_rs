@@ -19,7 +19,7 @@ class DocumentRsResource extends Resource
 {
     protected static ?string $model = DocumentRs::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-clipboard-document';
 
     public static function form(Form $form): Form
     {
