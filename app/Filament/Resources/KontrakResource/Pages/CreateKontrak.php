@@ -17,7 +17,7 @@ class CreateKontrak extends CreateRecord
         $tgl_kontrak = Carbon::parse($this->record->tgl_akhir);
 
         $kontrak = $data->reminder()->create([
-            'pengingat' => $tgl_kontrak->subMonth()->startOfMonth()->toDateString(),
+            'pengingat' => $tgl_kontrak->subMonth(3)->startOfMonth()->toDateString(),
             'karyawan_id' => $data->karyawan_id,
             'user_id' => auth()->user()->id,
             'sudah' => 0

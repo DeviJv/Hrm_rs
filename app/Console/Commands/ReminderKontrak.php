@@ -36,7 +36,7 @@ class ReminderKontrak extends Command
             ->where('sudah', false)->get();
 
         foreach ($reminders as $reminder) {
-            $date = Carbon::parse($reminder->pengingat)->addMonth(1)->format('d/m/Y');
+            $date = Carbon::parse($reminder->pengingat)->addMonth(3)->format('d/m/Y');
             $reminder->sudah = true;
             $reminder->save();
             Notification::make()
