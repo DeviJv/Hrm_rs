@@ -3,23 +3,28 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\MorphOne;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\MorphMany;
 
-class Strsip extends Model
+class Reminder extends Model
 {
     use HasFactory;
 
 
+    protected $casts = [
+        'sudah' => 'boolean',
+    ];
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
     public function karyawan(): BelongsTo
     {
         return $this->belongsTo(Karyawan::class);
     }
-
-    public function reminder(): MorphMany
+    public function remindable(): MorphTo
     {
-        return $this->morphMany(Reminder::class, 'remindable');
+        return $this->morphTo();
     }
 }
