@@ -16,6 +16,7 @@ use Filament\Forms\Form;
 use App\Models\Perusahaan;
 use Filament\Tables\Table;
 use App\Models\Tidak_masuk;
+use App\Models\PengaturanPajak;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\TransaksiPayroll;
 use Filament\Resources\Resource;
@@ -236,6 +237,13 @@ class TransaksiPayrollResource extends Resource
                                                     ->sum('jumlah_hari');
                                                 $get_tgl_terakhir = Carbon::parse($get('created_at'))->endOfMonth();
                                                 $set('tidak_masuk', ($hitung / $get_tgl_terakhir->day) * $get_absensi);
+                                                $pajak = PengaturanPajak::where('karyawan_id', $get('karyawan_id'))->first();
+                                                if ($pajak != null) {
+                                                    $hitung_pajak = ($hitung * $pajak->tarif) / 100;
+                                                    $set('pajak', $hitung_pajak);
+                                                } else {
+                                                    $set('pajak', 0);
+                                                }
                                             })
                                     )
                                     ->currencyMask(thousandSeparator: ',', decimalSeparator: '.', precision: 2)
