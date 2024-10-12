@@ -12,14 +12,17 @@ use Filament\Forms\Set;
 use App\Models\Karyawan;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
+use App\Exports\LemburExport;
 use Filament\Resources\Resource;
 use Illuminate\Support\HtmlString;
 use Filament\Tables\Grouping\Group;
+use Maatwebsite\Excel\Facades\Excel;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Section;
 use Filament\Tables\Filters\Indicator;
 use Filament\Forms\Components\Checkbox;
+use Filament\Tables\Actions\BulkAction;
 use Illuminate\Database\Eloquent\Model;
 use App\Filament\Exports\LemburExporter;
 use Filament\Forms\Components\TextInput;
@@ -31,6 +34,7 @@ use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Notifications\Actions\Action;
 use Filament\Tables\Columns\Summarizers\Sum;
+use Illuminate\Database\Eloquent\Collection;
 use Filament\Tables\Actions\ExportBulkAction;
 use Filament\Tables\Actions\Action as TAction;
 use App\Filament\Resources\LemburResource\Pages;
@@ -313,7 +317,7 @@ class LemburResource extends Resource implements HasShieldPermissions
     public static function table(Table $table): Table
     {
         return $table
-            ->defaultGroup('karyawan.nama')
+            // ->defaultGroup('karyawan.nama')
             ->groups([
                 Group::make('karyawan.nama')
                     ->collapsible(),
@@ -321,6 +325,7 @@ class LemburResource extends Resource implements HasShieldPermissions
                     ->collapsible()
                     ->date(),
             ])
+            ->defaultSort('karyawan.nama', 'desc')
             ->columns([
                 Tables\Columns\TextColumn::make('user.name')
                     ->label('Dibuat oleh')
@@ -342,8 +347,7 @@ class LemburResource extends Resource implements HasShieldPermissions
                     ->label('Jumlah Jam')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('harga_lembur')
-                    ->money('IDR')
-                    ->summarize(Sum::make()->label('Total')->money('IDR')),
+                    ->money('IDR'),
                 Tables\Columns\TextColumn::make('harga_perjam')
                     ->money('IDR')
                     ->summarize(Sum::make()->label('Total')->money('IDR')),
@@ -456,9 +460,36 @@ class LemburResource extends Resource implements HasShieldPermissions
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    ExportBulkAction::make()
+                    // ExportBulkAction::make()
+                    //     ->color('info')
+                    //     ->exporter(LemburExporter::class),
+                    BulkAction::make('export')
                         ->color('info')
-                        ->exporter(LemburExporter::class),
+                        ->label('Export')
+                        ->icon('heroicon-o-arrow-down-tray')
+                        ->action(function (Collection $records) {
+                            $name = "lembur-export-" . date('d-m-y H:i:s') . ".csv";
+                            // return (new FakturPajakExport($records))->store("export/faktur-pajak.csv", 'public')->chain([
+                            //     Notification::make()
+                            //         ->title('Export Sedang Berjalan')
+                            //         ->body('Cek Notifikasi Untuk Mendownload File Hasil Export')
+                            //         ->warning()
+                            //         ->send(),
+                            //     Notification::make()
+                            //         ->title('Queueu')
+                            //         ->icon('heroicon-o-shopping-bag')
+                            //         // ->body("**{$order->customer->nama} Membeli {$order->items->count()} Barang.**")
+                            //         ->actions([
+                            //             Action::make('Download')
+                            //                 ->url(function () {
+                            //                     $filepath = public_path('export\faktur-pajak.csv');
+                            //                     return response()->download($filepath);
+                            //                 }),
+                            //         ])
+                            //         ->sendToDatabase(auth()->user())
+                            // ]);
+                            return Excel::download(new LemburExport($records), $name, \Maatwebsite\Excel\Excel::CSV);
+                        }),
                     Tables\Actions\DeleteBulkAction::make()
                         ->requiresConfirmation()
                         ->form([
