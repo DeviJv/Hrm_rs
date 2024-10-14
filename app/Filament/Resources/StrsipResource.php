@@ -11,6 +11,7 @@ use Filament\Tables\Table;
 use Filament\Resources\Resource;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Checkbox;
 use Filament\Tables\Columns\TextColumn;
 use App\Filament\Exports\StrsipExporter;
 use Filament\Forms\Components\TextInput;
@@ -62,6 +63,10 @@ class StrsipResource extends Resource
                         DatePicker::make('masa_berlaku_str'),
                         TextInput::make('sip'),
                         DatePicker::make('masa_berlaku_sip'),
+                        Checkbox::make('seumur_hidup')
+                            ->label('Seumur Hidup?')
+                            ->inline(false)
+                            ->live()
                     ])
                 //
             ]);
@@ -88,7 +93,9 @@ class StrsipResource extends Resource
                 TextColumn::make('masa_berlaku_sip')
                     ->label('Masa Berlaku SIP')
                     ->date(),
-
+                Tables\Columns\IconColumn::make('seumur_hidup')
+                    ->label('Seumur Hidup')
+                    ->boolean(),
             ])
             ->filters([
                 //
