@@ -468,7 +468,7 @@ class LemburResource extends Resource implements HasShieldPermissions
                         ->label('Export')
                         ->icon('heroicon-o-arrow-down-tray')
                         ->action(function (Collection $records) {
-                            $name = "lembur-export-" . date('d-m-y H:i:s') . ".csv";
+                            $name = "lembur-export-" . date('d-m-y H:i:s') . ".XLSX";
                             // return (new FakturPajakExport($records))->store("export/faktur-pajak.csv", 'public')->chain([
                             //     Notification::make()
                             //         ->title('Export Sedang Berjalan')
@@ -488,7 +488,7 @@ class LemburResource extends Resource implements HasShieldPermissions
                             //         ])
                             //         ->sendToDatabase(auth()->user())
                             // ]);
-                            return Excel::download(new LemburExport($records), $name, \Maatwebsite\Excel\Excel::CSV);
+                            return Excel::download(new LemburExport($records), $name, \Maatwebsite\Excel\Excel::XLSX);
                         }),
                     Tables\Actions\DeleteBulkAction::make()
                         ->requiresConfirmation()

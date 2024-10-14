@@ -39,7 +39,7 @@ class Reminderstrsip extends Command
             ->where('sudah', false)->get();
 
         foreach ($reminders as $reminder) {
-            $date = Carbon::parse($reminder->pengingat)->addMonth(3)->format('d/m/Y');
+            $date = Carbon::parse($reminder->pengingat)->addMonth(6)->format('d/m/Y');
             $reminder->sudah = true;
             $reminder->save();
             Notification::make()

@@ -5,11 +5,13 @@ namespace App\Filament\Resources;
 use Filament\Forms;
 use Filament\Tables;
 use App\Models\Kontrak;
+use App\Models\Reminder;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
 use Filament\Resources\Resource;
 use Filament\Forms\Components\Section;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use App\Filament\Resources\KontrakResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\KontrakResource\RelationManagers;
@@ -75,7 +77,12 @@ class KontrakResource extends Resource
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\DeleteBulkAction::make()
+                        ->before(function (Collection $records) {
+                            foreach ($records as $record) {
+                                $delete_reminder = Reminder::where('remindable_type', Kontrak::class)->where('remindable_id', $record->id)->delete();
+                            }
+                        }),
                 ]),
             ]);
     }

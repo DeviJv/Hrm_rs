@@ -6,6 +6,7 @@ use Filament\Forms;
 use Filament\Tables;
 use App\Models\Strsip;
 use App\Models\Karyawan;
+use App\Models\Reminder;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
 use Filament\Resources\Resource;
@@ -17,6 +18,7 @@ use App\Filament\Exports\StrsipExporter;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\DatePicker;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Filament\Tables\Actions\ExportBulkAction;
 use App\Filament\Resources\StrsipResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -108,7 +110,12 @@ class StrsipResource extends Resource
                     ExportBulkAction::make()
                         ->color('info')
                         ->exporter(StrsipExporter::class),
-                    Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\DeleteBulkAction::make()
+                        ->before(function (Collection $records) {
+                            foreach ($records as $record) {
+                                $delete_reminder = Reminder::where('remindable_type', Strsip::class)->where('remindable_id', $record->id)->delete();
+                            }
+                        }),
                 ]),
             ]);
     }

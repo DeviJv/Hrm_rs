@@ -2,9 +2,11 @@
 
 namespace App\Filament\Resources\KontrakResource\Pages;
 
-use App\Filament\Resources\KontrakResource;
 use Filament\Actions;
+use App\Models\Reminder;
 use Filament\Resources\Pages\EditRecord;
+use App\Filament\Resources\KontrakResource;
+use App\Models\Kontrak;
 
 class EditKontrak extends EditRecord
 {
@@ -13,7 +15,10 @@ class EditKontrak extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\DeleteAction::make(),
+            Actions\DeleteAction::make()
+                ->before(function () {
+                    $delete_reminder = Reminder::where('remindable_type', Kontrak::class)->where('remindable_id', $this->record->id)->delete();
+                }),
         ];
     }
 }
