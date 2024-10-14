@@ -1,5 +1,4 @@
 <table>
-
     <thead>
         <tr>
             <th>No</th>
@@ -27,7 +26,7 @@
                 <td>{{ 'Rp ' . number_format($l->total_lembur) }}</td>
             </tr>
             @if (!$loop->last)
-                @if ($lembur[$k + 1]->karyawan_id != $l->karyawan_id)
+                @if ($lembur[$k + 1]->karyawan_id !== $l->karyawan_id)
                     <tr style="background-color: green;">
                         <td colspan=2>Total : </td>
                         <td>{{ $sum_jumlah_jam[$l->karyawan_id] }}</td>
@@ -40,7 +39,7 @@
                     </tr>
                 @endif
             @else
-                @if ($lembur[$k]->karyawan_id == $l->karyawan_id)
+                @if ($lembur[$k]->karyawan_id === $l->karyawan_id)
                     <tr style="background-color: green;">
                         <td colspan=2>Total : </td>
                         <td>{{ $sum_jumlah_jam[$l->karyawan_id] }}</td>

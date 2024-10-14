@@ -19,26 +19,28 @@ class LemburExport implements FromView
 
     public function view(): View
     {
-        $sum_jumlah_jam = $this->records->groupBy('karyawan_id')
+
+        $records = $this->records;
+
+        $sum_jumlah_jam = $records->groupBy('karyawan_id')
             ->map(function ($item) {
                 return $item->sum('jumlah_jam');
             });
-        $harga_jam_pertama = $this->records->groupBy('karyawan_id')
+        $harga_jam_pertama = $records->groupBy('karyawan_id')
             ->map(function ($item) {
                 return $item->sum('harga_jam_pertama');
             });
-        $harga_total_jam = $this->records->groupBy('karyawan_id')
+        $harga_total_jam = $records->groupBy('karyawan_id')
             ->map(function ($item) {
                 return $item->sum('harga_total_jam');
             });
-        $total_lembur = $this->records->groupBy('karyawan_id')
+        $total_lembur = $records->groupBy('karyawan_id')
             ->map(function ($item) {
                 return $item->sum('total_lembur');
             });
 
-
         return view('exports.lembur', [
-            'lembur' => $this->records ? $this->records : Lembur::with('karyawan')->orderBy('karyawan_id', 'asc')->get(),
+            'lembur' =>  $records,
             'sum_jumlah_jam' => $sum_jumlah_jam,
             'harga_total_jam' => $harga_total_jam,
             'harga_jam_pertama' => $harga_jam_pertama,
