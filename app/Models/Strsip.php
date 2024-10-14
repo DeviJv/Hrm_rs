@@ -12,7 +12,12 @@ class Strsip extends Model
 {
     use HasFactory;
 
-
+    protected function casts(): array
+    {
+        return [
+            'seumur_hidup' => 'boolean',
+        ];
+    }
     public function karyawan(): BelongsTo
     {
         return $this->belongsTo(Karyawan::class);

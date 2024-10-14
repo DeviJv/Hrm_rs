@@ -32,7 +32,8 @@ class ReminderKontrak extends Command
      */
     public function handle()
     {
-        $reminders = Reminder::where('remindable_type', Kontrak::class)->where('pengingat', Carbon::now()->format('Y-m-d'))
+        $reminders = Reminder::where('remindable_type', Kontrak::class)
+            ->whereMonth('pengingat', '=', date('m', strtotime(now())))
             ->where('sudah', false)->get();
 
         foreach ($reminders as $reminder) {

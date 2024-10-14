@@ -34,7 +34,8 @@ class Reminderstrsip extends Command
      */
     public function handle()
     {
-        $reminders = Reminder::where('remindable_type', Strsip::class)->where('pengingat', Carbon::now()->format('Y-m-d'))
+        $reminders = Reminder::where('remindable_type', Strsip::class)
+            ->whereMonth('pengingat', '=', date('m', strtotime(now())))
             ->where('sudah', false)->get();
 
         foreach ($reminders as $reminder) {
