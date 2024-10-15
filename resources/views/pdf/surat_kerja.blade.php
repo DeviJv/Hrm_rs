@@ -141,10 +141,10 @@
 
         </div>
 
-        <p class="w-full mt-3 px-8 text-xs ml-20">
+        <p class="w-full mt-3 px-4 text-sm ml-16">
             Demikian surat keterangan ini kami buat untuk digunakan sebagaimana mestinya. <br />
         </p>
-        <p class="text-xs ml-16">
+        <p class="text-sm ml-16">
             Atas perhatiannya kami ucapkan terima kasih. <br />
         </p>
 
