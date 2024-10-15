@@ -150,7 +150,7 @@
             </div>
         </div>
 
-        <p class="w-full mt-3 px-8 text-sm ml-20">
+        <p class="w-full mt-3 px-4 text-sm ml-16">
             Yang bersangkutan telah memberikan kontribusi yang baik kepada perusahaan selama bekerja <br />
         </p>
         <p class="text-sm ml-16">
