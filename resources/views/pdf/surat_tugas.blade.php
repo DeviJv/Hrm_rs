@@ -138,10 +138,10 @@
                     </div>
                 </div>
             @endif
-            <p class="w-full mt-3 px-8 ml-20">
+            <p class="w-full mt-3 ml-12">
                 Adalah benar karyawan {{ $perusahaan->nama }} yang kami tugaskan untuk <br />
             </p>
-            <p class=" mb-3 ml-16">
+            <p class=" mb-3 ml-12">
                 <span class="font-semibold italic">{{ $record->tugas }}</span> yang dilaksakan pada :
             </p>
             <div class="flex flex-row items-center ml-12">
@@ -188,9 +188,9 @@
                     {{ $record->tempat }}
                 </div>
             </div>
-            <p class="px-8 mt-2 ml-14">Demikian surat tugas ini dibuat untuk dapat dipergunakan sebagaimana<br />
+            <p class="mt-2 ml-12">Demikian surat tugas ini dibuat untuk dapat dipergunakan sebagaimana<br />
             </p>
-            <p class="ml-16">mestinya, atas perhatian dan kerjasamanya kami ucapkan terima kasih.</p>
+            <p class="ml-12">mestinya, atas perhatian dan kerjasamanya kami ucapkan terima kasih.</p>
             <div class="flex flex-row items-start justify-between mt-5 break-after-page ml-12">
                 <div class="w-1/2">
                     Diterima oleh,<br />

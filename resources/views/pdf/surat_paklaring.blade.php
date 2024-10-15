@@ -150,13 +150,13 @@
             </div>
         </div>
 
-        <p class="w-full mt-3 px-4 text-sm ml-16">
+        <p class="w-full mt-3 text-sm ml-12">
             Yang bersangkutan telah memberikan kontribusi yang baik kepada perusahaan selama bekerja <br />
         </p>
-        <p class="text-sm ml-16">
-            tidak pernah melakukan perbuatan yang merugikan perusahaan kami. Demikian surat keterangan <br />
+        <p class="text-sm ml-12">
+            tidak pernah melakukan perbuatan yang merugikan perusahaan kami, Demikian surat keterangan <br />
         </p>
-        <p class="text-sm mb-3 ml-16">
+        <p class="text-sm mb-3 ml-12">
             bekerja ini dibuat agar dapat dipergunakan sebagaimana mestinya. <br />
         </p>
 
