@@ -7,12 +7,15 @@ use App\Models\Tidak_masuk;
 use Filament\Widgets\Widget;
 use App\Models\PengaturanTidakMasuk;
 use BezhanSalleh\FilamentShield\Traits\HasWidgetShield;
+use Filament\Widgets\Concerns\InteractsWithPageFilters;
 
 class CutiWidget extends Widget
 {
-    use HasWidgetShield;
+    use HasWidgetShield, InteractsWithPageFilters;
     protected static string $view = 'filament.widgets.jadwal-widget';
     protected int | string | array $columnSpan = 'full';
+    protected static ?int $sort = 4;
+
     protected function getViewData(): array
     {
         $startDate = $this->filters['startDate'] ?? null;
@@ -30,7 +33,7 @@ class CutiWidget extends Widget
             $izin = $izin->where('karyawan_id', auth()->user()->karyawan_id);
             $lembur = $lembur->where('karyawan_id', auth()->user()->karyawan_id);
         }
-        if ($startDate !== null && $startDate !== null) {
+        if ($startDate !== null && $endDate !== null) {
             $cuti->whereBetween('tgl_mulai', [$startDate, $endDate]);
             $cuti_pending->whereBetween('tgl_mulai', [$startDate, $endDate]);
             $izin->whereBetween('tgl_mulai', [$startDate, $endDate]);

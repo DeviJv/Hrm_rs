@@ -12,6 +12,7 @@
         "charrafimed/global-search-modal": "^3.0",
         "filament/filament": "^3.2",
         "flowframe/laravel-trend": "^0.2.0",
+        "ibrahim-bougaoua/filaprogress": "^0.1.0",
         "laravel/framework": "^11.9",
         "laravel/reverb": "^1.0",
         "laravel/tinker": "^2.9",

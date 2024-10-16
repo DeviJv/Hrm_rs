@@ -32,11 +32,12 @@ class CutiChart extends ApexChartWidget
      * @return array
      */
 
-    protected static ?int $sort = 10;
+    protected static ?int $sort = 5;
 
 
     protected function getOptions(): array
     {
+        $filters = $this;
 
         $count_tidakmasuk = Trend::query(Tidak_masuk::where('keterangan', 'cuti'))
             ->dateColumn('tgl_mulai')
