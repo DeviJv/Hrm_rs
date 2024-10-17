@@ -18,8 +18,11 @@ class Dashboard extends BaseDashboard
             ->schema([
                 Section::make()
                     ->schema([
-                        DatePicker::make('startDate'),
-                        DatePicker::make('endDate'),
+                        DatePicker::make('startDate')
+                            ->label('Tanggal Mulai'),
+                        DatePicker::make('endDate')
+                            ->label('Tanggal Akhir'),
+
                     ])
                     ->columns(2),
             ]);
