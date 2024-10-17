@@ -2,10 +2,11 @@
     <x-filament::section>
         <div
             class="flex flex-col md:flex-row lg:flex-row space-y-3 items-center justify-between h-full flex-wrap md:justify-around lg:justify-between">
-            <div class="bg-white dark:bg shadow-md p-6 rounded-2xl border-2 border-gray-50  ">
+            <div
+                class="bg-white  shadow-md p-6 rounded-2xl border-2 border-gray-50 dark:bg-gray-900 dark:border-gray-700">
                 <div class="flex flex-col">
                     <div>
-                        <h2 class="font-bold text-gray-600 text-center">Jumlah Izin
+                        <h2 class="font-bold text-gray-600 text-center dark:text-white">Jumlah Izin
                             Saya, </h2>
                     </div>
                     <div class="my-6">
@@ -20,25 +21,28 @@
                                 </span>
                             </div>
                             <div id="temp">
-                                <h4 class="text-6xl text-gray-700 text-center">{{ $count_jumlah_hari_izin }}</h4>
-                                <p class="text-xs text-gray-500">Maximal Perbulan {{ $jumlah_max_izin }}</p>
+                                <h4 class="text-6xl text-gray-700 text-center dark:text-white">
+                                    {{ $count_jumlah_hari_izin }}</h4>
+                                <p class="text-xs text-gray-500 dark:text-white">Maximal Perbulan {{ $jumlah_max_izin }}
+                                </p>
                             </div>
                         </div>
                     </div>
-                    <div class="w-full place-items-end text-right border-t-2 border-gray-100 mt-2">
-                        {{-- <a href="{{ \app\Filament\Resources\TidakMasukResource::getUrl() }}"
-                            class="text-gray-500 text-xs font-medium">Lihat
-                            Selengkapnya</a> --}}
+                    <div class="w-full place-items-end text-right border-t-2 border-gray-100  mt-2">
+                        <a href="{{ route('filament.admin.resources.tidak-masuks.index') }}"
+                            class="text-gray-500 text-xs font-medium dark:text-white">Lihat
+                            Selengkapnya</a>
                     </div>
                 </div>
             </div>
-            <div class="bg-white shadow-md p-6 rounded-2xl border-2 border-gray-50 ">
+            <div
+                class="bg-white shadow-md p-6 rounded-2xl border-2 border-gray-50 dark:bg-gray-900 dark:border-gray-700">
                 <div class="flex flex-col">
                     <div>
-                        <h2 class="font-bold text-gray-600 text-center">Jumlah Cuti Saya </h2>
+                        <h2 class="font-bold text-gray-600 text-center dark:text-white">Jumlah Cuti Saya </h2>
                     </div>
                     <div class="my-6">
-                        <div class="flex flex-row space-x-4 items-center">
+                        <div class="flex flex-row space-x-4 items-center dark:text-white">
                             <div id="icon">
                                 <span>
                                     <svg class="w-20 h-20 fill-stroke text-gray-400" xmlns="http://www.w3.org/2000/svg"
@@ -49,22 +53,25 @@
                                 </span>
                             </div>
                             <div id="temp">
-                                <h4 class="text-6xl text-gray-600 text-center">{{ $count_jumlah_hari_cuti }}</h4>
-                                <p class="text-xs text-gray-500">Maximal Perbulan {{ $jumlah_max_cuti }}</p>
+                                <h4 class="text-6xl text-gray-600 text-center dark:text-white">
+                                    {{ $count_jumlah_hari_cuti }}</h4>
+                                <p class="text-xs text-gray-500 dark:text-white">Maximal Perbulan {{ $jumlah_max_cuti }}
+                                </p>
                             </div>
                         </div>
                     </div>
                     <div class="w-full place-items-end text-right border-t-2 border-gray-100 mt-2">
-                        {{-- <a href="{{ \app\Filament\Resources\TidakMasukResource::getUrl() }}"
-                            class="text-gray-500 text-xs font-medium">Lihat
-                            Selengkapnya</a> --}}
+                        <a href="{{ route('filament.admin.resources.tidak-masuks.index') }}"
+                            class="text-gray-500 text-xs font-medium dark:text-white">Lihat
+                            Selengkapnya</a>
                     </div>
                 </div>
             </div>
-            <div class="bg-white shadow-md p-6 rounded-2xl border-2 border-gray-50 ">
+            <div
+                class="bg-white shadow-md p-6 rounded-2xl border-2 border-gray-50 dark:bg-gray-900 dark:border-gray-700">
                 <div class="flex flex-col">
                     <div>
-                        <h2 class="font-bold text-gray-600 text-center">Jumlah Lembur Saya</h2>
+                        <h2 class="font-bold text-gray-600 text-center dark:text-white">Jumlah Lembur Saya</h2>
                     </div>
                     <div class="my-6">
                         <div class="flex flex-row space-x-4 items-center">
@@ -81,22 +88,25 @@
                                 </span>
                             </div>
                             <div id="temp">
-                                <h4 class="text-6xl text-gray-600 text-center">{{ $count_jumlah_jam_lembur }}</h4>
-                                <p class="text-xs text-gray-500">Maximal Perbulan - </p>
+                                <h4 class="text-6xl text-gray-600 text-center dark:text-white">
+                                    {{ $count_jumlah_jam_lembur }}</h4>
+                                <p class="text-xs text-gray-500 dark:text-white">Maximal Perbulan - </p>
                             </div>
                         </div>
                     </div>
                     <div class="w-full place-items-end text-right border-t-2 border-gray-100 mt-2">
-                        {{-- <a href="{{ \app\Filament\Resources\LemburResource::getUrl() }}"
-                            class="text-gray-500 text-xs font-medium">Lihat
-                            Selengkapnya</a> --}}
+                        <a href="{{ route('filament.admin.resources.tidak-masuks.index') }}"
+                            class="text-gray-500 text-xs font-medium dark:text-white">Lihat
+                            Selengkapnya</a>
                     </div>
                 </div>
             </div>
-            <div class="bg-white shadow-md p-6 rounded-2xl border-2 border-gray-50 ">
+            <div
+                class="bg-white shadow-md p-6 rounded-2xl border-2 border-gray-50 dark:bg-gray-900 dark:border-gray-700">
                 <div class="flex flex-col">
                     <div>
-                        <h2 class="font-bold text-gray-600 text-center">Pengajuan Cuti/Lembur (Pending), </h2>
+                        <h2 class="font-bold text-gray-600 text-center dark:text-white">Pengajuan Cuti/Lembur (Pending),
+                        </h2>
                     </div>
                     <div class="my-6">
                         <div class="flex flex-row space-x-4 items-center">
@@ -110,16 +120,18 @@
                                 </span>
                             </div>
                             <div id="temp">
-                                <h4 class="text-6xl text-gray-600 text-center">{{ $count_jumlah_hari_cuti_pending }}
+                                <h4 class="text-6xl text-gray-600 text-center dark:text-white">
+                                    {{ $count_jumlah_hari_cuti_pending }}
                                 </h4>
-                                <p class="text-xs text-gray-500">Maximal Perbulan {{ $jumlah_max_cuti }}</p>
+                                <p class="text-xs text-gray-500 dark:text-white">Maximal Perbulan {{ $jumlah_max_cuti }}
+                                </p>
                             </div>
                         </div>
                     </div>
                     <div class="w-full place-items-end text-right border-t-2 border-gray-100 mt-2">
-                        {{-- <a href="{{ \app\Filament\Resources\TidakMasukResource::getUrl() }}"
-                            class="text-gray-500 text-xs font-medium">Lihat
-                            Selengkapnya</a> --}}
+                        <a href="{{ route('filament.admin.resources.tidak-masuks.index') }}"
+                            class="text-gray-500 text-xs font-medium dark:text-white">Lihat
+                            Selengkapnya</a>
                     </div>
                 </div>
             </div>
