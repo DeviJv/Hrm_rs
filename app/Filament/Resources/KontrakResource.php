@@ -10,7 +10,9 @@ use Filament\Forms\Form;
 use Filament\Tables\Table;
 use Filament\Resources\Resource;
 use Filament\Forms\Components\Section;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Database\Eloquent\Collection;
 use App\Filament\Resources\KontrakResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -101,5 +103,26 @@ class KontrakResource extends Resource
             'create' => Pages\CreateKontrak::route('/create'),
             'edit' => Pages\EditKontrak::route('/{record}/edit'),
         ];
+    }
+
+    public static function getGlobalSearchEloquentQuery(): Builder
+    {
+        return parent::getGlobalSearchEloquentQuery()->with('karyawan')->latest();
+    }
+
+    public static function getGloballySearchableAttributes(): array
+    {
+        return ['karyawan.nama'];
+    }
+    public static function getGlobalSearchResultDetails(Model $record): array
+    {
+        return [
+            'Tangga Mulai' => date('d F, Y', strtotime($record->tgl_mulai)),
+            'Tangga Akhir' => date('d F, Y', strtotime($record->tgl_akhir)),
+        ];
+    }
+    public static function getGlobalSearchResultTitle(Model $record): string | Htmlable
+    {
+        return $record->karyawan->nama;
     }
 }

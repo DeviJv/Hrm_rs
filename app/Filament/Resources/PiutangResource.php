@@ -15,9 +15,11 @@ use Filament\Resources\Resource;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Section;
 use Filament\Tables\Filters\Indicator;
+use Illuminate\Database\Eloquent\Model;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\DatePicker;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Contracts\Support\Htmlable;
 use App\Filament\Resources\PiutangResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\PiutangResource\RelationManagers;
@@ -202,5 +204,29 @@ class PiutangResource extends Resource
             return parent::getEloquentQuery()->where('karyawan_id', auth()->user()->karyawan_id);
         }
         return parent::getEloquentQuery();
+    }
+
+    public static function getGlobalSearchEloquentQuery(): Builder
+    {
+        return parent::getGlobalSearchEloquentQuery()->with('karyawan')->orderBy('created_at', 'desc');
+    }
+
+    public static function getGloballySearchableAttributes(): array
+    {
+        return ['karyawan.nama'];
+    }
+    public static function getGlobalSearchResultDetails(Model $record): array
+    {
+        return [
+            'Tangga Piutang' => date('d F, Y', strtotime($record->created_at)),
+            'Obat' => "Rp " . number_format($record->obat),
+            'Catering' => "Rp " . number_format($record->catering),
+            'Sub Total' => "Rp " . number_format($record->sub_total),
+            'Status' => $record->status,
+        ];
+    }
+    public static function getGlobalSearchResultTitle(Model $record): string | Htmlable
+    {
+        return $record->karyawan->nama;
     }
 }

@@ -63,7 +63,8 @@ class AdminPanelProvider extends PanelProvider
                 FilamentSpatieLaravelBackupPlugin::make()
                     ->noTimeout()
                     ->usingPage(Backups::class),
-                GlobalSearchModalPlugin::make(),
+                GlobalSearchModalPlugin::make()
+                    ->associateItemsWithTheirGroups(),
                 FilamentApexChartsPlugin::make(),
                 \BezhanSalleh\FilamentShield\FilamentShieldPlugin::make()
                     ->gridColumns([

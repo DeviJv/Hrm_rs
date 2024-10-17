@@ -11,9 +11,11 @@ use Filament\Tables\Table;
 use Filament\Resources\Resource;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Section;
+use Illuminate\Database\Eloquent\Model;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\FileUpload;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Contracts\Support\Htmlable;
 use App\Filament\Resources\DocumentResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\DocumentResource\RelationManagers;
@@ -24,6 +26,7 @@ class DocumentResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-clipboard-document-list';
     protected static ?string $navigationLabel = 'Document Karyawan';
+    protected static ?string $pluralModelLabel = 'Document Karyawan';
 
     public static function form(Form $form): Form
     {
@@ -152,5 +155,20 @@ class DocumentResource extends Resource
             return parent::getEloquentQuery()->where('karyawan_id', auth()->user()->karyawan_id);
         }
         return parent::getEloquentQuery();
+    }
+
+    public static function getGlobalSearchEloquentQuery(): Builder
+    {
+        return parent::getGlobalSearchEloquentQuery()->with('karyawan');
+    }
+
+    public static function getGloballySearchableAttributes(): array
+    {
+        return ['karyawan.nama'];
+    }
+
+    public static function getGlobalSearchResultTitle(Model $record): string | Htmlable
+    {
+        return $record->karyawan->nama;
     }
 }
