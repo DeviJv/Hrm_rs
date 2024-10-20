@@ -152,7 +152,12 @@
                     :
                 </div>
                 <div class="w-1/2">
-                    {{ $today = \Carbon\Carbon::parse($record->tgl_tugas)->isoFormat('dddd') }}
+                    @if ($record->tgl_akhir != null)
+                        {{ $today = \Carbon\Carbon::parse($record->tgl_tugas)->isoFormat('dddd') }} s/d
+                        {{ $today = \Carbon\Carbon::parse($record->tgl_akhir)->isoFormat('dddd') }}
+                    @else
+                        {{ $today = \Carbon\Carbon::parse($record->tgl_tugas)->isoFormat('dddd') }}
+                    @endif
                 </div>
             </div>
             <div class="flex flex-row items-center ml-12">
@@ -163,7 +168,12 @@
                     :
                 </div>
                 <div class="w-1/2">
-                    {{ $today = \Carbon\Carbon::parse($record->tgl_tugas)->isoFormat('D MMMM Y') }}
+                    @if ($record->tgl_akhir != null)
+                        {{ $today = \Carbon\Carbon::parse($record->tgl_tugas)->isoFormat('D MMMM Y') }} s/d
+                        {{ $today = \Carbon\Carbon::parse($record->tgl_akhir)->isoFormat('D MMMM Y') }}
+                    @else
+                        {{ $today = \Carbon\Carbon::parse($record->tgl_tugas)->isoFormat('D MMMM Y') }}
+                    @endif
                 </div>
             </div>
             <div class="flex flex-row items-center ml-12">
@@ -174,7 +184,12 @@
                     :
                 </div>
                 <div class="w-1/2">
-                    {{ $today = \Carbon\Carbon::parse($record->tgl_tugas)->isoFormat('H:mm:ss') }} WIB s/d Selesai
+                    @if ($record->tgl_akhir != null)
+                        {{ $today = \Carbon\Carbon::parse($record->tgl_tugas)->isoFormat('H:mm') }} s/d
+                        {{ $today = \Carbon\Carbon::parse($record->tgl_akhir)->isoFormat('H:mm') }} WIB
+                    @else
+                        {{ $today = \Carbon\Carbon::parse($record->tgl_tugas)->isoFormat('H:mm') }} WIB s/d Selesai
+                    @endif
                 </div>
             </div>
             <div class="flex flex-row items-center ml-12">

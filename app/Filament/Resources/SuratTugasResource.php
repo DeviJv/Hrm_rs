@@ -73,6 +73,8 @@ class SuratTugasResource extends Resource
                         DateTimePicker::make('tgl_tugas')
                             ->label('Tanggal Dan Jam Tugas')
                             ->required(),
+                        DateTimePicker::make('tgl_akhir')
+                            ->label('Sampai Tanggal'),
                         TextInput::make('nama_direktur')
                             ->label('Nama direktur'),
                         TextInput::make('jabatan_direktur')
@@ -125,8 +127,15 @@ class SuratTugasResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('tgl_tugas')
                     ->label('Tanggal Surat Tugas')
-                    ->dateTime()
-                    ->sortable(),
+                    // ->dateTime()
+                    // ->sortable(),
+                    ->state(function (SuratTugas $record) {
+                        if ($record->tgl_akhir != null) {
+                            return date('M d, Y H:m', strtotime($record->tgl_tugas)) . " - " . date('M d, Y H:m', strtotime($record->tgl_akhir));
+                        } else {
+                            return date('M d, Y H:m', strtotime($record->tgl_tugas));
+                        }
+                    }),
                 Tables\Columns\TextColumn::make('no_surat'),
                 Tables\Columns\TextColumn::make('nama_direktur'),
                 Tables\Columns\TextColumn::make('jabatan_direktur'),
