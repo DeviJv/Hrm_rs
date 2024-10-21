@@ -159,7 +159,7 @@
                     <span class="underline">{{ '( ' . $record->nama_manager . ' ) ' }}</span><br />
                     {{ $record->jabatan_manager }}
                 @else
-                    <div class="mt-20 ">
+                    <div class="mt-16 ">
                         {{ '( ' . $record->nama_manager . ' ) ' }}
                         <br />
                         {{ $record->jabatan_manager }}
