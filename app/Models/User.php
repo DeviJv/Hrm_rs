@@ -3,13 +3,15 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Filament\Panel;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Filament\Models\Contracts\FilamentUser;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class User extends Authenticatable
+class User extends Authenticatable implements FilamentUser
 {
     use HasFactory, Notifiable, HasRoles;
 
@@ -53,5 +55,17 @@ class User extends Authenticatable
     public function karyawan(): BelongsTo
     {
         return $this->belongsTo(Karyawan::class);
+    }
+
+    public function canAccessPanel(Panel $panel): bool
+    {
+        //if ($panel->getId() === 'admin') {
+        //return str_ends_with($this->email, '@yourdomain.com') && $this->hasVerifiedEmail();
+        //}
+        // $check_role = auth()->user()->getRoleNames();
+        // if (isset($check_role)) {
+        //     return false;
+        // }
+        return true;
     }
 }
