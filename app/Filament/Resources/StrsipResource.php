@@ -66,7 +66,7 @@ class StrsipResource extends Resource
                         TextInput::make('sip'),
                         DatePicker::make('masa_berlaku_sip'),
                         Checkbox::make('seumur_hidup')
-                            ->label('Seumur Hidup?')
+                            ->label('STR Seumur Hidup?')
                             ->inline(false)
                             ->live()
                     ])
@@ -96,7 +96,7 @@ class StrsipResource extends Resource
                     ->label('Masa Berlaku SIP')
                     ->date(),
                 Tables\Columns\IconColumn::make('seumur_hidup')
-                    ->label('Seumur Hidup')
+                    ->label('STR Seumur Hidup')
                     ->boolean(),
             ])
             ->filters([
