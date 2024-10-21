@@ -26,12 +26,12 @@ class CreateStrsip extends CreateRecord
                     'sudah' => 0
                 ]);
             }
-            // $sip = $data->reminder()->create([
-            //     'pengingat' => $masa_berlaku_sip->subMonth(6)->startOfMonth()->toDateString(),
-            //     'karyawan_id' => $data->karyawan_id,
-            //     'user_id' => auth()->user()->id,
-            //     'sudah' => 0
-            // ]);
+            $sip = $data->reminder()->create([
+                'pengingat' => $masa_berlaku_sip->subMonth(6)->startOfMonth()->toDateString(),
+                'karyawan_id' => $data->karyawan_id,
+                'user_id' => auth()->user()->id,
+                'sudah' => 0
+            ]);
         }
     }
 }
