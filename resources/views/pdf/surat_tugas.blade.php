@@ -223,7 +223,7 @@
                         <span class="underline">{{ '( ' . $record->nama_direktur . ' ) ' }}</span><br />
                         {{ $record->jabatan_direktur }}
                     @else
-                        <div class="mt-16">
+                        <div class="mt-[75px]">
                             {{ '( ' . $record->nama_direktur . ' ) ' }}
                             <br />
                             {{ $record->jabatan_direktur }}
