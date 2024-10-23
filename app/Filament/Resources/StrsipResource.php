@@ -17,12 +17,14 @@ use Filament\Tables\Columns\TextColumn;
 use App\Filament\Exports\StrsipExporter;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\DatePicker;
+use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Filament\Tables\Actions\ExportBulkAction;
 use App\Filament\Resources\StrsipResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\StrsipResource\RelationManagers;
+use Filament\Tables\Filters\Filter;
 
 class StrsipResource extends Resource
 {
@@ -82,6 +84,12 @@ class StrsipResource extends Resource
                     ->label('Nama')
                     ->sortable()
                     ->searchable(),
+                TextColumn::make('karyawan.nakes')
+                    ->label('Nakes')
+                    ->searchable(),
+                TextColumn::make('karyawan.department')
+                    ->label('Department')
+                    ->searchable(),
                 TextColumn::make('karyawan.universitas')
                     ->label('Universitas')
                     ->searchable(),
@@ -100,7 +108,35 @@ class StrsipResource extends Resource
                     ->boolean(),
             ])
             ->filters([
-                //
+                SelectFilter::make('department')
+                    ->searchable()
+                    ->multiple()
+                    ->label('Department')
+                    ->relationship('karyawan', 'department', fn(Builder $query) => $query->groupBy('department'))
+                    ->searchable()
+                    ->preload(),
+                Filter::make('created_at')
+                    ->form([
+                        Select::make('nakes')
+                            ->searchable()
+                            ->label('Nakes')
+                            ->options(fn() => Karyawan::groupBy('nakes')->pluck('nakes', 'nakes'))
+                            ->searchable()
+                            ->preload(),
+                    ])
+                    ->query(function (Builder $query, array $data): Builder {
+                        return $query
+                            ->when(
+                                $data['nakes'],
+                                fn(Builder $query, $date): Builder => $query->whereRelation('karyawan', 'nakes', '=', $data),
+                            );
+                    })
+                    ->indicateUsing(function (array $data): ?string {
+                        if (! $data['nakes']) {
+                            return null;
+                        }
+                        return 'Nakes :' . $data['nakes'];
+                    })
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

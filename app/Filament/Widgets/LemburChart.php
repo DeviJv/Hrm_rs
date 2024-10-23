@@ -27,7 +27,7 @@ class LemburChart extends ApexChartWidget
     /**
      * Widget Title
      */
-    protected static ?string $heading = 'Jumlah Total Pendapatan Lembur Perbulan';
+    protected static ?string $heading = 'Jumlah Total Pengeluaran Lembur Perbulan';
 
     /**
      * Sort
@@ -101,7 +101,7 @@ class LemburChart extends ApexChartWidget
             ],
             'series' => [
                 [
-                    'name' => 'Total Pendapatan Lembur Per Bulan',
+                    'name' => 'Total Pengeluaran Lembur Per Bulan',
                     'data' => $data->map(
                         fn(TrendValue $value) => $value->aggregate
                     ),

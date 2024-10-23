@@ -90,7 +90,8 @@ class PerusahaanResource extends Resource
                 Tables\Columns\TextColumn::make('fax'),
                 Tables\Columns\TextColumn::make('telpon'),
                 Tables\Columns\TextColumn::make('telpon_2'),
-                Tables\Columns\ImageColumn::make('logo'),
+                Tables\Columns\ImageColumn::make('logo')
+                    ->action(fn($state) => response()->download(storage_path('app/public/' . $state))),
             ])
             ->filters([
                 //

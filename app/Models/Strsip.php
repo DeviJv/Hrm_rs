@@ -22,6 +22,10 @@ class Strsip extends Model
     {
         return $this->belongsTo(Karyawan::class);
     }
+    public function department(): BelongsTo
+    {
+        return $this->belongsTo(Karyawan::class, 'karyawan_id', 'id')->groupBy('department');
+    }
 
     public function reminder(): MorphMany
     {
