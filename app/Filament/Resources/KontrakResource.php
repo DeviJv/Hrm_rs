@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use Filament\Forms;
 use Filament\Tables;
 use App\Models\Kontrak;
+use Filament\Forms\Get;
 use App\Models\Reminder;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
@@ -38,10 +39,28 @@ class KontrakResource extends Resource
                             ->required(),
                         Forms\Components\DatePicker::make('tgl_mulai')
                             ->label('Tanggal Mulai')
-                            ->required(),
+                            ->live()
+                            ->required(function (Get $get) {
+                                if ($get('seumur_hidup')) {
+                                    return false;
+                                } else {
+                                    return true;
+                                }
+                            }),
                         Forms\Components\DatePicker::make('tgl_akhir')
                             ->label('Tanggal Akhir')
-                            ->required()
+                            ->live()
+                            ->required(function (Get $get) {
+                                if ($get('seumur_hidup')) {
+                                    return false;
+                                } else {
+                                    return true;
+                                }
+                            }),
+                        Forms\Components\Checkbox::make('seumur_hidup')
+                            ->label('Karyawan Tetap?')
+                            ->inline(false)
+                            ->live()
                     ])
             ]);
     }
@@ -62,6 +81,9 @@ class KontrakResource extends Resource
                     ->label('Tanggal Akhir')
                     ->date()
                     ->sortable(),
+                Tables\Columns\IconColumn::make('seumur_hidup')
+                    ->label('Karyawan Tetap')
+                    ->boolean(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
