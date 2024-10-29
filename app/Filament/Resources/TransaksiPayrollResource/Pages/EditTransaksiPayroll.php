@@ -41,10 +41,12 @@ class EditTransaksiPayroll extends EditRecord
                     if ($record->koperasi > 0) {
                         $koperasi = Koperasi::where('karyawan_id', $record->karyawan_id)
                             ->whereMonth('created_at', '=', date('m', strtotime($record->created_at)))->first();
-                        $pembayaran_koperasi = PembayaranKoperasi::where('koperasi_id', $koperasi->id)
-                            ->whereDate('created_at', '=', $record->created_at)->delete();
-                        $koperasi->status = "UNPAID";
-                        $koperasi->save();
+                        if ($koperasi != null) {
+                            $pembayaran_koperasi = PembayaranKoperasi::where('koperasi_id', $koperasi->id)
+                                ->whereDate('created_at', '=', $record->created_at)->delete();
+                            $koperasi->status = "UNPAID";
+                            $koperasi->save();
+                        }
                     }
                 }),
         ];

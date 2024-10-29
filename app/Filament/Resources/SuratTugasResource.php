@@ -124,6 +124,7 @@ class SuratTugasResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->defaultSort('created_at', 'desc')
             ->columns([
                 Tables\Columns\TextColumn::make('tgl_tugas')
                     ->label('Tanggal Surat Tugas')

@@ -115,6 +115,7 @@ class TidakMasukResource extends Resource implements HasShieldPermissions
     public static function table(Table $table): Table
     {
         return $table
+            ->defaultSort('tgl_mulai', 'desc')
             ->columns([
                 TextColumn::make('karyawan.nama')
                     ->label('Nama')

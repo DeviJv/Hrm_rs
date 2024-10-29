@@ -325,7 +325,7 @@ class LemburResource extends Resource implements HasShieldPermissions
                     ->collapsible()
                     ->date(),
             ])
-            ->defaultSort('karyawan.nama', 'desc')
+            ->defaultSort('created_at', 'desc')
             ->columns([
                 Tables\Columns\TextColumn::make('user.name')
                     ->label('Dibuat oleh')

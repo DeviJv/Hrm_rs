@@ -302,6 +302,7 @@ class TransaksiPayrollResource extends Resource
                                     ->hintAction(
                                         FAction::make('check_izin')
                                             ->label('Cek Izin?')
+                                            ->tooltip('Jangan Lupa Approve Di Pengajuan izin/cuti')
                                             ->icon('heroicon-o-magnifying-glass')
                                             ->url(function (Get $get, $state) {
                                                 if (filled($get('karyawan_id'))) {
@@ -431,7 +432,7 @@ class TransaksiPayrollResource extends Resource
     {
         return $table
             ->defaultSort('created_at', 'desc')
-            ->defaultGroup('payment_method')
+            // ->defaultGroup('payment_method')
             ->groups([
                 Group::make('payment_method')
                     ->collapsible(),
@@ -604,10 +605,12 @@ class TransaksiPayrollResource extends Resource
                                 if ($record->koperasi > 0) {
                                     $koperasi = Koperasi::where('karyawan_id', $record->karyawan_id)
                                         ->whereMonth('created_at', '=', date('m', strtotime($record->created_at)))->first();
-                                    $pembayaran_koperasi = PembayaranKoperasi::where('koperasi_id', $koperasi->id)
-                                        ->whereDate('created_at', '=', $record->created_at)->delete();
-                                    $koperasi->status = "UNPAID";
-                                    $koperasi->save();
+                                    if ($koperasi != null) {
+                                        $pembayaran_koperasi = PembayaranKoperasi::where('koperasi_id', $koperasi->id)
+                                            ->whereDate('created_at', '=', $record->created_at)->delete();
+                                        $koperasi->status = "UNPAID";
+                                        $koperasi->save();
+                                    }
                                 }
                             }
                         }),
