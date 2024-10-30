@@ -188,6 +188,9 @@ class TransaksiPayrollResource extends Resource
                                     ->readOnly()
                                     ->columnSpanFull()
                                     ->required()
+                                    ->afterStateHydrated(function (TextInput $component, Get $get) {
+                                        $component->state($get('gaji_pokok') + $get('makan') + $get('transport'));
+                                    })
                                     ->currencyMask(thousandSeparator: ',', decimalSeparator: '.', precision: 2)
                                     ->prefix('Rp '),
                             ]),
@@ -221,6 +224,10 @@ class TransaksiPayrollResource extends Resource
                                     ->readOnly()
                                     ->columnSpanFull()
                                     ->required()
+                                    ->afterStateHydrated(function (TextInput $component, Get $get) {
+                                        $component->state($get('sub_total_1') + $get('penyesuaian') + $get('insentif') + $get('fungsional')
+                                            + $get('fungsional') + $get('fungsional_it') + $get('jabatan'));
+                                    })
                                     ->suffixAction(
                                         FAction::make('hitung_2')
                                             ->icon('heroicon-m-arrow-path')
@@ -274,6 +281,11 @@ class TransaksiPayrollResource extends Resource
                                     ->readOnly()
                                     ->columnSpanFull()
                                     ->required()
+                                    ->afterStateHydrated(function (TextInput $component, Get $get) {
+                                        $component->state(
+                                            $get('pajak') + $get('bpjs_kesehatan') + $get('ketenagakerjaan')
+                                        );
+                                    })
                                     ->suffixAction(
                                         FAction::make('hitung_3')
                                             ->icon('heroicon-m-arrow-path')
@@ -364,12 +376,37 @@ class TransaksiPayrollResource extends Resource
                                                 }
                                             }, $shouldOpenInNewTab = true),
                                     ),
+                                TextInput::make('biaya_admin')
+                                    ->label('Biaya admin transfer non BRI')
+                                    ->readOnly()
+                                    ->dehydrated(false)
+                                    ->default(2900)
+                                    ->afterStateHydrated(function (TextInput $component) {
+                                        $component->state(2900);
+                                    })
+                                    ->prefix("Rp ")
+                                    ->hidden(function (Get $get) {
+                                        if ($get('payment_method') == "transfer_non_bri") {
+                                            return false;
+                                        }
+                                        return true;
+                                    })
+                                    ->currencyMask(thousandSeparator: ',', decimalSeparator: '.', precision: 2),
                                 TextInput::make('sub_total_4')
                                     ->label('Sub Total Potongan Karyawan')
                                     ->dehydrated(false)
                                     ->readOnly()
                                     ->columnSpanFull()
                                     ->required()
+                                    ->afterStateHydrated(function (TextInput $component, Get $get) {
+                                        $hitung = $get('tidak_masuk') + $get('piutang') + $get('koperasi');
+                                        if ($get('payment_method') == "transfer_non_bri") {
+                                            $hitung = $hitung + $get('biaya_admin');
+                                        }
+                                        $component->state(
+                                            $hitung
+                                        );
+                                    })
                                     ->suffixAction(
                                         FAction::make('hitung_4')
                                             ->icon('heroicon-m-arrow-path')
@@ -378,6 +415,9 @@ class TransaksiPayrollResource extends Resource
 
                                             ->action(function (Set $set, Get $get, $state) {
                                                 $hitung = (int)$get('tidak_masuk') + (int)$get('piutang') + (int)$get('koperasi');
+                                                if ($get('payment_method') == "transfer_non_bri") {
+                                                    $hitung = $hitung + $get('biaya_admin');
+                                                }
                                                 $set('sub_total_4', $hitung);
                                                 $set('total', '');
                                             })
