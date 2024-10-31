@@ -400,9 +400,9 @@ class TransaksiPayrollResource extends Resource
                                     ->required()
                                     ->afterStateHydrated(function (TextInput $component, Get $get) {
                                         $hitung = $get('tidak_masuk') + $get('piutang') + $get('koperasi');
-                                        if ($get('payment_method') == "transfer_non_bri") {
-                                            $hitung = $hitung + $get('biaya_admin');
-                                        }
+                                        // if ($get('payment_method') == "transfer_non_bri") {
+                                        //     $hitung = $hitung + $get('biaya_admin');
+                                        // }
                                         $component->state(
                                             $hitung
                                         );
@@ -415,9 +415,7 @@ class TransaksiPayrollResource extends Resource
 
                                             ->action(function (Set $set, Get $get, $state) {
                                                 $hitung = (int)$get('tidak_masuk') + (int)$get('piutang') + (int)$get('koperasi');
-                                                if ($get('payment_method') == "transfer_non_bri") {
-                                                    $hitung = $hitung + $get('biaya_admin');
-                                                }
+
                                                 $set('sub_total_4', $hitung);
                                                 $set('total', '');
                                             })
