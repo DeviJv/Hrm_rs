@@ -69,6 +69,11 @@ class DocumentUnitResource extends Resource
                                 "BPJS" => "BPJS",
                                 "SPGDT" => "SPGDT",
                                 "AMBULANCE" => "AMBULANCE",
+                                "SECURITY" => "SECURITY",
+                                "CS" => "CS",
+                                "ATEM" => "ATEM",
+                                "MAINTENANCE" => "MAINTENANCE",
+                                "K3RS" => "K3RS",
                             ]),
                         Forms\Components\FileUpload::make('upload_document')
                             ->directory('documents_unit')
