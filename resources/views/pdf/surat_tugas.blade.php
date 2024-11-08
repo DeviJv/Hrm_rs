@@ -80,8 +80,13 @@
                     </div>
                 </div>
             </div>
-            <h3 class="mt-6 ml-12">Dengan ini menerangkan bahwa nama-nama dibawah ini :</h3>
-
+            <h3 class="mt-6 ml-12">Dengan ini menerangkan bahwa
+                @if (count($record->karyawans) > 1)
+                    nama-nama dibawah ini :
+                @else
+                    nama dibawah ini :
+                @endif
+            </h3>
             @if (count($record->karyawans) > 1)
                 <table class="table table-auto w-[630px] mx-12 mt-3 text-center text-sm">
                     <thead>
@@ -142,7 +147,7 @@
                 Adalah benar karyawan {{ $perusahaan->nama }} yang kami tugaskan untuk <br />
             </p>
             <p class=" mb-3 ml-12">
-                <span class="font-semibold italic">{{ $record->tugas }}</span> yang dilaksakan pada :
+                <span class="font-semibold italic">{{ $record->tugas }}</span> yang dilaksanakan pada :
             </p>
             <div class="flex flex-row items-center ml-12">
                 <div class="w-[6%]">
@@ -203,9 +208,9 @@
                     {{ $record->tempat }}
                 </div>
             </div>
-            <p class="mt-2 ml-12">Demikian surat tugas ini dibuat untuk dapat dipergunakan sebagaimana<br />
+            <p class="mt-2 ml-12">Demikian surat tugas ini dibuat untuk dapat dipergunakan sebagaimana mestinya<br />
             </p>
-            <p class="ml-12">mestinya, atas perhatian dan kerjasamanya kami ucapkan terima kasih.</p>
+            <p class="ml-12">, atas perhatian dan kerjasamanya kami ucapkan terima kasih.</p>
             <div class="flex flex-row items-start justify-between mt-5 break-after-page ml-12">
                 <div class="w-1/2">
                     Diterima oleh,<br />

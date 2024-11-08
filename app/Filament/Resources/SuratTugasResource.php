@@ -45,9 +45,15 @@ class SuratTugasResource extends Resource
                         TextInput::make('no_surat')
                             ->default(function () {
                                 $array_bln    = array(1 => "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII");
-                                $surat_tugas = SuratTugas::count();
+                                $surat_tugas = SuratTugas::latest()->first();
+                                if ($surat_tugas != null) {
+                                    $explode = explode('/', $surat_tugas->no_surat);
+                                    $no = preg_replace("/[^0-9]/", '', $explode[0]);
+                                } else {
+                                    $no = 0;
+                                }
 
-                                return "No." . $surat_tugas + 1 . "/RSIABS-BS/SDM/" . $array_bln[date('m')] . "/" . date('Y');
+                                return "No." . $no + 1 . "/RSIABS-BS/SDM/" . $array_bln[date('m')] . "/" . date('Y');
                             })
                             ->disabled()
                             ->dehydrated()
