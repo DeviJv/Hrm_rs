@@ -15,14 +15,14 @@
             border-collapse: collapse;
         }
 
-        /* @font-face {
+        @font-face {
             font-family: 'Inter';
             font-style: normal;
             font-weight: 400;
             src: url('{{ public_path('fonts/Inter.ttf') }}') format('truetype');
         }
 
-        body {
+        /* body {
             font-family: 'Inter', sans-serif;
         } */
 
@@ -33,7 +33,7 @@
 </head>
 
 <body>
-    <div class=" px-0 mx-0  mt-1 text-sm antialiased h-full w-full " id="cetak">
+    <div class=" px-0 mx-0  mt-1 text-sm antialiased h-full w-full tracking-normal" id="cetak">
         @foreach ($records as $record)
             <div class="flex items-start">
                 {{-- <img class="h-40 w-48" src="{{ asset($perusahaan->logo) }}"> --}}
@@ -42,10 +42,10 @@
             </div>
             <div class="text-center uppercase mt-44">
                 <h2 class="underline text-2xl">surat tugas</h2>
-                <h4 class="text-lg tracking-widest">Nomor : {{ $record->no_surat }}</h4>
+                <h4 class="text-lg">Nomor : {{ $record->no_surat }}</h4>
             </div>
-            <div class="space-y-1.5 ml-12 w-full tracking-wide">
-                <h3 class="mt-10 w-full tracking-wide">Yang bertanda tangan di bawah ini :</h3>
+            <div class="space-y-1.5 ml-12">
+                <h3 class="mt-10">Yang bertanda tangan di bawah ini :</h3>
                 <div class="flex flex-row w-auto text-left justify-start">
                     <div class="w-[4%]">
                         Nama
@@ -80,7 +80,7 @@
                     </div>
                 </div>
             </div>
-            <h3 class="mt-6 ml-12 w-full tracking-tight">Dengan ini menerangkan bahwa
+            <h3 class="mt-6 ml-12">Dengan ini menerangkan bahwa
                 @if (count($record->karyawans) > 1)
                     nama-nama dibawah ini :
                 @else
@@ -143,13 +143,13 @@
                     </div>
                 </div>
             @endif
-            <p class="w-full mt-3 ml-12 tracking-tight">
+            <p class="w-full mt-3 ml-12">
                 Adalah benar karyawan {{ $perusahaan->nama }} yang kami tugaskan untuk <br />
             </p>
-            <p class=" mb-3 ml-12 w-full tracking-tight">
+            <p class=" mb-3 ml-12">
                 <span class="font-semibold italic">{{ $record->tugas }}</span> yang dilaksanakan pada :
             </p>
-            <div class="flex flex-row items-center ml-12 w-full tracking-tight">
+            <div class="flex flex-row items-center ml-12">
                 <div class="w-[6%]">
                     Hari
                 </div>
@@ -165,7 +165,7 @@
                     @endif
                 </div>
             </div>
-            <div class="flex flex-row items-center ml-12 w-full tracking-tight">
+            <div class="flex flex-row items-center ml-12">
                 <div class="w-[6%]">
                     Tanggal
                 </div>
@@ -181,7 +181,7 @@
                     @endif
                 </div>
             </div>
-            <div class="flex flex-row items-center ml-12 w-full tracking-tight">
+            <div class="flex flex-row items-center ml-12">
                 <div class="w-[6%]">
                     Pukul
                 </div>
@@ -197,7 +197,7 @@
                     @endif
                 </div>
             </div>
-            <div class="flex flex-row items-center ml-12 w-full tracking-tight">
+            <div class="flex flex-row items-center ml-12">
                 <div class="w-[6%]">
                     Tempat
                 </div>
@@ -208,12 +208,10 @@
                     {{ $record->tempat }}
                 </div>
             </div>
-            <p class="mt-2 ml-12 w-full tracking-tight">Demikian surat tugas ini dibuat untuk dapat dipergunakan
-                sebagaimana
-                mestinya,<br />
+            <p class="mt-2 ml-12">Demikian surat tugas ini dibuat untuk dapat dipergunakan sebagaimana mestinya,<br />
             </p>
-            <p class="ml-12 w-full tracking-tight"> atas perhatian dan kerjasamanya kami ucapkan terima kasih.</p>
-            <div class="tracking-tight flex flex-row items-start justify-between mt-5 break-after-page ml-12">
+            <p class="ml-12">atas perhatian dan kerjasamanya kami ucapkan terima kasih.</p>
+            <div class="flex flex-row items-start justify-between mt-5 break-after-page ml-12">
                 <div class="w-1/2">
                     Diterima oleh,<br />
                     Pejabat yang berwenang
