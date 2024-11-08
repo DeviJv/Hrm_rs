@@ -41,8 +41,15 @@ class SuratKeteranganBekerjaResource extends Resource
                         TextInput::make('no_surat')
                             ->default(function () {
                                 $array_bln    = array(1 => "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII");
-                                $surat_paklaring = SuratKeteranganBekerja::count();
-                                return "No." . $surat_paklaring + 1 . "/RSIABS-SKB/SDM/" . $array_bln[date('m')] . "/" . date('Y');
+                                $surat_paklaring = SuratKeteranganBekerja::latest()->first();
+
+                                if ($surat_paklaring != null) {
+                                    $explode = explode('/', $surat_paklaring->no_surat);
+                                    $no = preg_replace("/[^0-9]/", '', $explode[0]);
+                                } else {
+                                    $no = 0;
+                                }
+                                return "No." . $no + 1 . "/RSIABS-SKB/SDM/" . $array_bln[date('m')] . "/" . date('Y');
                             })
                             ->disabled()
                             ->dehydrated()
