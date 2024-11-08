@@ -15,7 +15,7 @@
             border-collapse: collapse;
         }
 
-        @font-face {
+        /* @font-face {
             font-family: 'Inter';
             font-style: normal;
             font-weight: 400;
@@ -24,7 +24,7 @@
 
         body {
             font-family: 'Inter', sans-serif;
-        }
+        } */
 
         .page-break {
             page-break-before: always;
@@ -42,10 +42,10 @@
             </div>
             <div class="text-center uppercase mt-44">
                 <h2 class="underline text-2xl">surat tugas</h2>
-                <h4 class="text-lg">Nomor : <?php echo wordwrap($record->no_surat, 100); ?></h4>
+                <h4 class="text-lg">Nomor : {{ $record->no_surat }}</h4>
             </div>
             <div class="space-y-1.5 ml-12 w-full">
-                <h3 class="mt-10 w-full"><?php echo wordwrap('Yang bertanda tangan di bawah ini', 100); ?> :</h3>
+                <h3 class="mt-10 w-full">Yang bertanda tangan di bawah ini :</h3>
                 <div class="flex flex-row w-auto text-left justify-start">
                     <div class="w-[4%]">
                         Nama
@@ -80,11 +80,11 @@
                     </div>
                 </div>
             </div>
-            <h3 class="mt-6 ml-12 w-full"><?php wordwrap('Dengan ini menerangkan bahwa', 100); ?>
+            <h3 class="mt-6 ml-12 w-full">Dengan ini menerangkan bahwa
                 @if (count($record->karyawans) > 1)
-                    <?php echo wordwrap('nama-nama dibawah ini :', 100); ?>
+                    nama-nama dibawah ini :
                 @else
-                    <?php echo wordwrap('nama dibawah ini :', 100); ?>
+                    nama dibawah ini :
                 @endif
             </h3>
             @if (count($record->karyawans) > 1)
