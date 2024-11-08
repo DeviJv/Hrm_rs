@@ -80,7 +80,7 @@
                     </div>
                 </div>
             </div>
-            <h3 class="mt-6 ml-12 w-full">Dengan ini menerangkan bahwa
+            <h3 class="mt-6 ml-12 w-full tracking-tight">Dengan ini menerangkan bahwa
                 @if (count($record->karyawans) > 1)
                     nama-nama dibawah ini :
                 @else
@@ -143,13 +143,13 @@
                     </div>
                 </div>
             @endif
-            <p class="w-full mt-3 ml-12">
+            <p class="w-full mt-3 ml-12 tracking-tight">
                 Adalah benar karyawan {{ $perusahaan->nama }} yang kami tugaskan untuk <br />
             </p>
-            <p class=" mb-3 ml-12 w-full">
+            <p class=" mb-3 ml-12 w-full tracking-tight">
                 <span class="font-semibold italic">{{ $record->tugas }}</span> yang dilaksanakan pada :
             </p>
-            <div class="flex flex-row items-center ml-12 w-full">
+            <div class="flex flex-row items-center ml-12 w-full tracking-tight">
                 <div class="w-[6%]">
                     Hari
                 </div>
@@ -165,7 +165,7 @@
                     @endif
                 </div>
             </div>
-            <div class="flex flex-row items-center ml-12 w-full">
+            <div class="flex flex-row items-center ml-12 w-full tracking-tight">
                 <div class="w-[6%]">
                     Tanggal
                 </div>
@@ -181,7 +181,7 @@
                     @endif
                 </div>
             </div>
-            <div class="flex flex-row items-center ml-12 w-full">
+            <div class="flex flex-row items-center ml-12 w-full tracking-tight">
                 <div class="w-[6%]">
                     Pukul
                 </div>
@@ -197,7 +197,7 @@
                     @endif
                 </div>
             </div>
-            <div class="flex flex-row items-center ml-12 w-full">
+            <div class="flex flex-row items-center ml-12 w-full tracking-tight">
                 <div class="w-[6%]">
                     Tempat
                 </div>
@@ -208,11 +208,12 @@
                     {{ $record->tempat }}
                 </div>
             </div>
-            <p class="mt-2 ml-12 w-full">Demikian surat tugas ini dibuat untuk dapat dipergunakan sebagaimana
+            <p class="mt-2 ml-12 w-full tracking-tight">Demikian surat tugas ini dibuat untuk dapat dipergunakan
+                sebagaimana
                 mestinya,<br />
             </p>
-            <p class="ml-12 w-full"> atas perhatian dan kerjasamanya kami ucapkan terima kasih.</p>
-            <div class="flex flex-row items-start justify-between mt-5 break-after-page ml-12">
+            <p class="ml-12 w-full tracking-tight"> atas perhatian dan kerjasamanya kami ucapkan terima kasih.</p>
+            <div class="tracking-tight flex flex-row items-start justify-between mt-5 break-after-page ml-12">
                 <div class="w-1/2">
                     Diterima oleh,<br />
                     Pejabat yang berwenang
