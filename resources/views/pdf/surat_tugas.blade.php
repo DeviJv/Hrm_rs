@@ -42,10 +42,10 @@
             </div>
             <div class="text-center uppercase mt-44">
                 <h2 class="underline text-2xl">surat tugas</h2>
-                <h4 class="text-lg">Nomor : {{ $record->no_surat }}</h4>
+                <h4 class="text-lg">Nomor : <?php echo wordwrap($record->no_surat, 100); ?></h4>
             </div>
             <div class="space-y-1.5 ml-12 w-full">
-                <h3 class="mt-10 w-full">Yang bertanda tangan di bawah ini :</h3>
+                <h3 class="mt-10 w-full"><?php echo wordwrap('Yang bertanda tangan di bawah ini', 100); ?> :</h3>
                 <div class="flex flex-row w-auto text-left justify-start">
                     <div class="w-[4%]">
                         Nama
@@ -80,11 +80,11 @@
                     </div>
                 </div>
             </div>
-            <h3 class="mt-6 ml-12 w-full">Dengan ini menerangkan bahwa
+            <h3 class="mt-6 ml-12 w-full"><?php wordwrap('Dengan ini menerangkan bahwa', 100); ?>
                 @if (count($record->karyawans) > 1)
-                    nama-nama dibawah ini :
+                    <?php echo wordwrap('nama-nama dibawah ini :', 100); ?>
                 @else
-                    nama dibawah ini :
+                    <?php echo wordwrap('nama dibawah ini :', 100); ?>
                 @endif
             </h3>
             @if (count($record->karyawans) > 1)
@@ -209,9 +209,9 @@
                 </div>
             </div>
             <p class="mt-2 ml-12 w-full">Demikian surat tugas ini dibuat untuk dapat dipergunakan sebagaimana
-                mestinya<br />
+                mestinya,<br />
             </p>
-            <p class="ml-12 w-full">, atas perhatian dan kerjasamanya kami ucapkan terima kasih.</p>
+            <p class="ml-12 w-full"> atas perhatian dan kerjasamanya kami ucapkan terima kasih.</p>
             <div class="flex flex-row items-start justify-between mt-5 break-after-page ml-12">
                 <div class="w-1/2">
                     Diterima oleh,<br />
