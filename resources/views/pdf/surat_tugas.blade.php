@@ -44,8 +44,8 @@
                 <h2 class="underline text-2xl">surat tugas</h2>
                 <h4 class="text-lg tracking-widest">Nomor : {{ $record->no_surat }}</h4>
             </div>
-            <div class="space-y-1.5 ml-12 w-full tracking-tight">
-                <h3 class="mt-10 w-full ">Yang bertanda tangan di bawah ini :</h3>
+            <div class="space-y-1.5 ml-12 w-full tracking-wide">
+                <h3 class="mt-10 w-full tracking-wide">Yang bertanda tangan di bawah ini :</h3>
                 <div class="flex flex-row w-auto text-left justify-start">
                     <div class="w-[4%]">
                         Nama
