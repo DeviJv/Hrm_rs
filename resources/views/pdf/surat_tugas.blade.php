@@ -42,7 +42,7 @@
             </div>
             <div class="text-center uppercase mt-44">
                 <h2 class="underline text-2xl">surat tugas</h2>
-                <h4 class="text-lg">Nomor : {{ $record->no_surat }}</h4>
+                <h4 class="text-lg tracking-wider">Nomor : {{ $record->no_surat }}</h4>
             </div>
             <div class="space-y-1.5 ml-12">
                 <h3 class="mt-10">Yang bertanda tangan di bawah ini :</h3>
