@@ -4,7 +4,7 @@
             <th>No</th>
             <th>Tanggal Lembur</th>
             <th>Jumlah Jam</th>
-            <th>Jumlah Jam Yang Dihitung</th>
+            <th>Setelah Pengurangan</th>
             <th>Nama</th>
             <th>Harga Lembur</th>
             <th>Harga Perjam</th>
