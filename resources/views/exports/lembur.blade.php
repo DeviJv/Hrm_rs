@@ -4,6 +4,7 @@
             <th>No</th>
             <th>Tanggal Lembur</th>
             <th>Jumlah Jam</th>
+            <th>Jumlah Jam Yang Dihitung</th>
             <th>Nama</th>
             <th>Harga Lembur</th>
             <th>Harga Perjam</th>
@@ -13,10 +14,19 @@
         </tr>
     </thead>
     <tbody>
+        <?php $sum = [];
+        $hitung_array = []; ?>
         @foreach ($lembur as $k => $l)
             <tr>
                 <td>{{ $k + 1 }}</td>
                 <td>{{ date('d F,Y', strtotime($l->tgl_lembur)) }}</td>
+                <?php
+                $dari = date_create('' . $l->tgl_lembur . '' . $l->jm_mulai . '');
+                $sampai = date_create('' . $l->tgl_lembur . '' . $l->jm_selesai . '');
+                $hitung = date_diff($dari, $sampai);
+                $sum[] = $hitung->h;
+                ?>
+                <td>{{ $hitung->h }}</td>
                 <td>{{ $l->jumlah_jam }}</td>
                 <td>{{ $l->karyawan->nama }}</td>
                 <td>{{ 'Rp ' . number_format($l->harga_lembur, 0, ',', '.') }}</td>
@@ -29,6 +39,10 @@
                 @if ($lembur[$k + 1]->karyawan_id !== $l->karyawan_id)
                     <tr style="background-color: green;">
                         <td colspan=2>Total : </td>
+
+                        <td>
+                            {{ $jumlah_jam_real[$l->karyawan_id] }}
+                        </td>
                         <td>{{ $sum_jumlah_jam[$l->karyawan_id] }}</td>
                         <td>&nbsp;</td>
                         <td>&nbsp;</td>
@@ -42,6 +56,9 @@
                 @if ($lembur[$k]->karyawan_id === $l->karyawan_id)
                     <tr style="background-color: green;">
                         <td colspan=2>Total : </td>
+                        <td>
+                            {{ $jumlah_jam_real[$l->karyawan_id] }}
+                        </td>
                         <td>{{ $sum_jumlah_jam[$l->karyawan_id] }}</td>
                         <td>&nbsp;</td>
                         <td>&nbsp;</td>

@@ -26,6 +26,20 @@ class LemburExport implements FromView
             ->map(function ($item) {
                 return $item->sum('jumlah_jam');
             });
+        $sum_jumlah_real = $records
+            ->map(function ($item, $k) {
+
+                $dari = date_create('' . $item['tgl_lembur'] . '' . $item['jm_mulai'] . '');
+                $sampai = date_create('' . $item['tgl_lembur'] . '' . $item['jm_selesai'] . '');
+                $hitung = date_diff($dari, $sampai);
+                $item['jj'] = $hitung->h;
+                return $item;
+            });
+        $sum_jumlah_jam_real = $sum_jumlah_real->groupBy('karyawan_id')
+            ->map(function ($item) {
+                return $item->sum('jj');
+            });
+
         $harga_jam_pertama = $records->groupBy('karyawan_id')
             ->map(function ($item) {
                 return $item->sum('harga_jam_pertama');
@@ -45,6 +59,7 @@ class LemburExport implements FromView
             'harga_total_jam' => $harga_total_jam,
             'harga_jam_pertama' => $harga_jam_pertama,
             'total_lembur' => $total_lembur,
+            'jumlah_jam_real' => $sum_jumlah_jam_real
         ]);
     }
 }
