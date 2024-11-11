@@ -19,11 +19,11 @@
                 <td>{{ date('d F,Y', strtotime($l->tgl_lembur)) }}</td>
                 <td>{{ $l->jumlah_jam }}</td>
                 <td>{{ $l->karyawan->nama }}</td>
-                <td>{{ 'Rp ' . number_format($l->harga_lembur) }}</td>
-                <td>{{ 'Rp ' . number_format($l->harga_perjam) }}</td>
-                <td>{{ 'Rp ' . number_format($l->harga_jam_pertama) }}</td>
-                <td>{{ 'Rp ' . number_format($l->harga_total_jam) }}</td>
-                <td>{{ 'Rp ' . number_format($l->total_lembur) }}</td>
+                <td>{{ 'Rp ' . number_format($l->harga_lembur, 0, ',', '.') }}</td>
+                <td>{{ 'Rp ' . number_format($l->harga_perjam, 0, ',', '.') }}</td>
+                <td>{{ 'Rp ' . number_format($l->harga_jam_pertama, 0, ',', '.') }}</td>
+                <td>{{ 'Rp ' . number_format($l->harga_total_jam, 0, ',', '.') }}</td>
+                <td>{{ 'Rp ' . number_format($l->total_lembur, 0, ',', '.') }}</td>
             </tr>
             @if (!$loop->last)
                 @if ($lembur[$k + 1]->karyawan_id !== $l->karyawan_id)
@@ -33,9 +33,9 @@
                         <td>&nbsp;</td>
                         <td>&nbsp;</td>
                         <td>&nbsp;</td>
-                        <td><b>{{ 'Rp' . number_format($harga_jam_pertama[$l->karyawan_id]) }}</b></td>
-                        <td><b>{{ 'Rp ' . number_format($harga_total_jam[$l->karyawan_id]) }}</b></td>
-                        <td><b>{{ 'Rp ' . number_format($total_lembur[$l->karyawan_id]) }}</b></td>
+                        <td><b>{{ 'Rp' . number_format($harga_jam_pertama[$l->karyawan_id], 0, ',', '.') }}</b></td>
+                        <td><b>{{ 'Rp ' . number_format($harga_total_jam[$l->karyawan_id], 0, ',', '.') }}</b></td>
+                        <td><b>{{ 'Rp ' . number_format($total_lembur[$l->karyawan_id], 0, ',', '.') }}</b></td>
                     </tr>
                 @endif
             @else
@@ -46,9 +46,9 @@
                         <td>&nbsp;</td>
                         <td>&nbsp;</td>
                         <td>&nbsp;</td>
-                        <td><b>{{ 'Rp' . number_format($harga_jam_pertama[$l->karyawan_id]) }}</b></td>
-                        <td><b>{{ 'Rp ' . number_format($harga_total_jam[$l->karyawan_id]) }}</b></td>
-                        <td><b>{{ 'Rp ' . number_format($total_lembur[$l->karyawan_id]) }}</b></td>
+                        <td><b>{{ 'Rp' . number_format($harga_jam_pertama[$l->karyawan_id], 0, ',', '.') }}</b></td>
+                        <td><b>{{ 'Rp ' . number_format($harga_total_jam[$l->karyawan_id], 0, ',', '.') }}</b></td>
+                        <td><b>{{ 'Rp ' . number_format($total_lembur[$l->karyawan_id], 0, ',', '.') }}</b></td>
                     </tr>
                 @endif
             @endif
