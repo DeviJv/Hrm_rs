@@ -622,6 +622,7 @@ class TransaksiPayrollResource extends Resource
                         ->color('primary')
                         ->label('Export Payroll With Bank')
                         ->exporter(TransaksiPayrollWithBankExporter::class)
+                        ->modifyQueryUsing(fn($query, $livewire) => $livewire->getFilteredTableQuery())
                         ->fileName(fn(Export $export): string => "Transaksi Payroll With Bank-{$export->getKey()}"),
                     Tables\Actions\DeleteBulkAction::make()
                         ->databaseTransaction()
