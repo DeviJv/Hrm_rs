@@ -214,7 +214,11 @@ function terbilang($x)
                         <div class="flex flex-row items-center justify-between px-8 container w-full">
                             <div class="w-1/2 font-semibold">TOTAL KEWAJIBAN KARYAWAN</div>
                             <div class="w-1/3 text-right"> Rp
-                                {{ number_format($record->tidak_masuk + $record->piutang + $record->ketenagakerjaan + $record->bpjs_kesehatan) }}
+                                @if ($record->payment_method == 'transfer_non_bri')
+                                    {{ number_format($record->tidak_masuk + $record->piutang + $record->ketenagakerjaan + $record->bpjs_kesehatan + 2900) }}
+                                @else
+                                    {{ number_format($record->tidak_masuk + $record->piutang + $record->ketenagakerjaan + $record->bpjs_kesehatan) }}
+                                @endif
                             </div>
                         </div>
                     </td>
@@ -229,15 +233,18 @@ function terbilang($x)
                             <div class="w-1/3 text-right"> Rp
                                 <?php $total = $record->penyesuaian + $record->insentif + $record->fungsional + $record->lembur + $record->gaji_pokok + $record->transport + $record->makan + $record->fungsional_it + $record->jabatan - $record->tidak_masuk - $record->piutang - $record->ketenagakerjaan - $record->bpjs_kesehatan;
                                 ?>
-                                {{ number_format($total) }}
-
+                                @if ($record->payment_method == 'transfer_non_bri')
+                                    {{ number_format($total - 2900) }}
+                                @else
+                                    {{ number_format($total) }}
+                                @endif
                             </div>
                         </div>
                     </td>
                 </tr>
                 <tr>
                     <td colspan="2" class="h-7 bg-gray-200 text-center font-bold italic">
-                        "{{ ucwords(terbilang($total)) }}"
+                        "{{ ucwords(terbilang($total)) }}Rupiah "
                     </td>
                 </tr>
                 <tr class="text-center text-sm">

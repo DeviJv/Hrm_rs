@@ -482,6 +482,7 @@ class TransaksiPayrollResource extends Resource
                     ->date(),
                 TextColumn::make('karyawan.nama')
                     ->label('Nama')
+                    ->sortable()
                     ->searchable(),
                 TextColumn::make('payment_method'),
                 TextColumn::make('gaji_pokok')
@@ -615,6 +616,7 @@ class TransaksiPayrollResource extends Resource
                     ExportBulkAction::make('export_payroll')
                         ->color('primary')
                         ->label('Export Payroll')
+                        ->modifyQueryUsing(fn(Builder $query) => $query->orderBy('created_at', 'asc'))
                         ->exporter(TransaksiPayrollExporter::class),
                     ExportBulkAction::make('export_payroll_with_bank')
                         ->color('primary')
