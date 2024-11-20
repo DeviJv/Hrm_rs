@@ -261,7 +261,7 @@ function terbilang($x)
                             Mengetahui
                         </div>
                         <div class="border border-t border-black ">
-                            &nbsp;
+                            Fazri Aris Aprilianto, S.Kom
                         </div>
                     </td>
                 </tr>
