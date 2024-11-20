@@ -616,7 +616,7 @@ class TransaksiPayrollResource extends Resource
                     ExportBulkAction::make('export_payroll')
                         ->color('primary')
                         ->label('Export Payroll')
-                        ->modifyQueryUsing(fn(Builder $query) => $query->orderBy('created_at', 'asc'))
+                        ->modifyQueryUsing(fn(Builder $query) => $query->orderBy('created_at', 'desc'))
                         ->exporter(TransaksiPayrollExporter::class),
                     ExportBulkAction::make('export_payroll_with_bank')
                         ->color('primary')

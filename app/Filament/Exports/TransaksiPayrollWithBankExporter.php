@@ -22,7 +22,9 @@ class TransaksiPayrollWithBankExporter extends Exporter
                 ->label('Bank'),
             ExportColumn::make('karyawan.no_rekening')
                 ->label('No Rekening'),
-            ExportColumn::make('total'),
+            ExportColumn::make('total')
+                ->formatStateUsing(fn(string $state): string => number_format($state, 0, ',', '.')),
+
         ];
     }
 
