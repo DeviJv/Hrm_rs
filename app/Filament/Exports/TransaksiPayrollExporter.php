@@ -26,61 +26,61 @@ class TransaksiPayrollExporter extends Exporter
                 ->label('NPWP'),
             ExportColumn::make('karyawan.jabatan'),
             ExportColumn::make('gaji_pokok')
-                ->formatStateUsing(fn(string $state): int => number_format($state, 0, ',', '.')),
+                ->formatStateUsing(fn(string $state): float => (float)number_format($state)),
             ExportColumn::make('transport')
-                ->formatStateUsing(fn(string $state): int => number_format($state, 0, ',', '.')),
+                ->formatStateUsing(fn(string $state): float => (float)number_format($state)),
             ExportColumn::make('makan')
-                ->formatStateUsing(fn(string $state): int => number_format($state, 0, ',', '.')),
+                ->formatStateUsing(fn(string $state): float => (float)number_format($state)),
 
             ExportColumn::make('sub_total_1')
                 ->state(function (TransaksiPayroll $record) {
-                    return number_format($record->gaji_pokok + $record->transport + $record->makan, 0, ',', '.');
+                    return (float)number_format($record->gaji_pokok + $record->transport + $record->makan);
                 }),
             ExportColumn::make('penyesuaian')
-                ->formatStateUsing(fn(string $state): int => number_format($state, 0, ',', '.')),
+                ->formatStateUsing(fn(string $state): float => (float)number_format($state)),
             ExportColumn::make('insentif')
-                ->formatStateUsing(fn(string $state): int => number_format($state, 0, ',', '.')),
+                ->formatStateUsing(fn(string $state): float => (float)number_format($state)),
 
             ExportColumn::make('fungsional')
                 ->label('Fungsional Umum')
-                ->formatStateUsing(fn(string $state): int => number_format($state, 0, ',', '.')),
+                ->formatStateUsing(fn(string $state): float => (float)number_format($state)),
 
             ExportColumn::make('fungsional_it')
                 ->label('Fungsional Khusus')
-                ->formatStateUsing(fn(string $state): int => number_format($state, 0, ',', '.')),
+                ->formatStateUsing(fn(string $state): float => (float)number_format($state)),
 
             ExportColumn::make('jabatan')
-                ->formatStateUsing(fn(string $state): int => number_format($state, 0, ',', '.')),
+                ->formatStateUsing(fn(string $state): float => (float)number_format($state)),
             ExportColumn::make('sub_total_2')
                 ->state(function (TransaksiPayroll $record) {
-                    return  number_format($record->gaji_pokok + $record->transport + $record->makan + $record->penyesuaian + $record->insentif + $record->fungsional + $record->fungsional_it + $record->jabatan, 0, ',', '.');
+                    return  (float)number_format($record->gaji_pokok + $record->transport + $record->makan + $record->penyesuaian + $record->insentif + $record->fungsional + $record->fungsional_it + $record->jabatan);
                 }),
             ExportColumn::make('ketenagakerjaan')
-                ->formatStateUsing(fn(string $state): int => number_format($state, 0, ',', '.')),
+                ->formatStateUsing(fn(string $state): float => (float)number_format($state)),
 
             ExportColumn::make('bpjs_kesehatan')
-                ->formatStateUsing(fn(string $state): int => number_format($state, 0, ',', '.')),
+                ->formatStateUsing(fn(string $state): float => (float)number_format($state)),
 
             ExportColumn::make('pajak')
-                ->formatStateUsing(fn(string $state): int => number_format($state, 0, ',', '.')),
+                ->formatStateUsing(fn(string $state): float => (float)number_format($state)),
 
             ExportColumn::make('koperasi')
-                ->formatStateUsing(fn(string $state): int => number_format($state, 0, ',', '.')),
+                ->formatStateUsing(fn(string $state): float => (float)number_format($state)),
 
             ExportColumn::make('piutang')
                 ->label('obat/catering/dll')
-                ->formatStateUsing(fn(string $state): int => number_format($state, 0, ',', '.')),
+                ->formatStateUsing(fn(string $state): float => (float)number_format($state)),
 
             ExportColumn::make('tidak_masuk')
                 ->label('Izin')
-                ->formatStateUsing(fn(string $state): int => number_format($state, 0, ',', '.')),
+                ->formatStateUsing(fn(string $state): float => (float)number_format($state)),
 
             ExportColumn::make('sub_total_3')
                 ->state(function (TransaksiPayroll $record) {
-                    return number_format($record->ketenagakerjaan + $record->bpjs_kesehatan + $record->pajak + $record->koperasi + $record->piutang, 0, ',', '.');
+                    return (float)number_format($record->ketenagakerjaan + $record->bpjs_kesehatan + $record->pajak + $record->koperasi + $record->piutang);
                 }),
             ExportColumn::make('total')
-                ->formatStateUsing(fn(string $state): int => number_format($state, 0, ',', '.'))
+                ->formatStateUsing(fn(string $state): float => (float)number_format($state))
                 ->label('NET INCOME'),
             // ExportColumn::make('karyawan.nik_ktp')
             //     ->label('Nomor Induk Kependudukan'),
