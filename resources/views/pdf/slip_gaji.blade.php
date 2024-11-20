@@ -180,7 +180,7 @@ function terbilang($x)
                 </tr>
                 <tr>
                     <td colspan="2" class="h-10 text-center font-semibold uppercase">
-                        <h3 class="text-center  text-lg font-semibold">kewajibatan karyawan</h3>
+                        <h3 class="text-center  text-lg font-semibold">kewajiban karyawan</h3>
                         <div class="flex flex-row items-center justify-between px-8 container w-full">
                             <div class="w-1/3 font-semibold">Iuran BPJS Ketenagakerjaan </div>
                             <div class="w-1/2 text-right"> Rp {{ number_format($record->bpjs_kesehatan) }}</div>
