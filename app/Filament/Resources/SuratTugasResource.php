@@ -52,8 +52,7 @@ class SuratTugasResource extends Resource
                                 } else {
                                     $no = 0;
                                 }
-
-                                return "" . $no + 1 . "/RSIABS/SDM/" . $array_bln[date('m')] . "/" . date('Y');
+                                return "" . $no + 1 . "/RSIABS/SDM/" . $array_bln[date('n')] . "/" . date('Y');
                             })
                             ->disabled()
                             ->dehydrated()
