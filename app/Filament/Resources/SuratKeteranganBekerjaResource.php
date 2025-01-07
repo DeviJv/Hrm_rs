@@ -49,7 +49,7 @@ class SuratKeteranganBekerjaResource extends Resource
                                 } else {
                                     $no = 0;
                                 }
-                                return "" . $no + 1 . "/RSIABS-SKB/SDM/" . $array_bln[date('m')] . "/" . date('Y');
+                                return "" . $no + 1 . "/RSIABS-SKB/SDM/" . $array_bln[date('n')] . "/" . date('Y');
                             })
                             ->disabled()
                             ->dehydrated()

@@ -49,7 +49,7 @@ class SuratPaklaringResource extends Resource
                                 } else {
                                     $no = 0;
                                 }
-                                return "" . $no + 1 . "/RSIABS-PK/SDM/" . $array_bln[date('m')] . "/" . date('Y');
+                                return "" . $no + 1 . "/RSIABS-PK/SDM/" . $array_bln[date('n')] . "/" . date('Y');
                             })
                             ->disabled()
                             ->dehydrated()
