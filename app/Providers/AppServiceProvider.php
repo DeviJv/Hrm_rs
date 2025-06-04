@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Blade;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\ServiceProvider;
 use Filament\Support\Facades\FilamentView;
+use Filament\Support\Facades\FilamentAsset;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -29,10 +30,12 @@ class AppServiceProvider extends ServiceProvider
         config(['app.locale' => 'id']);
         Carbon::setLocale('id');
         Gate::policy(\Spatie\Permission\Models\Role::class, \App\Policies\RolePolicy::class);
+
         FilamentView::registerRenderHook(
             PanelsRenderHook::BODY_END,
             fn(): string => Blade::render('@livewire(\'Notif\')'),
         );
+
         // date_default_timezone_set('Asia/Jakarta');
     }
 }
