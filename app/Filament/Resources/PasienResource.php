@@ -14,6 +14,7 @@ use Filament\Tables\Table;
 use Filament\Resources\Resource;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Section;
+use Filament\Forms\Components\FileUpload;
 use Illuminate\Database\Eloquent\Builder;
 use App\Filament\Resources\PasienResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -23,45 +24,18 @@ class PasienResource extends Resource {
     protected static ?string $model = Pasien::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationGroup = 'Marketing';
 
     public static function form(Form $form): Form {
         return $form
             ->schema([
                 Section::make()
-                    ->columns(3)
+                    ->columns(5)
                     ->schema([
                         Forms\Components\DatePicker::make('created_at')
                             ->label('Tanggal')
                             ->required()
                             ->default(now()),
-                        Forms\Components\TextInput::make('nama')
-                            ->required()
-                            ->maxLength(255),
-                        Forms\Components\TextInput::make('usia')
-                            ->label('Usia')
-                            ->required()
-                            ->maxLength(255),
-                        Forms\Components\Select::make('kelas')
-                            ->required()
-                            ->options([
-                                'kelas 3' => 'kelas 3',
-                                'kelas 2' => 'kelas 2',
-                                'kelas 1' => 'kelas 1',
-                                'VIP' => 'VIP',
-                                'SVIP' => 'SVIP',
-                                'Suite Room' => 'Suite Room',
-                            ]),
-                        Forms\Components\TextInput::make('pasien_rujukan')
-                            ->required(),
-
-                        Forms\Components\TextInput::make('jenis')
-                            ->required(),
-                        Forms\Components\Select::make('status')
-                            ->required()
-                            ->options([
-                                'diterima' => 'diterima',
-                                'ditolak' => 'ditolak',
-                            ]),
                         Forms\Components\Select::make('kategori')
                             ->label('Pilih Kategori')
                             ->dehydrated(false)
@@ -96,6 +70,33 @@ class PasienResource extends Resource {
                                 return [];
                             })
                             ->required(),
+                        Forms\Components\TextInput::make('nama')
+                            ->required()
+                            ->maxLength(255),
+                        Forms\Components\TextInput::make('usia')
+                            ->label('Usia')
+                            ->required()
+                            ->maxLength(255),
+                        Forms\Components\Select::make('kelas')
+                            ->required()
+                            ->options([
+                                'kelas 3' => 'kelas 3',
+                                'kelas 2' => 'kelas 2',
+                                'kelas 1' => 'kelas 1',
+                                'VIP' => 'VIP',
+                                'SVIP' => 'SVIP',
+                                'Suite Room' => 'Suite Room',
+                            ]),
+                        Forms\Components\Select::make('pasien_rujukan')
+                            ->label('Tipe Kunjungan')
+                            ->required()
+                            ->options([
+                                'Rawat Inap' => 'Rawat Inap',
+                                'Rawat Jalan' => 'Rawat Jalan',
+                            ]),
+                        Forms\Components\TextInput::make('jenis')
+                            ->required(),
+
                         Forms\Components\Select::make('operasi')
                             ->label('Tindakan')
                             ->live()
@@ -113,6 +114,13 @@ class PasienResource extends Resource {
                                 }
                                 return [];
                             }),
+                        Forms\Components\Select::make('status')
+                            ->required()
+                            ->options([
+                                'diterima' => 'diterima',
+                                'ditolak' => 'ditolak',
+                            ]),
+
                         Forms\Components\Textarea::make('keterangan'),
                     ]),
 

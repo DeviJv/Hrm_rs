@@ -13,12 +13,11 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Section;
 use Illuminate\Database\Eloquent\Model;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\FileUpload;
 use Illuminate\Database\Eloquent\Builder;
 use Cheesegrits\FilamentGoogleMaps\Fields\Map;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\BidanMitraResource\Pages;
-use App\Filament\Resources\BidanMitraResource\RelationManagers;
-use App\Filament\Resources\BidanMitraResource\Widgets\CobaCustomWidget;
 use App\Filament\Resources\BidanMitraResource\Widgets\CustomBidanWidget;
 use App\Filament\Resources\BidanMitraResource\Widgets\BidanMitraTableWidget;
 use App\Filament\Resources\BidanMitraResource\Widgets\BidanMitra as BidanMitraWidget;
@@ -75,6 +74,8 @@ class BidanMitraResource extends Resource {
                                 "sudah" => 'SUDAH',
                                 "belum" => 'BELUM',
                             ]),
+                        FileUpload::make('document')
+                            ->directory('documents'),
                         Map::make('location')
                             ->dehydrated(false)
                             // ->relationship('locations')
