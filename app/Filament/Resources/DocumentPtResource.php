@@ -16,15 +16,14 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\DocumentPtResource\Pages;
 use App\Filament\Resources\DocumentPtResource\RelationManagers;
 
-class DocumentPtResource extends Resource
-{
+class DocumentPtResource extends Resource {
     protected static ?string $model = Document_pt::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-briefcase';
     protected static ?string $pluralModelLabel = 'Document PT';
+    protected static ?string $navigationGroup = 'HRM';
 
-    public static function form(Form $form): Form
-    {
+    public static function form(Form $form): Form {
         return $form
             ->schema([
                 Section::make()
@@ -58,8 +57,7 @@ class DocumentPtResource extends Resource
             ]);
     }
 
-    public static function table(Table $table): Table
-    {
+    public static function table(Table $table): Table {
         return $table
             ->defaultSort('created_at', 'desc')
             ->columns([
@@ -113,15 +111,13 @@ class DocumentPtResource extends Resource
             ]);
     }
 
-    public static function getRelations(): array
-    {
+    public static function getRelations(): array {
         return [
             //
         ];
     }
 
-    public static function getPages(): array
-    {
+    public static function getPages(): array {
         return [
             'index' => Pages\ListDocumentPts::route('/'),
             'create' => Pages\CreateDocumentPt::route('/create'),

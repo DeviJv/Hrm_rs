@@ -28,6 +28,7 @@ class ListPasien extends Component implements HasForms, HasTable {
     public int $bidan_id;
     public function table(Table $table): Table {
         return $table
+            ->heading('Daftar Pasien')
             ->query(Pasien::query()->where('bidan_mitra_id', $this->bidan_id))
             ->paginated([10, 25, 50])
             ->headerActions([

@@ -19,14 +19,13 @@ use App\Filament\Resources\KontrakResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\KontrakResource\RelationManagers;
 
-class KontrakResource extends Resource
-{
+class KontrakResource extends Resource {
     protected static ?string $model = Kontrak::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-document-chart-bar';
+    protected static ?string $navigationGroup = 'HRM';
 
-    public static function form(Form $form): Form
-    {
+    public static function form(Form $form): Form {
         return $form
             ->schema([
                 Section::make()
@@ -65,8 +64,7 @@ class KontrakResource extends Resource
             ]);
     }
 
-    public static function table(Table $table): Table
-    {
+    public static function table(Table $table): Table {
         return $table
             ->defaultSort('created_at', 'desc')
             ->columns([
@@ -112,15 +110,13 @@ class KontrakResource extends Resource
             ]);
     }
 
-    public static function getRelations(): array
-    {
+    public static function getRelations(): array {
         return [
             //
         ];
     }
 
-    public static function getPages(): array
-    {
+    public static function getPages(): array {
         return [
             'index' => Pages\ListKontraks::route('/'),
             'create' => Pages\CreateKontrak::route('/create'),
@@ -128,24 +124,20 @@ class KontrakResource extends Resource
         ];
     }
 
-    public static function getGlobalSearchEloquentQuery(): Builder
-    {
+    public static function getGlobalSearchEloquentQuery(): Builder {
         return parent::getGlobalSearchEloquentQuery()->with('karyawan')->latest();
     }
 
-    public static function getGloballySearchableAttributes(): array
-    {
+    public static function getGloballySearchableAttributes(): array {
         return ['karyawan.nama'];
     }
-    public static function getGlobalSearchResultDetails(Model $record): array
-    {
+    public static function getGlobalSearchResultDetails(Model $record): array {
         return [
             'Tangga Mulai' => date('d F, Y', strtotime($record->tgl_mulai)),
             'Tangga Akhir' => date('d F, Y', strtotime($record->tgl_akhir)),
         ];
     }
-    public static function getGlobalSearchResultTitle(Model $record): string | Htmlable
-    {
+    public static function getGlobalSearchResultTitle(Model $record): string | Htmlable {
         return $record->karyawan->nama;
     }
 }

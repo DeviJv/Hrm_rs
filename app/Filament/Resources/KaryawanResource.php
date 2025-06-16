@@ -24,15 +24,14 @@ use App\Filament\Resources\KaryawanResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\KaryawanResource\RelationManagers;
 
-class KaryawanResource extends Resource
-{
+class KaryawanResource extends Resource {
     protected static ?string $model = Karyawan::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-user-circle';
     protected static ?string $recordTitleAttribute = 'nama';
+    protected static ?string $navigationGroup = 'HRM';
 
-    public static function form(Form $form): Form
-    {
+    public static function form(Form $form): Form {
         return $form
             ->schema([
                 Section::make('')
@@ -117,8 +116,7 @@ class KaryawanResource extends Resource
             ]);
     }
 
-    public static function table(Table $table): Table
-    {
+    public static function table(Table $table): Table {
         return $table
             ->groups([
                 'nakes',
@@ -229,15 +227,13 @@ class KaryawanResource extends Resource
             ]);
     }
 
-    public static function getRelations(): array
-    {
+    public static function getRelations(): array {
         return [
             //
         ];
     }
 
-    public static function getPages(): array
-    {
+    public static function getPages(): array {
         return [
             'index' => Pages\ListKaryawans::route('/'),
             'create' => Pages\CreateKaryawan::route('/create'),
@@ -245,30 +241,25 @@ class KaryawanResource extends Resource
         ];
     }
 
-    public static function getGlobalSearchEloquentQuery(): Builder
-    {
+    public static function getGlobalSearchEloquentQuery(): Builder {
         return parent::getGlobalSearchEloquentQuery();
     }
-    public static function getGloballySearchableAttributes(): array
-    {
+    public static function getGloballySearchableAttributes(): array {
         return ['nama'];
     }
 
-    public static function getGlobalSearchResultTitle(Model $record): string | Htmlable
-    {
+    public static function getGlobalSearchResultTitle(Model $record): string | Htmlable {
         return $record->nama;
     }
 
-    public static function getEloquentQuery(): Builder
-    {
+    public static function getEloquentQuery(): Builder {
         if (auth()->user()->hasRole('karyawan')) {
             return parent::getEloquentQuery()->where('karyawan_id', auth()->user()->karyawan_id);
         }
         return parent::getEloquentQuery();
     }
 
-    public static function canCreate(): bool
-    {
+    public static function canCreate(): bool {
         if (auth()->user()->hasRole('karyawan')) {
             return false;
         }

@@ -48,14 +48,13 @@ use App\Filament\Exports\TransaksiPayrollWithBankExporter;
 use App\Filament\Resources\TransaksiPayrollResource\Pages;
 use App\Filament\Resources\TransaksiPayrollResource\RelationManagers;
 
-class TransaksiPayrollResource extends Resource
-{
+class TransaksiPayrollResource extends Resource {
     protected static ?string $model = TransaksiPayroll::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-banknotes';
+    protected static ?string $navigationGroup = 'HRM';
 
-    public static function form(Form $form): Form
-    {
+    public static function form(Form $form): Form {
         return $form
             ->schema([
                 Section::make()
@@ -466,8 +465,7 @@ class TransaksiPayrollResource extends Resource
             ]);
     }
 
-    public static function table(Table $table): Table
-    {
+    public static function table(Table $table): Table {
         return $table
             ->defaultSort('created_at', 'desc')
             // ->defaultGroup('payment_method')
@@ -659,15 +657,13 @@ class TransaksiPayrollResource extends Resource
             ]);
     }
 
-    public static function getRelations(): array
-    {
+    public static function getRelations(): array {
         return [
             //
         ];
     }
 
-    public static function getPages(): array
-    {
+    public static function getPages(): array {
         return [
             'index' => Pages\ListTransaksiPayrolls::route('/'),
             'create' => Pages\CreateTransaksiPayroll::route('/create'),
@@ -675,8 +671,7 @@ class TransaksiPayrollResource extends Resource
         ];
     }
 
-    public static function getEloquentQuery(): Builder
-    {
+    public static function getEloquentQuery(): Builder {
         if (auth()->user()->hasRole('karyawan')) {
             return parent::getEloquentQuery()->where('karyawan_id', auth()->user()->karyawan_id);
         }

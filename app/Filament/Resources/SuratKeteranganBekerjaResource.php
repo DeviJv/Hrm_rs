@@ -23,14 +23,13 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\SuratKeteranganBekerjaResource\Pages;
 use App\Filament\Resources\SuratKeteranganBekerjaResource\RelationManagers;
 
-class SuratKeteranganBekerjaResource extends Resource
-{
+class SuratKeteranganBekerjaResource extends Resource {
     protected static ?string $model = SuratKeteranganBekerja::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-document-chart-bar';
+    protected static ?string $navigationGroup = 'HRM';
 
-    public static function form(Form $form): Form
-    {
+    public static function form(Form $form): Form {
         return $form
             ->schema([
                 Section::make()
@@ -123,8 +122,7 @@ class SuratKeteranganBekerjaResource extends Resource
             ]);
     }
 
-    public static function table(Table $table): Table
-    {
+    public static function table(Table $table): Table {
         return $table
             ->defaultSort('created_at', 'desc')
             ->columns([
@@ -198,15 +196,13 @@ class SuratKeteranganBekerjaResource extends Resource
             ]);
     }
 
-    public static function getRelations(): array
-    {
+    public static function getRelations(): array {
         return [
             //
         ];
     }
 
-    public static function getPages(): array
-    {
+    public static function getPages(): array {
         return [
             'index' => Pages\ListSuratKeteranganBekerjas::route('/'),
             'create' => Pages\CreateSuratKeteranganBekerja::route('/create'),
@@ -214,8 +210,7 @@ class SuratKeteranganBekerjaResource extends Resource
         ];
     }
 
-    public static function getEloquentQuery(): Builder
-    {
+    public static function getEloquentQuery(): Builder {
         if (auth()->user()->hasRole('karyawan')) {
             return parent::getEloquentQuery()->where('karyawan_id', auth()->user()->karyawan_id);
         }

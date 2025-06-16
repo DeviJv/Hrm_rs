@@ -25,14 +25,13 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\PiutangResource\RelationManagers;
 use App\Filament\Resources\PiutangResource\RelationManagers\PembayaransRelationManager;
 
-class PiutangResource extends Resource
-{
+class PiutangResource extends Resource {
     protected static ?string $model = Piutang::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-currency-dollar';
+    protected static ?string $navigationGroup = 'HRM';
 
-    public static function form(Form $form): Form
-    {
+    public static function form(Form $form): Form {
         return $form
             ->schema([
                 Section::make()
@@ -75,8 +74,7 @@ class PiutangResource extends Resource
             ]);
     }
 
-    public static function table(Table $table): Table
-    {
+    public static function table(Table $table): Table {
         return $table
             ->defaultSort('created_at', 'desc')
             ->columns([
@@ -183,15 +181,13 @@ class PiutangResource extends Resource
             ]);
     }
 
-    public static function getRelations(): array
-    {
+    public static function getRelations(): array {
         return [
             PembayaransRelationManager::class
         ];
     }
 
-    public static function getPages(): array
-    {
+    public static function getPages(): array {
         return [
             'index' => Pages\ListPiutangs::route('/'),
             'create' => Pages\CreatePiutang::route('/create'),
@@ -199,25 +195,21 @@ class PiutangResource extends Resource
         ];
     }
 
-    public static function getEloquentQuery(): Builder
-    {
+    public static function getEloquentQuery(): Builder {
         if (auth()->user()->hasRole('karyawan')) {
             return parent::getEloquentQuery()->where('karyawan_id', auth()->user()->karyawan_id);
         }
         return parent::getEloquentQuery();
     }
 
-    public static function getGlobalSearchEloquentQuery(): Builder
-    {
+    public static function getGlobalSearchEloquentQuery(): Builder {
         return parent::getGlobalSearchEloquentQuery()->with('karyawan')->orderBy('created_at', 'desc');
     }
 
-    public static function getGloballySearchableAttributes(): array
-    {
+    public static function getGloballySearchableAttributes(): array {
         return ['karyawan.nama'];
     }
-    public static function getGlobalSearchResultDetails(Model $record): array
-    {
+    public static function getGlobalSearchResultDetails(Model $record): array {
         return [
             'Tangga Piutang' => date('d F, Y', strtotime($record->created_at)),
             'Obat' => "Rp " . number_format($record->obat),
@@ -226,8 +218,7 @@ class PiutangResource extends Resource
             'Status' => $record->status,
         ];
     }
-    public static function getGlobalSearchResultTitle(Model $record): string | Htmlable
-    {
+    public static function getGlobalSearchResultTitle(Model $record): string | Htmlable {
         return $record->karyawan->nama;
     }
 }

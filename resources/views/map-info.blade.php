@@ -56,22 +56,7 @@
 
     {{-- KUNJUNGAN, default hidden --}}
     <div id="kunjungan-{{ $bidan->id }}" style="display: none;">
-      <table class="w-full text-sm text-left text-gray-700">
-        <thead>
-          <tr class="bg-gray-100">
-            <th class="py-1 px-2">Nama</th>
-            <th class="py-1 px-2">Tanggal</th>
-            <th class="py-1 px-2">Jam</th>
-            <th class="py-1 px-2">Keterangan</th>
-          </tr>
-        </thead>
-        <tbody class="divide-y divide-gray-200">
-          {{-- contoh dummy --}}
-          <tr><td class="py-1 px-2">Pasien A</td><td class="py-1 px-2">19/05/2025</td><td class="py-1 px-2">09:00</td><td class="py-1 px-2">Kontrol rutin</td></tr>
-          <tr><td class="py-1 px-2">Pasien B</td><td class="py-1 px-2">18/05/2025</td><td class="py-1 px-2">14:30</td><td class="py-1 px-2">Vaksinasi</td></tr>
-          <tr><td class="py-1 px-2">Pasien C</td><td class="py-1 px-2">17/05/2025</td><td class="py-1 px-2">11:15</td><td class="py-1 px-2">Konsultasi</td></tr>
-        </tbody>
-      </table>
+      @livewire('list-kujungan', ['bidan_id' => $bidan->id])
     </div>
     <div id="pasien-{{ $bidan->id }}" style="display: none;">
       @livewire('list-pasien', ['bidan_id' => $bidan->id])

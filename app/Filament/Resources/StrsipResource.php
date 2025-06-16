@@ -26,15 +26,14 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\StrsipResource\RelationManagers;
 use Filament\Tables\Filters\Filter;
 
-class StrsipResource extends Resource
-{
+class StrsipResource extends Resource {
     protected static ?string $model = Strsip::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
     protected static ?string $pluralModelLabel = 'STR & SIP';
+    protected static ?string $navigationGroup = 'HRM';
 
-    public static function form(Form $form): Form
-    {
+    public static function form(Form $form): Form {
         return $form
             ->schema([
                 Section::make()
@@ -76,8 +75,7 @@ class StrsipResource extends Resource
             ]);
     }
 
-    public static function table(Table $table): Table
-    {
+    public static function table(Table $table): Table {
         return $table
             ->defaultSort('created_at', 'desc')
 
@@ -158,15 +156,13 @@ class StrsipResource extends Resource
             ]);
     }
 
-    public static function getRelations(): array
-    {
+    public static function getRelations(): array {
         return [
             //
         ];
     }
 
-    public static function getPages(): array
-    {
+    public static function getPages(): array {
         return [
             'index' => Pages\ListStrsips::route('/'),
             'create' => Pages\CreateStrsip::route('/create'),

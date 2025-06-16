@@ -16,14 +16,13 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\DocumentUnitResource\Pages;
 use App\Filament\Resources\DocumentUnitResource\RelationManagers;
 
-class DocumentUnitResource extends Resource
-{
+class DocumentUnitResource extends Resource {
     protected static ?string $model = DocumentUnit::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-clipboard-document-check';
+    protected static ?string $navigationGroup = 'HRM';
 
-    public static function form(Form $form): Form
-    {
+    public static function form(Form $form): Form {
         return $form
             ->schema([
                 Section::make()
@@ -91,8 +90,7 @@ class DocumentUnitResource extends Resource
             ]);
     }
 
-    public static function table(Table $table): Table
-    {
+    public static function table(Table $table): Table {
         return $table
             ->defaultSort('created_at', 'desc')
             ->columns([
@@ -176,15 +174,13 @@ class DocumentUnitResource extends Resource
             ]);
     }
 
-    public static function getRelations(): array
-    {
+    public static function getRelations(): array {
         return [
             //
         ];
     }
 
-    public static function getPages(): array
-    {
+    public static function getPages(): array {
         return [
             'index' => Pages\ListDocumentUnits::route('/'),
             'create' => Pages\CreateDocumentUnit::route('/create'),

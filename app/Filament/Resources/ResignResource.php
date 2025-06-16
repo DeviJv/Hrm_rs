@@ -17,14 +17,13 @@ use App\Filament\Resources\ResignResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\ResignResource\RelationManagers;
 
-class ResignResource extends Resource
-{
+class ResignResource extends Resource {
     protected static ?string $model = Resign::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-exclamation-triangle';
+    protected static ?string $navigationGroup = 'HRM';
 
-    public static function form(Form $form): Form
-    {
+    public static function form(Form $form): Form {
         return $form
             ->schema([
                 Section::make()
@@ -52,8 +51,7 @@ class ResignResource extends Resource
             ]);
     }
 
-    public static function table(Table $table): Table
-    {
+    public static function table(Table $table): Table {
         return $table
             ->defaultSort('created_at', 'desc')
             ->columns([
@@ -101,15 +99,13 @@ class ResignResource extends Resource
             ]);
     }
 
-    public static function getRelations(): array
-    {
+    public static function getRelations(): array {
         return [
             //
         ];
     }
 
-    public static function getPages(): array
-    {
+    public static function getPages(): array {
         return [
             'index' => Pages\ListResigns::route('/'),
             'create' => Pages\CreateResign::route('/create'),

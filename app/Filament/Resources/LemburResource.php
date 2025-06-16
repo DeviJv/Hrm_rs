@@ -42,14 +42,14 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\LemburResource\RelationManagers;
 use BezhanSalleh\FilamentShield\Contracts\HasShieldPermissions;
 
-class LemburResource extends Resource implements HasShieldPermissions
-{
+class LemburResource extends Resource implements HasShieldPermissions {
     protected static ?string $model = Lembur::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-calendar-date-range';
+    protected static ?string $navigationGroup = 'HRM';
 
-    public static function getPermissionPrefixes(): array
-    {
+
+    public static function getPermissionPrefixes(): array {
         return [
             'view',
             'view_any',
@@ -61,8 +61,7 @@ class LemburResource extends Resource implements HasShieldPermissions
             'decline',
         ];
     }
-    public static function form(Form $form): Form
-    {
+    public static function form(Form $form): Form {
         return $form
             ->schema([
                 Section::make()
@@ -314,8 +313,7 @@ class LemburResource extends Resource implements HasShieldPermissions
             ]);
     }
 
-    public static function table(Table $table): Table
-    {
+    public static function table(Table $table): Table {
         return $table
             // ->defaultGroup('karyawan.nama')
             ->groups([
@@ -503,15 +501,13 @@ class LemburResource extends Resource implements HasShieldPermissions
             ]);
     }
 
-    public static function getRelations(): array
-    {
+    public static function getRelations(): array {
         return [
             //
         ];
     }
 
-    public static function getPages(): array
-    {
+    public static function getPages(): array {
         return [
             'index' => Pages\ListLemburs::route('/'),
             'create' => Pages\CreateLembur::route('/create'),
@@ -519,8 +515,7 @@ class LemburResource extends Resource implements HasShieldPermissions
         ];
     }
 
-    public static function tanggalMerah($value): bool
-    {
+    public static function tanggalMerah($value): bool {
         $array = json_decode(file_get_contents("https://raw.githubusercontent.com/guangrei/APIHariLibur_V2/main/calendar.json"), true);
 
         //check tanggal merah berdasarkan libur nasional
@@ -537,8 +532,7 @@ class LemburResource extends Resource implements HasShieldPermissions
         endif;
     }
 
-    public static function getEloquentQuery(): Builder
-    {
+    public static function getEloquentQuery(): Builder {
         if (auth()->user()->hasRole('karyawan')) {
             return parent::getEloquentQuery()->where('karyawan_id', auth()->user()->karyawan_id);
         }

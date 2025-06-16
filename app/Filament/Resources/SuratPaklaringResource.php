@@ -24,14 +24,13 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\SuratPaklaringResource\Pages;
 use App\Filament\Resources\SuratPaklaringResource\RelationManagers;
 
-class SuratPaklaringResource extends Resource
-{
+class SuratPaklaringResource extends Resource {
     protected static ?string $model = SuratPaklaring::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-clipboard';
+    protected static ?string $navigationGroup = 'HRM';
 
-    public static function form(Form $form): Form
-    {
+    public static function form(Form $form): Form {
         return $form
             ->schema([
                 Section::make()
@@ -126,8 +125,7 @@ class SuratPaklaringResource extends Resource
             ]);
     }
 
-    public static function table(Table $table): Table
-    {
+    public static function table(Table $table): Table {
         return $table
             ->defaultSort('created_at', 'desc')
             ->columns([
@@ -206,15 +204,13 @@ class SuratPaklaringResource extends Resource
             ]);
     }
 
-    public static function getRelations(): array
-    {
+    public static function getRelations(): array {
         return [
             //
         ];
     }
 
-    public static function getPages(): array
-    {
+    public static function getPages(): array {
         return [
             'index' => Pages\ListSuratPaklarings::route('/'),
             'create' => Pages\CreateSuratPaklaring::route('/create'),
@@ -222,8 +218,7 @@ class SuratPaklaringResource extends Resource
         ];
     }
 
-    public static function getEloquentQuery(): Builder
-    {
+    public static function getEloquentQuery(): Builder {
         if (auth()->user()->hasRole('karyawan')) {
             return parent::getEloquentQuery()->where('karyawan_id', auth()->user()->karyawan_id);
         }

@@ -31,15 +31,14 @@ use App\Filament\Resources\TidakMasukResource\Pages;
 use App\Filament\Resources\TidakMasukResource\RelationManagers;
 use BezhanSalleh\FilamentShield\Contracts\HasShieldPermissions;
 
-class TidakMasukResource extends Resource implements HasShieldPermissions
-{
+class TidakMasukResource extends Resource implements HasShieldPermissions {
     protected static ?string $model = Tidak_masuk::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-document-text';
     protected static ?string $pluralModelLabel = 'Pengajuan Cuti/Izin';
+    protected static ?string $navigationGroup = 'HRM';
 
-    public static function getPermissionPrefixes(): array
-    {
+    public static function getPermissionPrefixes(): array {
         return [
             'view',
             'view_any',
@@ -53,8 +52,7 @@ class TidakMasukResource extends Resource implements HasShieldPermissions
         ];
     }
 
-    public static function form(Form $form): Form
-    {
+    public static function form(Form $form): Form {
         return $form
             ->schema([
                 Section::make()
@@ -112,8 +110,7 @@ class TidakMasukResource extends Resource implements HasShieldPermissions
             ]);
     }
 
-    public static function table(Table $table): Table
-    {
+    public static function table(Table $table): Table {
         return $table
             ->defaultSort('created_at', 'desc')
             ->columns([
@@ -263,15 +260,13 @@ class TidakMasukResource extends Resource implements HasShieldPermissions
             ]);
     }
 
-    public static function getRelations(): array
-    {
+    public static function getRelations(): array {
         return [
             //
         ];
     }
 
-    public static function getPages(): array
-    {
+    public static function getPages(): array {
         return [
             'index' => Pages\ListTidakMasuks::route('/'),
             'create' => Pages\CreateTidakMasuk::route('/create'),
@@ -279,8 +274,7 @@ class TidakMasukResource extends Resource implements HasShieldPermissions
         ];
     }
 
-    public static function getEloquentQuery(): Builder
-    {
+    public static function getEloquentQuery(): Builder {
         if (auth()->user()->hasRole('karyawan')) {
             return parent::getEloquentQuery()->where('karyawan_id', auth()->user()->karyawan_id);
         }
