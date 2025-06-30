@@ -15,14 +15,16 @@ use App\Models\Strsip;
 use BezhanSalleh\FilamentShield\Traits\HasWidgetShield;
 use IbrahimBougaoua\FilaProgress\Tables\Columns\ProgressBar;
 
-class LatestStrsip extends BaseWidget
-{
+class LatestStrsip extends BaseWidget {
     use HasWidgetShield;
     protected int | string | array $columnSpan = 'full';
 
     protected static ?int $sort = 10;
-    public function table(Table $table): Table
-    {
+
+    public static function canView(): bool {
+        return request()->routeIs('filament.admin.dashboard.pages.dashboard');
+    }
+    public function table(Table $table): Table {
         return $table
             ->query(StrsipResource::getEloquentQuery())
             ->defaultPaginationPageOption(5)

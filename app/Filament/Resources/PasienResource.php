@@ -96,7 +96,12 @@ class PasienResource extends Resource {
                                 'Rawat Inap' => 'Rawat Inap',
                                 'Rawat Jalan' => 'Rawat Jalan',
                             ]),
-                        Forms\Components\TextInput::make('jenis')
+                        Forms\Components\Select::make('jenis')
+                            ->options([
+                                'BPJS' => 'BPJS',
+                                'Umum' => 'Umum',
+                                'Asuransi' => 'Asuransi',
+                            ])
                             ->required(),
 
                         Forms\Components\Select::make('operasi')
@@ -148,7 +153,7 @@ class PasienResource extends Resource {
                     ->sortable(),
                 Tables\Columns\TextColumn::make('operasi')
                     ->searchable(),
-
+                Tables\Columns\TextColumn::make('status'),
                 Tables\Columns\TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()

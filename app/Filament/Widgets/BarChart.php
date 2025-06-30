@@ -15,12 +15,14 @@ use Filament\Forms\Components\TextInput;
 use BezhanSalleh\FilamentShield\Traits\HasWidgetShield;
 use Leandrocfe\FilamentApexCharts\Widgets\ApexChartWidget;
 
-class BarChart extends ApexChartWidget
-{
+class BarChart extends ApexChartWidget {
     /**
      * Chart Id
      */
     use HasWidgetShield;
+    public static function canView(): bool {
+        return request()->routeIs('filament.admin.dashboard.pages.dashboard');
+    }
     protected static ?string $chartId = 'TransaksiPayrollChart';
 
     /**
@@ -42,8 +44,7 @@ class BarChart extends ApexChartWidget
     /**
      * Filter Form
      */
-    protected function getFormSchema(): array
-    {
+    protected function getFormSchema(): array {
         return [
 
             Radio::make('ordersChartType')
@@ -79,8 +80,7 @@ class BarChart extends ApexChartWidget
      * Chart options (series, labels, types, size, animations...)
      * https://apexcharts.com/docs/options
      */
-    protected function getOptions(): array
-    {
+    protected function getOptions(): array {
         $filters = $this->filterFormData;
         $data = Trend::model(TransaksiPayroll::class)
             ->between(
@@ -176,8 +176,7 @@ class BarChart extends ApexChartWidget
             ],
         ];
     }
-    protected function extraJsOptions(): ?RawJs
-    {
+    protected function extraJsOptions(): ?RawJs {
         return RawJs::make(<<<'JS'
         {
             xaxis: {
@@ -200,7 +199,7 @@ class BarChart extends ApexChartWidget
             tooltip: {
                 x: {
                     formatter: function (val) {
-                        return val 
+                        return val
                     }
                 }
             }

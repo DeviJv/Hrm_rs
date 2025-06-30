@@ -16,8 +16,7 @@ use Filament\Forms\Components\TextInput;
 use BezhanSalleh\FilamentShield\Traits\HasWidgetShield;
 use Leandrocfe\FilamentApexCharts\Widgets\ApexChartWidget;
 
-class LemburChart extends ApexChartWidget
-{
+class LemburChart extends ApexChartWidget {
     /**
      * Chart Id
      */
@@ -43,8 +42,11 @@ class LemburChart extends ApexChartWidget
     /**
      * Filter Form
      */
-    protected function getFormSchema(): array
-    {
+
+    public static function canView(): bool {
+        return request()->routeIs('filament.admin.dashboard.pages.dashboard');
+    }
+    protected function getFormSchema(): array {
         return [
 
             Radio::make('ordersChartType')
@@ -80,8 +82,7 @@ class LemburChart extends ApexChartWidget
      * Chart options (series, labels, types, size, animations...)
      * https://apexcharts.com/docs/options
      */
-    protected function getOptions(): array
-    {
+    protected function getOptions(): array {
         $filters = $this->filterFormData;
         $data = Trend::model(Lembur::class)
             ->dateColumn('tgl_lembur')
@@ -178,8 +179,7 @@ class LemburChart extends ApexChartWidget
             ],
         ];
     }
-    protected function extraJsOptions(): ?RawJs
-    {
+    protected function extraJsOptions(): ?RawJs {
         return RawJs::make(<<<'JS'
         {
             xaxis: {
@@ -202,7 +202,7 @@ class LemburChart extends ApexChartWidget
             tooltip: {
                 x: {
                     formatter: function (val) {
-                        return val 
+                        return val
                     }
                 }
             }

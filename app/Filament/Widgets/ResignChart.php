@@ -16,8 +16,7 @@ use Filament\Forms\Components\TextInput;
 use BezhanSalleh\FilamentShield\Traits\HasWidgetShield;
 use Leandrocfe\FilamentApexCharts\Widgets\ApexChartWidget;
 
-class ResignChart extends ApexChartWidget
-{
+class ResignChart extends ApexChartWidget {
     /**
      * Chart Id
      */
@@ -43,8 +42,11 @@ class ResignChart extends ApexChartWidget
     /**
      * Filter Form
      */
-    protected function getFormSchema(): array
-    {
+
+    public static function canView(): bool {
+        return request()->routeIs('filament.admin.dashboard.pages.dashboard');
+    }
+    protected function getFormSchema(): array {
         return [
 
             Radio::make('ordersChartType')
@@ -80,8 +82,7 @@ class ResignChart extends ApexChartWidget
      * Chart options (series, labels, types, size, animations...)
      * https://apexcharts.com/docs/options
      */
-    protected function getOptions(): array
-    {
+    protected function getOptions(): array {
         $filters = $this->filterFormData;
         $data = Trend::model(Resign::class)
             ->dateColumn('tgl_resign')
@@ -202,7 +203,7 @@ class ResignChart extends ApexChartWidget
     //         tooltip: {
     //             x: {
     //                 formatter: function (val) {
-    //                     return val 
+    //                     return val
     //                 }
     //             }
     //         }

@@ -9,15 +9,15 @@ use App\Models\PengaturanTidakMasuk;
 use BezhanSalleh\FilamentShield\Traits\HasWidgetShield;
 use Filament\Widgets\Concerns\InteractsWithPageFilters;
 
-class CutiWidget extends Widget
-{
+class CutiWidget extends Widget {
     use HasWidgetShield, InteractsWithPageFilters;
     protected static string $view = 'filament.widgets.jadwal-widget';
     protected int | string | array $columnSpan = 'full';
     protected static ?int $sort = 4;
-
-    protected function getViewData(): array
-    {
+    public static function canView(): bool {
+        return request()->routeIs('filament.admin.dashboard.pages.dashboard');
+    }
+    protected function getViewData(): array {
         $startDate = $this->filters['startDate'] ?? null;
         $endDate = $this->filters['endDate'] ?? null;
         $cuti = Tidak_masuk::where('keterangan', 'cuti');

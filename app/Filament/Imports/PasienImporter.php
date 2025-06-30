@@ -36,6 +36,7 @@ class PasienImporter extends Importer {
                 ->example('Pilih Salah Satu Dari : Rawat Inap,Rawat Jalan')
                 ->rules(['max:255']),
             ImportColumn::make('jenis')
+                ->example('Pilih Salah Satu Dari : BPJS,Umum,Asuransi')
                 ->rules(['max:255']),
             ImportColumn::make('status')
                 ->example('Pilih Salah Satu Dari : diterima/ditolak')

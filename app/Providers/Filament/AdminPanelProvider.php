@@ -31,6 +31,7 @@ use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use ShuvroRoy\FilamentSpatieLaravelBackup\FilamentSpatieLaravelBackupPlugin;
 
 class AdminPanelProvider extends PanelProvider {
+
     public function panel(Panel $panel): Panel {
         return $panel
             ->profile()
@@ -84,10 +85,12 @@ class AdminPanelProvider extends PanelProvider {
             ->maxContentWidth(MaxWidth::Full)
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
-            ->pages([
-                Das::class,
-            ])
+            ->discoverClusters(in: app_path('Filament/Clusters'), for: 'App\\Filament\\Clusters')
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
+            ->pages([
+                // Das::class,
+                // Dashboard::class,
+            ])
             ->viteTheme('resources/css/filament/admin/theme.css')
             ->plugins([
                 FilamentSpatieLaravelBackupPlugin::make()

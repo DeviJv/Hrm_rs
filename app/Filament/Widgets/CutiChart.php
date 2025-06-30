@@ -8,8 +8,7 @@ use Flowframe\Trend\TrendValue;
 use BezhanSalleh\FilamentShield\Traits\HasWidgetShield;
 use Leandrocfe\FilamentApexCharts\Widgets\ApexChartWidget;
 
-class CutiChart extends ApexChartWidget
-{
+class CutiChart extends ApexChartWidget {
     use HasWidgetShield;
     /**
      * Chart Id
@@ -34,9 +33,10 @@ class CutiChart extends ApexChartWidget
 
     protected static ?int $sort = 5;
 
-
-    protected function getOptions(): array
-    {
+    public static function canView(): bool {
+        return request()->routeIs('filament.admin.dashboard.pages.dashboard');
+    }
+    protected function getOptions(): array {
         $filters = $this;
 
         $count_tidakmasuk = Trend::query(Tidak_masuk::where('keterangan', 'cuti'))

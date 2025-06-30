@@ -13,14 +13,16 @@ use App\Filament\Resources\PenerimaBarangResource;
 use BezhanSalleh\FilamentShield\Traits\HasWidgetShield;
 use IbrahimBougaoua\FilaProgress\Tables\Columns\ProgressBar;
 
-class LatestKontrak extends BaseWidget
-{
+class LatestKontrak extends BaseWidget {
     use HasWidgetShield;
     protected int | string | array $columnSpan = 'full';
 
     protected static ?int $sort = 9;
-    public function table(Table $table): Table
-    {
+
+    public static function canView(): bool {
+        return request()->routeIs('filament.admin.dashboard.pages.dashboard');
+    }
+    public function table(Table $table): Table {
         return $table
             ->query(KontrakResource::getEloquentQuery())
             ->defaultPaginationPageOption(5)
