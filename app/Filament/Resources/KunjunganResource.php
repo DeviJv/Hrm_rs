@@ -7,12 +7,14 @@ use Filament\Tables;
 use Filament\Forms\Form;
 use App\Models\Kunjungan;
 use Filament\Tables\Table;
+use App\Exports\KunjunganExport;
 use Filament\Resources\Resource;
 use App\Models\ValidasiKunjungan;
 use Filament\Forms\Components\Section;
 use Illuminate\Database\Eloquent\Model;
 use Filament\Notifications\Notification;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use App\Filament\Resources\KunjunganResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\KunjunganResource\RelationManagers;
@@ -120,6 +122,11 @@ class KunjunganResource extends Resource {
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\BulkAction::make('export')
+                        ->label('Export Yang Dipilih')
+                        ->color('info')
+                        ->icon('heroicon-o-arrow-down-tray')
+                        ->action(fn(Collection $records) => (new KunjunganExport($records))->download('Kunjungan-' . date('d-m-y H i s') . '.xlsx'))
                 ]),
             ]);
     }
