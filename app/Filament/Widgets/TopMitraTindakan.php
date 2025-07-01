@@ -4,97 +4,103 @@ namespace App\Filament\Widgets;
 
 use Filament\Tables;
 use App\Models\Pasien;
-use App\Models\BidanMitra;
+use Filament\Tables\Table;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\DatePicker;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Widgets\TableWidget as BaseWidget;
+use BezhanSalleh\FilamentShield\Traits\HasWidgetShield;
 
-class TopMitraTindakan extends BaseWidget implements Tables\Contracts\HasTable {
+class TopMitraTindakan extends BaseWidget {
+    use HasWidgetShield;
+    protected int | string | array $columnSpan = 'full';
 
-    protected static ?int $sort = 4;
+    protected static ?int $sort = 9;
 
-    protected int|string|array $columnSpan = 'full';
-
-    protected static function getHeading(): string {
-        $bulan = request()->input('tableFilters.bulan.bulan') ?? now()->format('m');
-        $bulanFormatted = \Illuminate\Support\Carbon::create()->month($bulan)->translatedFormat('F');
-        return "Top 10 Mitra Berdasarkan Tindakan - Bulan {$bulanFormatted}";
-    }
     public static function canView(): bool {
         return request()->routeIs('filament.admin.dashboard.pages.dashboard-marketing');
     }
-
-    protected function getTableQuery(): Builder {
-        $bulan = request()->input('tableFilters.bulan.bulan') ?? now()->format('m');
-
-        return BidanMitra::query()
-            ->withCount([
-                'pasiens as jumlah_tindakan' => function ($query) use ($bulan) {
-                    $query->whereNotNull('tindakan_id')
-                        ->whereMonth('created_at', $bulan);
-                },
-                'pasiens as jumlah_non_tindakan' => function ($query) use ($bulan) {
-                    $query->whereNull('tindakan_id')
-                        ->whereMonth('created_at', $bulan);
-                },
+    public function table(Table $table): Table {
+        return $table
+            ->query(function () {
+                return Pasien::query()
+                    ->with('bidanMitra')
+                    ->select(
+                        'bidan_mitra_id',
+                        DB::raw('COUNT(tindakan_id) as tindakan_count'),
+                        DB::raw('COUNT(*) as total_count')
+                    )
+                    ->whereNotNull('bidan_mitra_id')
+                    ->groupBy('bidan_mitra_id')
+                    ->limit(10);
+            })
+            ->defaultSort('tindakan_count', 'desc')
+            ->heading('Top 10 Mitra Tindakan')
+            ->columns([
+                Tables\Columns\TextColumn::make('bidanMitra.nama')
+                    ->searchable()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('tindakan_count')
+                    ->label('Dengan Tindakan')
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('non_tindakan')
+                    ->label('Tanpa Tindakan')
+                    ->state(fn($record) => $record->total_count - $record->tindakan_count)
+                    ->sortable(),
             ])
-            ->orderByDesc('jumlah_tindakan')
-            ->limit(10);
+            ->filters([
+                Tables\Filters\Filter::make('created_at')
+                    ->form([
+                        Select::make('bulan')
+                            ->options([
+                                '1' => 'Januari',
+                                '2' => 'Februari',
+                                '3' => 'Maret',
+                                '4' => 'April',
+                                '5' => 'Mei',
+                                '6' => 'Juni',
+                                '7' => 'Juli',
+                                '8' => 'Agustus',
+                                '9' => 'September',
+                                '10' => 'Oktober',
+                                '11' => 'November',
+                                '12' => 'Desember',
+                            ])
+                            ->default(now()->format('n')),
+                        TextInput::make('tahun')
+                            ->numeric()
+                            ->default(now()->format('Y')),
+                    ])
+                    ->query(function (Builder $query, array $data): Builder {
+                        return $query
+                            ->when(
+                                $data['bulan'],
+                                fn(Builder $query, $date): Builder => $query->whereMonth('created_at', $date),
+                            )
+                            ->when(
+                                $data['tahun'],
+                                fn(Builder $query, $date): Builder => $query->whereYear('created_at', $date),
+                            );
+                    })
+                    ->indicateUsing(function (array $data): array {
+
+                        if ($data['bulan'] ?? null) {
+                            $namaBulan = \Carbon\Carbon::create()->month((int) $data['bulan'])->translatedFormat('F');
+                            $indicators['bulan'] = 'Bulan : ' . $namaBulan;
+                        }
+                        if ($data['tahun'] ?? null) {
+                            $indicators['tahun'] = 'Tahun : ' . $data['tahun'];
+                        }
+
+                        return $indicators;
+                    }),
+            ]);
     }
 
-    protected function getTableColumns(): array {
-        return [
-            Tables\Columns\TextColumn::make('nama')
-                ->label('Nama Mitra')
-                ->searchable(),
-
-            Tables\Columns\TextColumn::make('jumlah_tindakan')
-                ->label('Jumlah Tindakan')
-                ->numeric()
-                ->sortable(),
-
-            Tables\Columns\TextColumn::make('jumlah_non_tindakan')
-                ->label('Jumlah Non-Tindakan')
-                ->numeric()
-                ->sortable(),
-        ];
-    }
-
-    protected function getTableFilters(): array {
-        return [
-            Tables\Filters\Filter::make('bulan')
-                ->form([
-                    Select::make('bulan')
-                        ->options($this->getBulanOptions())
-                        ->default(now()->format('m'))
-                        ->label('Bulan'),
-                ])
-                ->query(function (Builder $query, array $data) {
-                    $bulan = $data['bulan'] ?? now()->format('m');
-
-                    $query->whereHas('pasiens', function ($q) use ($bulan) {
-                        $q->whereMonth('created_at', $bulan);
-                    });
-                })
-                ->indicateUsing(function (array $data): array {
-                    $indicators = [];
-
-                    if ($data['bulan'] ?? null) {
-                        $namaBulan = \Carbon\Carbon::create()->month((int) $data['bulan'])->translatedFormat('F');
-                        $indicators['bulan'] = 'Bulan: ' . $namaBulan;
-                    }
-                    return $indicators;
-                }),
-        ];
-    }
-
-    protected function getBulanOptions(): array {
-        return collect(range(1, 12))->mapWithKeys(function ($month) {
-            return [
-                str_pad($month, 2, '0', STR_PAD_LEFT) => Carbon::create()->month($month)->translatedFormat('F'),
-            ];
-        })->toArray();
+    public function getTableRecordKey(\Illuminate\Database\Eloquent\Model $record): string {
+        return $record->bidan_mitra_id;
     }
 }

@@ -13,6 +13,6 @@ class BidanMitra extends Model {
     }
 
     public function pasiens() {
-        return $this->hasMany(Pasien::class);
+        return $this->hasMany(Pasien::class, 'bidan_mitra_id');
     }
 }

@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Pasien extends Model {
     use HasFactory;
     public function bidanMitra(): BelongsTo {
-        return $this->belongsTo(BidanMitra::class);
+        return $this->belongsTo(BidanMitra::class, 'bidan_mitra_id');
     }
     public function tindakan(): BelongsTo {
         return $this->belongsTo(Tindakan::class);
