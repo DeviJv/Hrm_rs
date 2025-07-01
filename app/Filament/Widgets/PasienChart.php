@@ -22,7 +22,7 @@ class PasienChart extends ApexChartWidget {
     /**
      * Chart Id
      */
-    use HasWidgetShield, InteractsWithPageFilters;
+    use  InteractsWithPageFilters;
 
 
     protected static ?string $chartId = 'PasienChart';
@@ -52,7 +52,7 @@ class PasienChart extends ApexChartWidget {
     protected static ?string $loadingIndicator = 'Loading...';
 
     protected function getHeading(): string {
-        return 'Pasien Rujukan Perbulan (' . $this->filterFormData['kategori'] . ')';
+        return 'Pasien Rujukan Perbulan ';
     }
     public static function canView(): bool {
         return request()->routeIs('filament.admin.dashboard.pages.dashboard-marketing');
