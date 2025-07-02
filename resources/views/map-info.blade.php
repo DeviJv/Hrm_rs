@@ -56,10 +56,10 @@
 
     {{-- KUNJUNGAN, default hidden --}}
     <div id="kunjungan-{{ $bidan->id }}" style="display: none;">
-      @livewire('list-kujungan', ['bidan_id' => $bidan->id])
+      {{-- @livewire('list-kujungan', ['bidan_id' => $bidan->id]) --}}
     </div>
     <div id="pasien-{{ $bidan->id }}" style="display: none;">
-      @livewire('list-pasien', ['bidan_id' => $bidan->id])
+      {{-- @livewire('list-pasien', ['bidan_id' => $bidan->id]) --}}
     </div>
   </div>
 </div>

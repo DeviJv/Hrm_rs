@@ -159,6 +159,8 @@ class PasienResource extends Resource {
                     ->searchable(),
                 Tables\Columns\TextColumn::make('kelas')
                     ->searchable(),
+                Tables\Columns\TextColumn::make('jenis')
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('status'),
                 Tables\Columns\TextColumn::make('updated_at')
                     ->dateTime()

@@ -9,10 +9,10 @@ use Filament\Forms\Components\TextInput;
 use Filament\Widgets\Concerns\InteractsWithPageFilters;
 use Leandrocfe\FilamentApexCharts\Widgets\ApexChartWidget;
 
-class PasienKelas extends ApexChartWidget {
+class PasienJenis extends ApexChartWidget {
     use InteractsWithPageFilters;
 
-    protected static ?string $chartId = 'PasienKelasChart';
+    protected static ?string $chartId = 'PasienJenisChart';
     protected static ?int $sort = 4;
     protected static ?int $contentHeight = 450;
     protected int|string|array $columnSpan = 'full';
@@ -24,7 +24,7 @@ class PasienKelas extends ApexChartWidget {
         $bulan = (int) $this->filterFormData['bulan'] ?? now()->month;
         $namaBulan = \Carbon\Carbon::create()->month($bulan)->translatedFormat('F');
 
-        return 'Rujukan Pasien Perkelas Dibulan : ' . $namaBulan . '';
+        return 'Rujukan Pasien Perkategori Dibulan : ' . $namaBulan . '';
     }
 
     public static function canView(): bool {
@@ -61,32 +61,27 @@ class PasienKelas extends ApexChartWidget {
         $tahun = (int) $this->filterFormData['tahun'] ?? now()->year;
 
         $kelasList = ['Kelas 3', 'Kelas 2', 'Kelas 1', 'VIP', 'SVIP', 'Isolasi', 'Perina', 'NICU', 'ICU', 'HCU'];
+        $jenisList = ['BPJS', 'Umum', 'Asuransi'];
 
-        $totalData = [];
-        $tindakanData = [];
-        $nonTindakanData = [];
+        $start = Carbon::create($tahun, $bulan)->startOfMonth();
+        $end = Carbon::create($tahun, $bulan)->endOfMonth();
+
+        // Siapkan array kosong untuk setiap jenis
+        $dataByJenis = [
+            'BPJS' => [],
+            'Umum' => [],
+            'Asuransi' => [],
+        ];
 
         foreach ($kelasList as $kelas) {
-            $start = Carbon::create($tahun, $bulan)->startOfMonth();
-            $end = Carbon::create($tahun, $bulan)->endOfMonth();
+            foreach ($jenisList as $jenis) {
+                $count = Pasien::where('kelas', $kelas)
+                    ->where('jenis', $jenis)
+                    ->whereBetween('created_at', [$start, $end])
+                    ->count();
 
-            $total = Pasien::where('kelas', $kelas)
-                ->whereBetween('created_at', [$start, $end])
-                ->count();
-
-            $tindakan = Pasien::where('kelas', $kelas)
-                ->whereBetween('created_at', [$start, $end])
-                ->whereNotNull('tindakan_id')
-                ->count();
-
-            $nonTindakan = Pasien::where('kelas', $kelas)
-                ->whereBetween('created_at', [$start, $end])
-                ->whereNull('tindakan_id')
-                ->count();
-
-            $totalData[] = $total;
-            $tindakanData[] = $tindakan;
-            $nonTindakanData[] = $nonTindakan;
+                $dataByJenis[$jenis][] = $count;
+            }
         }
 
         return [
@@ -97,19 +92,19 @@ class PasienKelas extends ApexChartWidget {
             ],
             'series' => [
                 [
-                    'name' => 'Semua',
-                    'data' => $totalData,
-                    'color' =>  '#60a5fa',
+                    'name' => 'BPJS',
+                    'data' => $dataByJenis['BPJS'],
+                    'color' => '#60a5fa',
                 ],
                 [
-                    'name' => 'Tindakan',
-                    'data' => $tindakanData,
-                    'color' => '#4ade80',
+                    'name' => 'Umum',
+                    'data' => $dataByJenis['Umum'],
+                    'color' => '#34d399',
                 ],
                 [
-                    'name' => 'Non-Tindakan',
-                    'data' => $nonTindakanData,
-                    'color' => '#f87171',
+                    'name' => 'Asuransi',
+                    'data' => $dataByJenis['Asuransi'],
+                    'color' => '#fbbf24',
                 ],
             ],
             'xaxis' => [
