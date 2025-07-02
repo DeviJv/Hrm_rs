@@ -12,6 +12,7 @@ use Filament\Forms\Form;
 use App\Models\BidanMitra;
 use Filament\Tables\Table;
 use App\Exports\PasienExport;
+use Illuminate\Support\Carbon;
 use Filament\Resources\Resource;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Section;
@@ -38,6 +39,8 @@ class PasienResource extends Resource {
                             ->label('Tanggal')
                             ->required()
                             ->default(now()),
+                        Forms\Components\TextInput::make('no_rm')
+                            ->label('No RM'),
                         Forms\Components\Select::make('kategori')
                             ->label('Pilih Kategori')
                             ->dehydrated(false)
@@ -62,6 +65,7 @@ class PasienResource extends Resource {
                         Forms\Components\Select::make('bidan_mitra_id')
                             ->label('Pilih Mitra')
                             ->live()
+                            ->searchable()
                             ->options(function (Get $get) {
                                 $kategori = $get('kategori');
                                 if (filled($kategori)) {
@@ -75,10 +79,9 @@ class PasienResource extends Resource {
                         Forms\Components\TextInput::make('nama')
                             ->required()
                             ->maxLength(255),
-                        Forms\Components\TextInput::make('usia')
+                        Forms\Components\DatePicker::make('usia')
                             ->label('Usia')
-                            ->required()
-                            ->maxLength(255),
+                            ->required(),
                         Forms\Components\Select::make('kelas')
                             ->required()
                             ->options([
@@ -145,8 +148,13 @@ class PasienResource extends Resource {
                     ->label('Tanggal dibuat')
                     ->date()
                     ->sortable(),
+                Tables\Columns\TextColumn::make('no_rm')
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('nama')
                     ->searchable(),
+                Tables\Columns\TextColumn::make('usia')
+                    ->formatStateUsing(fn($state) => Carbon::parse($state)->age . ' tahun'),
+
                 Tables\Columns\TextColumn::make('bidanMitra.nama')
                     ->label('Mitra')
                     ->searchable()

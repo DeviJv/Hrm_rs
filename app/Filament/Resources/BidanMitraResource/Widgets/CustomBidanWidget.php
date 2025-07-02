@@ -7,8 +7,7 @@ use Filament\Widgets\Widget;
 use Filament\Widgets\Concerns\InteractsWithPageTable;
 use App\Filament\Resources\BidanMitraResource\Pages\ListBidanMitras;
 
-class CustomBidanWidget extends Widget
-{
+class CustomBidanWidget extends Widget {
     use InteractsWithPageTable;
 
     protected static ?string $pollingInterval = '5s';  // polling 5 detik
@@ -17,13 +16,11 @@ class CustomBidanWidget extends Widget
 
     public array $markers = [];
 
-    public function mount(): void
-    {
+    public function mount(): void {
         $this->loadMarkers();
     }
 
-    public function loadMarkers(): void
-    {
+    public function loadMarkers(): void {
         $this->markers = $this->getPageTableQuery()
             ->with('locations')
             ->get()
@@ -44,18 +41,15 @@ class CustomBidanWidget extends Widget
     }
 
     // dipanggil otomatis sesuai pollingInterval
-    public function updateMarkers(): void
-    {
+    public function updateMarkers(): void {
         $this->loadMarkers();
     }
 
-    protected function getTablePage(): string
-    {
+    protected function getTablePage(): string {
         return ListBidanMitras::class;
     }
 
-    public function getColumnSpan(): string|int|array
-    {
+    public function getColumnSpan(): string|int|array {
         return 'full';
     }
 }
