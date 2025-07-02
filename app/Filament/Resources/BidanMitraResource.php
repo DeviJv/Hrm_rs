@@ -16,6 +16,7 @@ use Filament\Forms\Components\Section;
 use Illuminate\Database\Eloquent\Model;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\FileUpload;
+use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Cheesegrits\FilamentGoogleMaps\Fields\Map;
@@ -167,7 +168,23 @@ class BidanMitraResource extends Resource {
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
+                SelectFilter::make('kategori')
+                    ->searchable()
+                    ->multiple()
+                    ->options([
+                        'bidan' => 'Bidan',
+                        'puskesmas' => 'Puskesmas',
+                        'kader' => 'Kader',
+                        'posyandu' => 'Posyandu',
+                        'sekolah' => 'Sekolah',
+                        'universitas' => 'Universitas',
+                        'boarding school' => 'Boarding School',
+                    ]),
+                SelectFilter::make('status_kerja_sama')
+                    ->options([
+                        "sudah" => 'SUDAH',
+                        "belum" => 'BELUM',
+                    ])
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),

@@ -21,8 +21,13 @@ class PasienKelas extends ApexChartWidget {
     protected static ?string $loadingIndicator = 'Loading...';
 
     protected function getHeading(): string {
-        $bulan = (int) $this->filterFormData['bulan'] ?? now()->month;
-        $namaBulan = \Carbon\Carbon::create()->month($bulan)->translatedFormat('F');
+        $namaBulan = "";
+        if (isset($this->filterFormData['bulan'])) {
+            $bulan = (int) $this->filterFormData['bulan'] ?? now()->month;
+            if ($bulan !== null) {
+                $namaBulan = \Carbon\Carbon::create()->month($bulan)->translatedFormat('F');
+            }
+        }
 
         return 'Rujukan Pasien Perkelas Dibulan : ' . $namaBulan . '';
     }

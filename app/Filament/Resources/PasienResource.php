@@ -17,6 +17,7 @@ use Filament\Resources\Resource;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\FileUpload;
+use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use App\Filament\Resources\PasienResource\Pages;
@@ -176,7 +177,44 @@ class PasienResource extends Resource {
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
+                SelectFilter::make('bidan_mitra_id')
+                    ->searchable()
+                    ->label('Mitra')
+                    ->multiple()
+                    ->options(fn() => BidanMitra::pluck('nama', 'id')),
+                SelectFilter::make('status')
+                    ->options([
+                        'diterima' => 'diterima',
+                        'ditolak' => 'ditolak',
+                    ]),
+                SelectFilter::make('kelas')
+                    ->searchable()
+                    ->multiple()
+                    ->options([
+                        'kelas 3' => 'kelas 3',
+                        'kelas 2' => 'kelas 2',
+                        'kelas 1' => 'kelas 1',
+                        'VIP' => 'VIP',
+                        'SVIP' => 'SVIP',
+                        'Isolasi' => 'Isolasi',
+                        'Perina' => 'Perina',
+                        'NICU' => 'NICU',
+                        'ICU' => 'ICU',
+                        'HCU' => 'HCU',
+                    ]),
+                SelectFilter::make('jenis')
+                    ->searchable()
+                    ->multiple()
+                    ->options([
+                        'BPJS' => 'BPJS',
+                        'Umum' => 'Umum',
+                        'Asuransi' => 'Asuransi',
+                    ]),
+                SelectFilter::make('tindakan_id')
+                    ->label('Tindakan')
+                    ->searchable()
+                    ->multiple()
+                    ->options(fn() => Tindakan::pluck('nama_tindakan', 'id')),
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
