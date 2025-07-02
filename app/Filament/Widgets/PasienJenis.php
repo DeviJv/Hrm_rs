@@ -60,55 +60,55 @@ class PasienJenis extends ApexChartWidget {
         $bulan = (int) $this->filterFormData['bulan'] ?? now()->month;
         $tahun = (int) $this->filterFormData['tahun'] ?? now()->year;
 
-        $kelasList = ['Kelas 3', 'Kelas 2', 'Kelas 1', 'VIP', 'SVIP', 'Isolasi', 'Perina', 'NICU', 'ICU', 'HCU'];
-        $jenisList = ['BPJS', 'Umum', 'Asuransi'];
+        $startOfMonth = Carbon::create($tahun, $bulan)->startOfMonth();
+        $endOfMonth = Carbon::create($tahun, $bulan)->endOfMonth();
+        $daysInMonth = $endOfMonth->day;
 
-        $start = Carbon::create($tahun, $bulan)->startOfMonth();
-        $end = Carbon::create($tahun, $bulan)->endOfMonth();
+        $jenisList = ['BPJS', 'Umum', 'Asuransi'];
 
         // Siapkan array kosong untuk setiap jenis
         $dataByJenis = [
-            'BPJS' => [],
-            'Umum' => [],
-            'Asuransi' => [],
+            'BPJS' => array_fill(1, $daysInMonth, 0),
+            'Umum' => array_fill(1, $daysInMonth, 0),
+            'Asuransi' => array_fill(1, $daysInMonth, 0),
         ];
 
-        foreach ($kelasList as $kelas) {
-            foreach ($jenisList as $jenis) {
-                $count = Pasien::where('kelas', $kelas)
-                    ->where('jenis', $jenis)
-                    ->whereBetween('created_at', [$start, $end])
-                    ->count();
+        // Ambil data dari database dalam 1 query
+        $pasienData = Pasien::selectRaw('DAY(created_at) as day, jenis, COUNT(*) as total')
+            ->whereBetween('created_at', [$startOfMonth, $endOfMonth])
+            ->whereIn('jenis', $jenisList)
+            ->groupByRaw('day, jenis')
+            ->get();
 
-                $dataByJenis[$jenis][] = $count;
-            }
+        foreach ($pasienData as $row) {
+            $day = (int) $row->day;
+            $jenis = $row->jenis;
+            $dataByJenis[$jenis][$day] = (int) $row->total;
         }
+
+        // Konversi ke array numerik (0-based) untuk ApexChart
+        $series = [];
+        foreach ($jenisList as $jenis) {
+            $series[] = [
+                'name' => $jenis,
+                'data' => array_values($dataByJenis[$jenis]),
+            ];
+        }
+
+        // X-axis = daftar tanggal (1 s/d jumlah hari di bulan)
+        $categories = range(1, $daysInMonth);
 
         return [
             'chart' => [
                 'type' => 'bar',
                 'height' => 250,
                 'toolbar' => ['show' => false],
+                'stacked' => false,
             ],
-            'series' => [
-                [
-                    'name' => 'BPJS',
-                    'data' => $dataByJenis['BPJS'],
-                    'color' => '#60a5fa',
-                ],
-                [
-                    'name' => 'Umum',
-                    'data' => $dataByJenis['Umum'],
-                    'color' => '#34d399',
-                ],
-                [
-                    'name' => 'Asuransi',
-                    'data' => $dataByJenis['Asuransi'],
-                    'color' => '#fbbf24',
-                ],
-            ],
+            'series' => $series,
             'xaxis' => [
-                'categories' => $kelasList,
+                'categories' => $categories,
+                'title' => ['text' => 'Tanggal'],
                 'labels' => [
                     'style' => [
                         'fontWeight' => 400,
@@ -117,6 +117,7 @@ class PasienJenis extends ApexChartWidget {
                 ],
             ],
             'yaxis' => [
+                'title' => ['text' => 'Jumlah Pasien'],
                 'labels' => [
                     'style' => [
                         'fontWeight' => 400,
@@ -125,17 +126,7 @@ class PasienJenis extends ApexChartWidget {
                 ],
             ],
             'fill' => [
-                'type' => 'gradient',
-                'gradient' => [
-                    'shade' => 'dark',
-                    'type' => 'vertical',
-                    'shadeIntensity' => 0.5,
-                    'gradientToColors' => ['#4ade80'],
-                    'inverseColors' => true,
-                    'opacityFrom' => 1,
-                    'opacityTo' => 1,
-                    'stops' => [0, 100],
-                ],
+                'type' => 'solid',
             ],
             'dataLabels' => ['enabled' => false],
             'tooltip' => ['enabled' => true],
