@@ -87,7 +87,11 @@ class PasienResource extends Resource {
                                 'kelas 1' => 'kelas 1',
                                 'VIP' => 'VIP',
                                 'SVIP' => 'SVIP',
-                                'Suite Room' => 'Suite Room',
+                                'Isolasi' => 'Isolasi',
+                                'Perina' => 'Perina',
+                                'NICU' => 'NICU',
+                                'ICU' => 'ICU',
+                                'HCU' => 'HCU',
                             ]),
                         Forms\Components\Select::make('pasien_rujukan')
                             ->label('Tipe Kunjungan')
@@ -152,6 +156,8 @@ class PasienResource extends Resource {
                     ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('operasi')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('kelas')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('status'),
                 Tables\Columns\TextColumn::make('updated_at')
