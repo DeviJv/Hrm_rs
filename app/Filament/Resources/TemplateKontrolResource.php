@@ -28,6 +28,7 @@ class TemplateKontrolResource extends Resource {
                     ->columns(4)
                     ->schema([
                         Forms\Components\DatePicker::make('tgl_kontrol')
+                            ->required()
                             ->label('Tanggal Kontrol'),
                         Forms\Components\TextInput::make('nama')
                             ->label('Nama Pasien')
