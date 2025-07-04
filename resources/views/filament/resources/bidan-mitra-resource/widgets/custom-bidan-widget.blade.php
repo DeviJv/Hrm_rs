@@ -10,7 +10,18 @@
 </style>
     <x-filament::section>
    {{-- <div wire:poll.5s="updateMarkers"> --}}
+    <div class="relative w-full max-w-sm mb-4">
+        <!-- Ikon pencarian -->
     
+      
+        <!-- Input -->
+        <input
+          type="text"
+          id="search-marker"
+          placeholder="Cari mitra..."
+          class="w-full rounded-lg border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 text-sm pl-12 pr-4 py-2"
+        />
+      </div>
         <div id="custom-map"
             data-markers='@json($markers ?? [])'
             style="width: 100%; height: 600px; min-height: 500px; background: #eee;"
@@ -84,6 +95,7 @@
             const bounds = new google.maps.LatLngBounds();
 
             const markerList = [];
+            const searchableMarkers = [];
             markers.forEach((m) => {
                 const iconUrl = {
                     sudah: 'http://maps.google.com/mapfiles/ms/icons/green-dot.png',
@@ -103,7 +115,7 @@
                     content: m.info,      // langsung pakai HTML Blade
                     // maxWidth: 1000,
                 });
-
+               
                 marker.addListener('click', () => {
                     infoWindow.open(map, marker);
                     // google.maps.event.addListenerOnce(infoWindow, 'domready', () => {
@@ -148,8 +160,24 @@
                     });
                 });
                 markerList.push(marker);
+                searchableMarkers.push({
+                    name: m.nama.toLowerCase(),
+                    marker,
+                });
             });
+            document.getElementById('search-marker').addEventListener('input', function (e) {
+                const query = e.target.value.toLowerCase();
 
+                searchableMarkers.forEach(({ name, marker }) => {
+                    const match = name.includes(query);
+                    marker.setVisible(match);
+
+                    if (match && query.length > 2) {
+                        map.setCenter(marker.getPosition());
+                        map.setZoom(15);
+                    }
+                });
+            });
             // ⬇️ Aktifkan clustering
             new markerClusterer.MarkerClusterer({ map, markers: markerList });
             document
