@@ -119,8 +119,10 @@ class PasienResource extends Resource {
                             ->afterStateHydrated(function (Select $component, Get $get, Set $set, $state, $operation) {
                                 if ($operation == "edit") {
                                     $id = $get('mitra_id_2');
-                                    $bidan = BidanMitra::where('id', $id)->first();
-                                    $component->state($bidan->kategori);
+                                    if (filled($id)) {
+                                        $bidan = BidanMitra::where('id', $id)->first();
+                                        $component->state($bidan->kategori);
+                                    }
                                 }
                             })
                             ->required(fn(Get $get) => $get('add') === false),
