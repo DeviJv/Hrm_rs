@@ -11,6 +11,9 @@ class Pasien extends Model {
     public function bidanMitra(): BelongsTo {
         return $this->belongsTo(BidanMitra::class, 'bidan_mitra_id');
     }
+    public function bidanMitra2(): BelongsTo {
+        return $this->belongsTo(BidanMitra::class, 'mitra_id_2');
+    }
     public function tindakan(): BelongsTo {
         return $this->belongsTo(Tindakan::class);
     }

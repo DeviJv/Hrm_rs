@@ -20,6 +20,7 @@ use Filament\Forms\Components\FileUpload;
 use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
+use Filament\Forms\Components\Actions\Action;
 use App\Filament\Resources\PasienResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\PasienResource\RelationManagers;
@@ -41,7 +42,31 @@ class PasienResource extends Resource {
                             ->required()
                             ->default(now()),
                         Forms\Components\TextInput::make('no_rm')
-                            ->label('No RM'),
+                            ->label('No RM')
+                            ->suffixAction(
+                                Action::make('add_1')
+                                    ->icon(function (Get $get) {
+                                        if (!$get('add')) {
+                                            return 'heroicon-o-plus';
+                                        } else {
+                                            return 'heroicon-o-minus';
+                                        }
+                                    })
+                                    ->tooltip('Tambah Kategori 1 Kategori & Mitra')
+                                    ->action(function (Get $get, Set $set) {
+                                        if (!$get('add')) {
+                                            $set('add', true);
+                                        } else {
+                                            $set('add', false);
+                                            $set('kategori_2', '');
+                                            $set('mitra_id_2', '');
+                                        }
+                                    }),
+                            ),
+                        Forms\Components\CheckBox::make('add')
+                            ->default(false)
+                            ->dehydrated(false)
+                            ->hidden(),
                         Forms\Components\Select::make('kategori')
                             ->label('Pilih Kategori')
                             ->dehydrated(false)
@@ -77,14 +102,76 @@ class PasienResource extends Resource {
                                 return [];
                             })
                             ->required(),
+                        Forms\Components\Select::make('kategori_2')
+                            ->label('Pilih Kategori 2')
+                            ->hidden(fn(Get $get) => $get('add') === false)
+                            ->dehydrated(false)
+                            ->live()
+                            ->options([
+                                'bidan' => 'Bidan',
+                                'puskesmas' => 'Puskesmas',
+                                'kader' => 'Kader',
+                                'posyandu' => 'Posyandu',
+                                'sekolah' => 'Sekolah',
+                                'universitas' => 'Universitas',
+                                'boarding school' => 'Boarding School',
+                            ])
+                            ->afterStateHydrated(function (Select $component, Get $get, Set $set, $state, $operation) {
+                                if ($operation == "edit") {
+                                    $id = $get('mitra_id_2');
+                                    $bidan = BidanMitra::where('id', $id)->first();
+                                    $component->state($bidan->kategori);
+                                }
+                            })
+                            ->required(fn(Get $get) => $get('add') === false),
+                        Forms\Components\Select::make('mitra_id_2')
+                            ->label('Pilih Mitra 2')
+                            ->live()
+                            ->hidden(fn(Get $get) => $get('add') === false)
+                            ->searchable()
+                            ->options(function (Get $get) {
+                                $kategori = $get('kategori_2');
+                                if (filled($kategori)) {
+                                    return BidanMitra::where('kategori', $kategori)->pluck('nama', 'id');
+                                } else {
+                                    return BidanMitra::pluck('nama', 'id');
+                                }
+                                return [];
+                            })
+                            ->required(fn(Get $get) => $get('add') === false),
                         Forms\Components\TextInput::make('nama')
                             ->required()
                             ->maxLength(255),
                         Forms\Components\DatePicker::make('usia')
                             ->label('Usia')
                             ->required(),
-                        Forms\Components\Select::make('kelas')
+                        Forms\Components\Select::make('pasien_rujukan')
+                            ->label('Tipe Kunjungan')
                             ->required()
+                            ->live()
+                            ->options([
+                                'Rawat Inap' => 'Rawat Inap',
+                                'Rawat Jalan' => 'Rawat Jalan',
+                            ]),
+                        Forms\Components\Select::make('poli')
+                            ->live()
+                            ->hidden(fn(Get $get) => $get('pasien_rujukan') !== 'Rawat Jalan')
+                            ->searchable()
+                            ->options([
+                                'kandungan' => 'kandungan',
+                                'anak' => 'anak',
+                                'penyakit dalam' => 'penyakit dalam',
+                                'bedah' => 'bedah',
+                                'gigi' => 'gigi',
+                                'bedah mulut' => 'bedah mulut',
+                                'fisio terapi' => 'fisio terapi',
+                                'anastesi' => 'anastesi',
+                                'laktasi' => 'laktasi',
+                            ]),
+                        Forms\Components\Select::make('kelas')
+                            ->live()
+                            ->searchable()
+                            ->hidden(fn(Get $get) => $get('pasien_rujukan') !== 'Rawat Inap')
                             ->options([
                                 'kelas 3' => 'kelas 3',
                                 'kelas 2' => 'kelas 2',
@@ -97,13 +184,7 @@ class PasienResource extends Resource {
                                 'ICU' => 'ICU',
                                 'HCU' => 'HCU',
                             ]),
-                        Forms\Components\Select::make('pasien_rujukan')
-                            ->label('Tipe Kunjungan')
-                            ->required()
-                            ->options([
-                                'Rawat Inap' => 'Rawat Inap',
-                                'Rawat Jalan' => 'Rawat Jalan',
-                            ]),
+
                         Forms\Components\Select::make('jenis')
                             ->options([
                                 'BPJS' => 'BPJS',
@@ -135,7 +216,6 @@ class PasienResource extends Resource {
                                 'diterima' => 'diterima',
                                 'ditolak' => 'ditolak',
                             ]),
-
                         Forms\Components\Textarea::make('keterangan'),
                     ]),
 
@@ -158,6 +238,10 @@ class PasienResource extends Resource {
 
                 Tables\Columns\TextColumn::make('bidanMitra.nama')
                     ->label('Mitra')
+                    ->searchable()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('bidanMitra2.nama')
+                    ->label('Mitra 2')
                     ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('tindakan.nama_tindakan')
