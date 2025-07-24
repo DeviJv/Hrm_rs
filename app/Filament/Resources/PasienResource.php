@@ -169,6 +169,7 @@ class PasienResource extends Resource {
                                 'fisio terapi' => 'fisio terapi',
                                 'anastesi' => 'anastesi',
                                 'laktasi' => 'laktasi',
+                                'IGD' => 'IGD',
                             ]),
                         Forms\Components\Select::make('kelas')
                             ->live()
