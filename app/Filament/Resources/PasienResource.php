@@ -63,7 +63,7 @@ class PasienResource extends Resource {
                                         }
                                     }),
                             ),
-                        Forms\Components\CheckBox::make('add')
+                        Forms\Components\Checkbox::make('add')
                             ->default(false)
                             ->dehydrated(false)
                             ->hidden(),
