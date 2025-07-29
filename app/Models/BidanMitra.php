@@ -15,4 +15,7 @@ class BidanMitra extends Model {
     public function pasiens() {
         return $this->hasMany(Pasien::class, 'bidan_mitra_id');
     }
+    public function kunjungans() {
+        return $this->hasMany(Kunjungan::class, 'bidan_mitra_id');
+    }
 }

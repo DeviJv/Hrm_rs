@@ -149,6 +149,8 @@ class BidanMitraResource extends Resource {
     public static function table(Table $table): Table {
         return $table
             ->columns([
+                Tables\Columns\TextColumn::make('kategori')
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('nama')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('kecamatan')
