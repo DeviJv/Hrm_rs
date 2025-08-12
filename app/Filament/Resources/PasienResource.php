@@ -13,12 +13,14 @@ use App\Models\BidanMitra;
 use Filament\Tables\Table;
 use App\Exports\PasienExport;
 use Illuminate\Support\Carbon;
+use App\Models\MasterFeeRujukan;
 use Filament\Resources\Resource;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\FileUpload;
 use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Builder;
+use Filament\Tables\Columns\Summarizers\Sum;
 use Illuminate\Database\Eloquent\Collection;
 use Filament\Forms\Components\Actions\Action;
 use App\Filament\Resources\PasienResource\Pages;
@@ -194,6 +196,7 @@ class PasienResource extends Resource {
                                 'Umum' => 'Umum',
                                 'Asuransi' => 'Asuransi',
                             ])
+                            ->live()
                             ->required(),
 
                         Forms\Components\Select::make('operasi')
@@ -213,12 +216,52 @@ class PasienResource extends Resource {
                                 }
                                 return [];
                             }),
+
                         Forms\Components\Select::make('status')
                             ->required()
+                            ->live()
                             ->options([
                                 'diterima' => 'diterima',
                                 'ditolak' => 'ditolak',
-                            ]),
+                            ])
+                            ->afterStateUpdated(function ($state, Set $set) {
+                                if ($state == "ditolak") {
+                                    $set('fee', 0);
+                                }
+                            }),
+                        Forms\Components\Select::make('fee')
+                            ->label('Fee')
+                            ->live()
+                            ->options(function (Get $get) {
+                                if (filled($get('kategori'))) {
+                                    if ($get('kategori') == 'bidan' && $get('jenis') == 'BPJS') {
+                                        return MasterFeeRujukan::where('kategori', 'bidan atau pkm')
+                                            ->get()
+                                            ->mapWithKeys(function ($item) {
+                                                return [$item->bpjs => ($item->tindakan . " - " . number_format($item->bpjs))];
+                                            })
+                                            ->toArray();
+                                    }
+                                    if ($get('kategori') == 'bidan' && $get('jenis') == 'Asuransi') {
+                                        return MasterFeeRujukan::where('kategori', 'bidan atau pkm')
+                                            ->get()
+                                            ->mapWithKeys(function ($item) {
+                                                return [$item->Asuransi => ($item->tindakan . " - " . number_format($item->bpjs))];
+                                            })
+                                            ->toArray();
+                                    }
+                                    if ($get('kategori') == 'bidan' && $get('jenis') == 'Umum') {
+                                        return MasterFeeRujukan::where('kategori', 'bidan atau pkm')
+                                            ->get()
+                                            ->mapWithKeys(function ($item) {
+                                                return [$item->umum => ($item->tindakan . " - " . number_format($item->bpjs))];
+                                            })
+                                            ->toArray();
+                                    }
+                                }
+
+                                return [];
+                            }),
                         Forms\Components\Textarea::make('keterangan'),
                     ]),
 
@@ -258,6 +301,11 @@ class PasienResource extends Resource {
                 Tables\Columns\TextColumn::make('jenis')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('status'),
+                Tables\Columns\TextColumn::make('fee')
+                    ->summarize([
+                        Sum::make(),
+                    ])
+                    ->money('IDR'),
                 Tables\Columns\TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
