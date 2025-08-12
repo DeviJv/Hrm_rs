@@ -169,19 +169,34 @@ class TemplateKontrolResource extends Resource {
                                     ->default(fn(?Model $record) => $record->no_hp)
                                     ->readOnly(),
                             ]),
-                        Select::make('nama')
-                            ->options(fn() => TemplateWhatsapp::pluck('keterangan', 'keterangan'))
-                            ->searchable()
-                            ->required()
-                            ->live()
-                            ->afterStateUpdated(function (Set $set, $state) {
-                                if (filled($state)) {
-                                    $set('pesan', $state);
-                                }
-                            }),
+                        // Select::make('nama')
+                        //     ->options(fn() => TemplateWhatsapp::pluck('keterangan', 'keterangan'))
+                        //     ->searchable()
+                        //     ->required()
+                        //     ->live()
+                        //     ->afterStateUpdated(function (Set $set, $state) {
+                        //         if (filled($state)) {
+                        //             $set('pesan', $state);
+                        //         }
+                        //     }),
                         Textarea::make('pesan')
                             ->live()
                             ->label('Tulis Pesan')
+                            ->rows(15)
+                            ->cols(25)
+                            ->default(function (Model $record) {
+                                return "Assalamu’alaikum Ibu/Sdr *{$record->nama}*
+Kami dari RSIA Bunda Suryatni ingin menginformasikan hasil dan jadwal kontrol Ibu/Sdr hari ini.
+Data Pasien
+* Nama : *{$record->nama}*
+* No. RM : *{$record->no_rm}*
+* Usia : *{$record->umur}*
+Kunjungan Hari Ini
+* Tanggal : *{$record->tgl_kontrol->format('d/m/Y H:m')}*
+* Poli : Obstetri / Ginekologi / Anak / Lainnya
+* Dokter/Bidan : [Nama Dokter/Bidan]
+* Jenis Kunjungan : Kontrol Rutin / Pasca Persalinan / Keluhan / Rujukan";
+                            })
 
                     ])
                     ->action(function (Model $record, array $data, $livewire) {
