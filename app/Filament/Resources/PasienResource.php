@@ -28,7 +28,7 @@ use App\Filament\Resources\PasienResource\RelationManagers;
 class PasienResource extends Resource {
     protected static ?string $model = Pasien::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-user';
     protected static ?string $navigationGroup = 'Marketing';
 
     public static function form(Form $form): Form {
@@ -302,6 +302,47 @@ class PasienResource extends Resource {
                     ->searchable()
                     ->multiple()
                     ->options(fn() => Tindakan::pluck('nama_tindakan', 'id')),
+                Tables\Filters\Filter::make('created_at')
+                    ->form([
+                        Forms\Components\DatePicker::make('created_from')
+                            ->label('Tanggal Mulai')
+                            ->placeholder(fn($state): string => 'Dec 18, ' . now()->subYear()->format('Y')),
+                        Forms\Components\DatePicker::make('created_until')
+                            ->label('Tanggal Akhir')
+                            ->placeholder(fn($state): string => now()->format('M d, Y')),
+                    ])
+                    ->query(function (Builder $query, array $data): Builder {
+                        return $query
+                            ->when(
+                                $data['karyawan_id'] ?? null,
+                                fn(Builder $query, $data): Builder => $query->where('karyawan_id', '=', $data),
+                            )
+                            ->when(
+                                $data['status'] ?? null,
+                                fn(Builder $query, $data): Builder => $query->where('status', '=', $data),
+                            )
+                            ->when(
+                                $data['created_from'] ?? null,
+                                fn(Builder $query, $date): Builder => $query->whereDate('created_at', '>=', $date),
+                            )
+                            ->when(
+                                $data['created_until'] ?? null,
+                                fn(Builder $query, $date): Builder => $query->whereDate('created_at', '<=', $date),
+                            );
+                    })
+                    ->indicateUsing(function (array $data): array {
+                        $indicators = [];
+
+                        if ($data['created_from'] ?? null) {
+                            $indicators['created_from'] = 'Tanggal Mulai ' . Carbon::parse($data['created_from'])->toFormattedDateString();
+                        }
+                        if ($data['created_until'] ?? null) {
+                            $indicators['created_until'] = 'Tanggal Akhir ' . Carbon::parse($data['created_until'])->toFormattedDateString();
+                        }
+
+                        return $indicators;
+                    }),
+
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),

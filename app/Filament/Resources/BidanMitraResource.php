@@ -29,7 +29,7 @@ use App\Filament\Resources\BidanMitraResource\Widgets\BidanMitra as BidanMitraWi
 class BidanMitraResource extends Resource {
     protected static ?string $model = BidanMitra::class;
     protected static ?string $pluralModelLabel = 'Mitra RSIA Bunda Suryatni';
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-user-group';
 
     protected static ?string $navigationGroup = 'Marketing';
 
