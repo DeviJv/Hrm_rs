@@ -261,7 +261,8 @@ class PasienResource extends Resource {
                                 }
 
                                 return [];
-                            }),
+                            })
+                            ->searchable(),
                         Forms\Components\Textarea::make('keterangan'),
                     ]),
 
