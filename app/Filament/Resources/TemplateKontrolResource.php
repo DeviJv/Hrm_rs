@@ -5,11 +5,18 @@ namespace App\Filament\Resources;
 use Carbon\Carbon;
 use Filament\Forms;
 use Filament\Tables;
+use Filament\Forms\Set;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
 use App\Models\TemplateKontrol;
+use App\Models\TemplateWhatsapp;
 use Filament\Resources\Resource;
+use Filament\Forms\Components\Grid;
+use Filament\Forms\Components\Select;
 use App\Exports\TemplateKontrolExport;
+use Filament\Forms\Components\Textarea;
+use Illuminate\Database\Eloquent\Model;
+use Filament\Forms\Components\TextInput;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -21,6 +28,8 @@ class TemplateKontrolResource extends Resource {
 
     protected static ?string $navigationIcon = 'heroicon-o-adjustments-vertical';
     protected static ?string $navigationGroup = 'Marketing';
+    protected static ?string $navigationLabel = 'Pasien Kontrol';
+    protected static ?string $pluralModelLabel = 'Pasien Kontrol';
 
     public static function form(Form $form): Form {
         return $form
@@ -147,6 +156,40 @@ class TemplateKontrolResource extends Resource {
                     }),
             ])
             ->actions([
+                Tables\Actions\Action::make('whatsapp')
+                    ->icon('heroicon-o-envelope')
+                    ->color('success')
+                    ->form([
+                        Grid::make(2)
+                            ->schema([
+                                TextInput::make('nama_pasien')
+                                    ->default(fn(?Model $record) => $record->nama)
+                                    ->readOnly(),
+                                TextInput::make('no_hp')
+                                    ->default(fn(?Model $record) => $record->no_hp)
+                                    ->readOnly(),
+                            ]),
+                        Select::make('nama')
+                            ->options(fn() => TemplateWhatsapp::pluck('keterangan', 'keterangan'))
+                            ->searchable()
+                            ->required()
+                            ->live()
+                            ->afterStateUpdated(function (Set $set, $state) {
+                                if (filled($state)) {
+                                    $set('pesan', $state);
+                                }
+                            }),
+                        Textarea::make('pesan')
+                            ->live()
+                            ->label('Tulis Pesan')
+
+                    ])
+                    ->action(function (Model $record, array $data) {
+                        $text = urlencode($data['pesan']);
+                        $href = "https://wa.me/{$record->no_hp}?text={$text}";
+
+                        return redirect()->away($href);
+                    }),
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
             ])
