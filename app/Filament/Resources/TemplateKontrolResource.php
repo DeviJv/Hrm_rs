@@ -184,12 +184,19 @@ class TemplateKontrolResource extends Resource {
                             ->label('Tulis Pesan')
 
                     ])
-                    ->action(function (Model $record, array $data) {
+                    ->action(function (Model $record, array $data, $livewire) {
                         $text = urlencode($data['pesan']);
                         $href = "https://wa.me/{$record->no_hp}?text={$text}";
-
-                        return redirect()->away($href);
+                        $livewire->js(<<<JS
+                        window.open("{$href}", "_blank");
+                    JS);
+                        // return response(
+                        //     "<script>window.open('{$href}', '_blank').focus();</script>"
+                        // )->header('Content-Type', 'text/html');
                     }),
+                // ->extraAttributes(fn($record, $data) => [
+                //     'onclick' => "window.open('https://wa.me/{$record->no_hp}?text=" . urlencode($data['pesan']) . "', '_blank'); return false;"
+                // ]),
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
             ])
