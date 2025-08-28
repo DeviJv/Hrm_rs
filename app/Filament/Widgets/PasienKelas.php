@@ -6,11 +6,13 @@ use App\Models\Pasien;
 use Illuminate\Support\Carbon;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
+use BezhanSalleh\FilamentShield\Traits\HasWidgetShield;
 use Filament\Widgets\Concerns\InteractsWithPageFilters;
 use Leandrocfe\FilamentApexCharts\Widgets\ApexChartWidget;
 
 class PasienKelas extends ApexChartWidget {
     use InteractsWithPageFilters;
+    use HasWidgetShield;
 
     protected static ?string $chartId = 'PasienKelasChart';
     protected static ?int $sort = 4;

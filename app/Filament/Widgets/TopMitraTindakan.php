@@ -16,6 +16,7 @@ use BezhanSalleh\FilamentShield\Traits\HasWidgetShield;
 
 class TopMitraTindakan extends BaseWidget {
     use HasWidgetShield;
+
     protected int | string | array $columnSpan = 'full';
 
     protected static ?int $sort = 9;

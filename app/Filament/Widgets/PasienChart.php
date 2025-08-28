@@ -22,7 +22,8 @@ class PasienChart extends ApexChartWidget {
     /**
      * Chart Id
      */
-    use  InteractsWithPageFilters;
+    use HasWidgetShield;
+    use InteractsWithPageFilters;
 
 
     protected static ?string $chartId = 'PasienChart';
