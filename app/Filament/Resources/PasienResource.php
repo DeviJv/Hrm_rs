@@ -223,6 +223,8 @@ class PasienResource extends Resource {
                             ->options([
                                 'diterima' => 'diterima',
                                 'ditolak' => 'ditolak',
+                                'dicancel' => 'dicancel',
+
                             ])
                             ->afterStateUpdated(function ($state, Set $set) {
                                 if ($state == "ditolak") {
