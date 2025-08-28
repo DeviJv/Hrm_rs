@@ -11,9 +11,11 @@ use Illuminate\Database\Eloquent\Model;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Concerns\InteractsWithForms;
+use BezhanSalleh\FilamentShield\Traits\HasWidgetShield;
 
 class TargetKunjungan extends Page  implements HasForms {
     use InteractsWithForms;
+    use HasWidgetShield;
     protected static ?string $navigationIcon = 'heroicon-o-map';
     protected static ?string $navigationGroup = 'Marketing';
     protected static string $view = 'filament.pages.target-kunjungan';
