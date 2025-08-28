@@ -22,8 +22,7 @@ use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Builder;
 use App\Filament\Resources\UserResource\Pages;
 
-class UserResource extends Resource
-{
+class UserResource extends Resource {
     protected static ?string $model = User::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-user-group';
@@ -36,8 +35,7 @@ class UserResource extends Resource
     //     return static::getModel()::query()->where('name', 'Super'); //fungsi untuk filter sebelum boot
     // }
 
-    public static function form(Form $form): Form
-    {
+    public static function form(Form $form): Form {
         return $form
             ->schema([
                 Forms\Components\Section::make()
@@ -49,7 +47,7 @@ class UserResource extends Resource
                             ->relationship('karyawan', 'nama')
                             ->preload()
                             ->live()
-                            ->required()
+                            ->required(fn() => !auth()->user()->hasRole('super_admin'))
                             ->unique(User::class, 'karyawan_id', ignoreRecord: true)
                             ->afterStateUpdated(function ($state, Get $get, Set $set) {
                                 if (filled($state)) {
@@ -124,8 +122,7 @@ class UserResource extends Resource
             ]);
     }
 
-    public static function table(Table $table): Table
-    {
+    public static function table(Table $table): Table {
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('name')
@@ -186,15 +183,13 @@ class UserResource extends Resource
             ]);
     }
 
-    public static function getRelations(): array
-    {
+    public static function getRelations(): array {
         return [
             //
         ];
     }
 
-    public static function getPages(): array
-    {
+    public static function getPages(): array {
         return [
             'index' => Pages\ListUsers::route('/'),
             'create' => Pages\CreateUser::route('/create'),
@@ -202,14 +197,12 @@ class UserResource extends Resource
         ];
     }
 
-    public static function getWidgets(): array
-    {
+    public static function getWidgets(): array {
         return [
             // UserResource\Widgets\UserRoleOverview::class,
         ];
     }
-    public static function getHeaderWidgetsColumns(): int | array
-    {
+    public static function getHeaderWidgetsColumns(): int | array {
         return 4;
     }
 
