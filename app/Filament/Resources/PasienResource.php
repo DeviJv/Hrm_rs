@@ -322,6 +322,7 @@ class PasienResource extends Resource {
                     ->options([
                         'diterima' => 'diterima',
                         'ditolak' => 'ditolak',
+                        'dicancel' => 'dicancel',
                     ]),
                 SelectFilter::make('kelas')
                     ->searchable()
