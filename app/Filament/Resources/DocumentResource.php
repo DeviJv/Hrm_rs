@@ -114,7 +114,14 @@ class DocumentResource extends Resource {
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
+                Tables\Filters\TernaryFilter::make('karyawan_aktif')
+                    ->label('Karyawan Aktif')
+                    ->default(true) // default filter aktif
+                    ->queries(
+                        true: fn(Builder $query) => $query->whereHas('karyawan', fn($q) => $q->where('aktif', true)),
+                        false: fn(Builder $query) => $query->whereHas('karyawan', fn($q) => $q->where('aktif', false)),
+                        blank: fn(Builder $query) => $query, // kalau toggle di kosongkan tampil semua
+                    ),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
