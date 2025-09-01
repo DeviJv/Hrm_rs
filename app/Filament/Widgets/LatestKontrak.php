@@ -19,9 +19,9 @@ class LatestKontrak extends BaseWidget {
 
     protected static ?int $sort = 9;
 
-    public static function canView(): bool {
-        return request()->routeIs('filament.admin.dashboard.pages.dashboard');
-    }
+    // public static function canView(): bool {
+    //     return request()->routeIs('filament.admin.dashboard.pages.dashboard');
+    // }
     public function table(Table $table): Table {
         return $table
             ->query(KontrakResource::getEloquentQuery())

@@ -14,9 +14,9 @@ class CutiWidget extends Widget {
     protected static string $view = 'filament.widgets.jadwal-widget';
     protected int | string | array $columnSpan = 'full';
     protected static ?int $sort = 4;
-    public static function canView(): bool {
-        return request()->routeIs('filament.admin.dashboard.pages.dashboard');
-    }
+    // public static function canView(): bool {
+    //     return request()->routeIs('filament.admin.dashboard.pages.dashboard');
+    // }
     protected function getViewData(): array {
         $startDate = $this->filters['startDate'] ?? null;
         $endDate = $this->filters['endDate'] ?? null;

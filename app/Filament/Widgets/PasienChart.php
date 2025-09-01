@@ -55,9 +55,7 @@ class PasienChart extends ApexChartWidget {
     protected function getHeading(): string {
         return 'Pasien Rujukan Perbulan ';
     }
-    public static function canView(): bool {
-        return request()->routeIs('filament.admin.dashboard.pages.dashboard-marketing');
-    }
+
 
     protected function getFormSchema(): array {
         return [

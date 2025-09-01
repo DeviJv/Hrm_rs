@@ -43,9 +43,10 @@ class LemburChart extends ApexChartWidget {
      * Filter Form
      */
 
-    public static function canView(): bool {
-        return request()->routeIs('filament.admin.dashboard.pages.dashboard');
-    }
+    // public static function canView(): bool {
+    //     return request()->routeIs('filament.admin.dashboard.pages.dashboard');
+    // }
+
     protected function getFormSchema(): array {
         return [
 

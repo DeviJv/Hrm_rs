@@ -21,9 +21,9 @@ class LatestStrsip extends BaseWidget {
 
     protected static ?int $sort = 10;
 
-    public static function canView(): bool {
-        return request()->routeIs('filament.admin.dashboard.pages.dashboard');
-    }
+    // public static function canView(): bool {
+    //     return request()->routeIs('filament.admin.dashboard.pages.dashboard');
+    // }
     public function table(Table $table): Table {
         return $table
             ->query(StrsipResource::getEloquentQuery())

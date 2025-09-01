@@ -4,9 +4,13 @@ namespace App\Filament\Pages;
 
 use Filament\Forms\Form;
 use Filament\Widgets\AccountWidget;
+use App\Filament\Widgets\PasienChart;
+use App\Filament\Widgets\PasienJenis;
+use App\Filament\Widgets\PasienKelas;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\DatePicker;
+use App\Filament\Widgets\TopMitraTindakan;
 use App\Filament\Clusters\DashboardCluster;
 use Filament\Pages\Dashboard as BaseDashboard;
 use Filament\Pages\Dashboard\Concerns\HasFiltersForm;
@@ -19,7 +23,15 @@ class DashboardMarketing extends BaseDashboard {
     protected static ?string $title = 'Dashboard Marketing';
     protected static ?string $navigationLabel = 'Marketing';
 
-
+    public function getFooterWidgets(): array {
+        return [
+            // AccountWidget::class,
+            PasienChart::class,
+            PasienJenis::class,
+            PasienKelas::class,
+            TopMitraTindakan::class,
+        ];
+    }
     // public function filtersForm(Form $form): Form {
     //     return $form
     //         ->schema([

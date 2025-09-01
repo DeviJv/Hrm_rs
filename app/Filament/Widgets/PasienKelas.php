@@ -34,9 +34,9 @@ class PasienKelas extends ApexChartWidget {
         return 'Rujukan Pasien Perkelas Dibulan : ' . $namaBulan . '';
     }
 
-    public static function canView(): bool {
-        return request()->routeIs('filament.admin.dashboard.pages.dashboard-marketing');
-    }
+    // public static function canView(): bool {
+    //     return request()->routeIs('filament.admin.dashboard.pages.dashboard-marketing');
+    // }
 
     protected function getFormSchema(): array {
         return [

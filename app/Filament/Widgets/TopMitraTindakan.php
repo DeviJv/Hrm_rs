@@ -21,9 +21,9 @@ class TopMitraTindakan extends BaseWidget {
 
     protected static ?int $sort = 9;
 
-    public static function canView(): bool {
-        return request()->routeIs('filament.admin.dashboard.pages.dashboard-marketing');
-    }
+    // public static function canView(): bool {
+    //     return request()->routeIs('filament.admin.dashboard.pages.dashboard-marketing');
+    // }
     public function table(Table $table): Table {
         return $table
             ->query(function () {

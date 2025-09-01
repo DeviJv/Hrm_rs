@@ -3,9 +3,16 @@
 namespace App\Filament\Pages;
 
 use Filament\Forms\Form;
-use App\Filament\Clusters\DashboardCluster;
+use App\Filament\Widgets\BarChart;
+use App\Filament\Widgets\CutiChart;
+use App\Filament\Widgets\LatestStrsip;
 use Filament\Forms\Components\Section;
+use App\Filament\Widgets\LatestKontrak;
 use Filament\Forms\Components\DatePicker;
+use App\Filament\Clusters\DashboardCluster;
+use App\Filament\Widgets\CutiWidget;
+use App\Filament\Widgets\LemburChart;
+use App\Filament\Widgets\ResignChart;
 use Filament\Pages\Dashboard as BaseDashboard;
 use Filament\Pages\Dashboard\Concerns\HasFiltersForm;
 
@@ -17,6 +24,17 @@ class Dashboard extends BaseDashboard {
     protected static ?string $title = 'Dashboard HRM';
     protected static ?string $navigationLabel = 'HRM';
 
+    public function getFooterWidgets(): array {
+        return [
+            BarChart::class,
+            CutiChart::class,
+            CutiWidget::class,
+            LatestStrsip::class,
+            LatestKontrak::class,
+            LemburChart::class,
+            ResignChart::class,
+        ];
+    }
 
     public function filtersForm(Form $form): Form {
         return $form

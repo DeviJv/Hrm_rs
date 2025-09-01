@@ -33,9 +33,10 @@ class CutiChart extends ApexChartWidget {
 
     protected static ?int $sort = 5;
 
-    public static function canView(): bool {
-        return request()->routeIs('filament.admin.dashboard.pages.dashboard');
-    }
+    // public static function canView(): bool {
+    //     return request()->routeIs('filament.admin.dashboard.pages.dashboard');
+    // }
+
     protected function getOptions(): array {
         $filters = $this;
 

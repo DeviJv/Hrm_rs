@@ -20,9 +20,9 @@ class BarChart extends ApexChartWidget {
      * Chart Id
      */
     use HasWidgetShield;
-    public static function canView(): bool {
-        return request()->routeIs('filament.admin.dashboard.pages.dashboard');
-    }
+    // public static function canView(): bool {
+    //     return request()->routeIs('filament.admin.dashboard.pages.dashboard');
+    // }
     protected static ?string $chartId = 'TransaksiPayrollChart';
 
     /**
