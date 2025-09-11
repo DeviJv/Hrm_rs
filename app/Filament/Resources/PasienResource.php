@@ -248,7 +248,7 @@ class PasienResource extends Resource {
                                         return MasterFeeRujukan::where('kategori', 'bidan atau pkm')
                                             ->get()
                                             ->mapWithKeys(function ($item) {
-                                                return [$item->Asuransi => ($item->tindakan . " - " . number_format($item->bpjs))];
+                                                return [$item->asuransi => ($item->tindakan . " - " . number_format($item->bpjs))];
                                             })
                                             ->toArray();
                                     }
@@ -256,7 +256,31 @@ class PasienResource extends Resource {
                                         return MasterFeeRujukan::where('kategori', 'bidan atau pkm')
                                             ->get()
                                             ->mapWithKeys(function ($item) {
-                                                return [$item->umum => ($item->tindakan . " - " . number_format($item->bpjs))];
+                                                return [$item->umum => ($item->tindakan . " - " . number_format($item->umum))];
+                                            })
+                                            ->toArray();
+                                    }
+                                    if ($get('kategori') !== 'bidan' && $get('jenis') == 'Umum') {
+                                        return MasterFeeRujukan::where('kategori', 'komunitas')
+                                            ->get()
+                                            ->mapWithKeys(function ($item) {
+                                                return [$item->umum => ($item->tindakan . " - " . number_format($item->umum))];
+                                            })
+                                            ->toArray();
+                                    }
+                                    if ($get('kategori') !== 'bidan' && $get('jenis') == 'Asuransi') {
+                                        return MasterFeeRujukan::where('kategori', 'komunitas')
+                                            ->get()
+                                            ->mapWithKeys(function ($item) {
+                                                return [$item->asuransi => ($item->tindakan . " - " . number_format($item->asuransi))];
+                                            })
+                                            ->toArray();
+                                    }
+                                    if ($get('kategori') !== 'bidan' && $get('jenis') == 'BPJS') {
+                                        return MasterFeeRujukan::where('kategori', 'komunitas')
+                                            ->get()
+                                            ->mapWithKeys(function ($item) {
+                                                return [$item->bpjs => ($item->tindakan . " - " . number_format($item->bpjs))];
                                             })
                                             ->toArray();
                                     }
