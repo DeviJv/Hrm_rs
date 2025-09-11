@@ -240,7 +240,10 @@ class PasienResource extends Resource {
                                         return MasterFeeRujukan::where('kategori', 'bidan atau pkm')
                                             ->get()
                                             ->mapWithKeys(function ($item) {
-                                                return [$item->bpjs => ($item->tindakan . " - " . number_format($item->bpjs))];
+                                                // bikin key unik (id|bpjs), label tetap tindakan + harga
+                                                return [
+                                                    $item->id . '|' . $item->bpjs => $item->tindakan . " - " . number_format($item->bpjs),
+                                                ];
                                             })
                                             ->toArray();
                                     }
@@ -248,7 +251,10 @@ class PasienResource extends Resource {
                                         return MasterFeeRujukan::where('kategori', 'bidan atau pkm')
                                             ->get()
                                             ->mapWithKeys(function ($item) {
-                                                return [$item->asuransi => ($item->tindakan . " - " . number_format($item->bpjs))];
+                                                // bikin key unik (id|bpjs), label tetap tindakan + harga
+                                                return [
+                                                    $item->id . '|' . $item->asuransi => $item->tindakan . " - " . number_format($item->asuransi),
+                                                ];
                                             })
                                             ->toArray();
                                     }
@@ -256,7 +262,10 @@ class PasienResource extends Resource {
                                         return MasterFeeRujukan::where('kategori', 'bidan atau pkm')
                                             ->get()
                                             ->mapWithKeys(function ($item) {
-                                                return [$item->umum => ($item->tindakan . " - " . number_format($item->umum))];
+                                                // bikin key unik (id|bpjs), label tetap tindakan + harga
+                                                return [
+                                                    $item->id . '|' . $item->umum => $item->tindakan . " - " . number_format($item->umum),
+                                                ];
                                             })
                                             ->toArray();
                                     }
@@ -264,7 +273,10 @@ class PasienResource extends Resource {
                                         return MasterFeeRujukan::where('kategori', 'komunitas')
                                             ->get()
                                             ->mapWithKeys(function ($item) {
-                                                return [$item->umum => ($item->tindakan . " - " . number_format($item->umum))];
+                                                // bikin key unik (id|bpjs), label tetap tindakan + harga
+                                                return [
+                                                    $item->id . '|' . $item->umum => $item->tindakan . " - " . number_format($item->umum),
+                                                ];
                                             })
                                             ->toArray();
                                     }
@@ -272,17 +284,20 @@ class PasienResource extends Resource {
                                         return MasterFeeRujukan::where('kategori', 'komunitas')
                                             ->get()
                                             ->mapWithKeys(function ($item) {
-                                                return [$item->asuransi => ($item->tindakan . " - " . number_format($item->asuransi))];
+                                                // bikin key unik (id|bpjs), label tetap tindakan + harga
+                                                return [
+                                                    $item->id . '|' . $item->asuransi => $item->tindakan . " - " . number_format($item->asuransi),
+                                                ];
                                             })
                                             ->toArray();
                                     }
                                     if ($get('kategori') !== 'bidan' && $get('jenis') == 'BPJS') {
                                         return MasterFeeRujukan::where('kategori', 'komunitas')
                                             ->get()
-                                            ->map(function ($item) {
+                                            ->mapWithKeys(function ($item) {
+                                                // bikin key unik (id|bpjs), label tetap tindakan + harga
                                                 return [
-                                                    'value' => $item->bpjs,
-                                                    'label' => $item->tindakan . " - " . number_format($item->bpjs),
+                                                    $item->id . '|' . $item->bpjs => $item->tindakan . " - " . number_format($item->bpjs),
                                                 ];
                                             })
                                             ->toArray();
