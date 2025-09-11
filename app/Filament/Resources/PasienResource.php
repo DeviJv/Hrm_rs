@@ -279,8 +279,11 @@ class PasienResource extends Resource {
                                     if ($get('kategori') !== 'bidan' && $get('jenis') == 'BPJS') {
                                         return MasterFeeRujukan::where('kategori', 'komunitas')
                                             ->get()
-                                            ->mapWithKeys(function ($item) {
-                                                return [$item->bpjs => ($item->tindakan . " - " . number_format($item->bpjs))];
+                                            ->map(function ($item) {
+                                                return [
+                                                    'value' => $item->bpjs,
+                                                    'label' => $item->tindakan . " - " . number_format($item->bpjs),
+                                                ];
                                             })
                                             ->toArray();
                                     }
