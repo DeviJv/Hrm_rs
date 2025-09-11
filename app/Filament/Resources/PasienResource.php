@@ -76,6 +76,7 @@ class PasienResource extends Resource {
                             ->options([
                                 'bidan' => 'Bidan',
                                 'puskesmas' => 'Puskesmas',
+                                'klinik' => 'Klinik',
                                 'kader' => 'Kader',
                                 'posyandu' => 'Posyandu',
                                 'sekolah' => 'Sekolah',
@@ -224,7 +225,6 @@ class PasienResource extends Resource {
                                 'diterima' => 'diterima',
                                 'ditolak' => 'ditolak',
                                 'dicancel' => 'dicancel',
-
                             ])
                             ->afterStateUpdated(function ($state, Set $set) {
                                 if ($state == "ditolak") {
@@ -236,7 +236,7 @@ class PasienResource extends Resource {
                             ->live()
                             ->options(function (Get $get) {
                                 if (filled($get('kategori'))) {
-                                    if ($get('kategori') == 'bidan' && $get('jenis') == 'BPJS') {
+                                    if ($get('kategori') == 'bidan' || $get('kategori') == 'klinik' || $get('kategori') == 'puskesmas' && $get('jenis') == 'BPJS') {
                                         return MasterFeeRujukan::where('kategori', 'bidan atau pkm')
                                             ->get()
                                             ->mapWithKeys(function ($item) {
@@ -247,7 +247,7 @@ class PasienResource extends Resource {
                                             })
                                             ->toArray();
                                     }
-                                    if ($get('kategori') == 'bidan' && $get('jenis') == 'Asuransi') {
+                                    if ($get('kategori') == 'bidan' || $get('kategori') == 'klinik' || $get('kategori') == 'puskesmas' && $get('jenis') == 'Asuransi') {
                                         return MasterFeeRujukan::where('kategori', 'bidan atau pkm')
                                             ->get()
                                             ->mapWithKeys(function ($item) {
@@ -258,7 +258,7 @@ class PasienResource extends Resource {
                                             })
                                             ->toArray();
                                     }
-                                    if ($get('kategori') == 'bidan' && $get('jenis') == 'Umum') {
+                                    if ($get('kategori') == 'bidan' || $get('kategori') == 'klinik' || $get('kategori') == 'puskesmas' && $get('jenis') == 'Umum') {
                                         return MasterFeeRujukan::where('kategori', 'bidan atau pkm')
                                             ->get()
                                             ->mapWithKeys(function ($item) {
