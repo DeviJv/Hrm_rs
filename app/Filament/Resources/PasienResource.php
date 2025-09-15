@@ -77,6 +77,7 @@ class PasienResource extends Resource {
                                 'bidan' => 'Bidan',
                                 'puskesmas' => 'Puskesmas',
                                 'klinik' => 'Klinik',
+                                'kelurahan' => 'Kelurahan',
                                 'kader' => 'Kader',
                                 'posyandu' => 'Posyandu',
                                 'sekolah' => 'Sekolah',

@@ -69,6 +69,7 @@ class TargetKunjungan extends Page  implements HasForms {
                         'bidan' => 'Bidan',
                         'puskesmas' => 'Puskesmas',
                         'kader' => 'Kader',
+                        'kelurahan' => 'Kelurahan',
                         'klinik' => 'Klinik',
                         'posyandu' => 'Posyandu',
                         'sekolah' => 'Sekolah',
